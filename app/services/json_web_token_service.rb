@@ -1,6 +1,5 @@
 class JsonWebTokenService
-  # SECRET_KEY = Rails.application.secrets.secret_key_base.freeze
-  SECRET_KEY = ENV["SECRET_KEY_BASE"]
+  SECRET_KEY = ENV["SECRET_KEY_BASE"].freeze
 
   def self.encode(payload, exp = 24.hours.from_now)
     payload[:exp] = exp.to_i
@@ -8,8 +7,6 @@ class JsonWebTokenService
   end
 
   def self.decode(token)
-    Rails.logger.info "Token before being decoded>>>#{token}"
-    Rails.logger.info "Key>>>>#{SECRET_KEY}"
     decoded = JWT.decode(token, SECRET_KEY)[0]
     HashWithIndifferentAccess.new decoded
   end
