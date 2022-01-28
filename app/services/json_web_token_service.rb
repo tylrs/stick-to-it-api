@@ -7,7 +7,9 @@ class JsonWebTokenService
   end
 
   def self.decode(token)
+    Rails.logger.info "Token before being decoded>>>#{token}"
     decoded = JWT.decode(token, SECRET_KEY)[0]
+    Rails.logger.info "Decoded>>>>#{decoded}"
     HashWithIndifferentAccess.new decoded
   end
 end
