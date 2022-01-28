@@ -15,12 +15,12 @@ class ApplicationController < ActionController::API
     begin
       @decoded = JsonWebTokenService.decode(header)
       @current_user = User.find(@decoded[:user_id])
-      logger.debug "Begin statement worked"
+      Rails.logger.info "Begin statement worked"
     rescue ActiveRecord::RecordNotFound => e
-      logger.debug "Active Record Error"
+      Rails.logger.info "Active Record Error"
       render json: { errors: e.message }, status: :unauthorized
     rescue JWT::DecodeError => e
-      logger.debug "Decoding error"
+      Rails.logger.info "Decoding error"
       render json: { errors: e.message }, status: :unauthorized
     end
   end
