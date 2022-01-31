@@ -1,11 +1,14 @@
 class HabitsController < ApplicationController
   before_action :authorize_request
-  before_action :find_user, except: %i[create index]
+  before_action :find_user
 
-  def show
+  def index
   end
 
   def create
+  end
+
+  def show
   end
 
   def update
