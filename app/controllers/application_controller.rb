@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  before_action :authorize_request
+
   def hello
     render json: {
       message: "Hello World"
