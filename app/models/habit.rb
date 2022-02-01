@@ -4,5 +4,5 @@ class Habit < ApplicationRecord
 
     validates :name, presence: true, uniqueness: true
     validates :description, presence: true
-    validates :datetime, presence: true
+    validates :start_datetime, presence: true
 end
