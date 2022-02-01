@@ -24,6 +24,7 @@ class HabitsController < ApplicationController
   end
 
   def destroy
+    @user.habits.destroy(params[:id])
   end
 
   private
