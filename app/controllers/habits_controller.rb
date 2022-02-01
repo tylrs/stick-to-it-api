@@ -23,6 +23,11 @@ class HabitsController < ApplicationController
   end
 
   def update
+    @habit = @user.habits.find_by id: params[:id]
+    unless @habit.update(habit_params)
+      render json: { errors: @habit.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def destroy
