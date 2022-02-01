@@ -18,6 +18,8 @@ class HabitsController < ApplicationController
   end
 
   def show
+    @habit = @user.habits.find_by id: params[:id]
+    render json: @habit, status: :ok
   end
 
   def update
