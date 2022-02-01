@@ -7,8 +7,8 @@ class HabitsController < ApplicationController
   end
 
   def create
-    habit = @user.habits.create!(habit_params)
-    if habit.valid?
+    habit = @user.habits.build(habit_params)
+    if @user.habits << habit
       render json: habit, status: :created
     else
       render json: { errors: habit.errors.full_messages },
