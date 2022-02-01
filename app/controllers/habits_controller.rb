@@ -24,7 +24,10 @@ class HabitsController < ApplicationController
 
   def update
     @habit = @user.habits.find_by id: params[:id]
-    unless @habit.update(habit_params)
+    @habit.update(habit_params)
+    if @habit.valid?
+      render json: @habit, status: :ok
+    else 
       render json: { errors: @habit.errors.full_messages },
              status: :unprocessable_entity
     end
