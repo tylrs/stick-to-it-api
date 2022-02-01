@@ -2,7 +2,9 @@ class HabitsController < ApplicationController
   # before_action :authorize_request
   before_action :find_user
 
-  def index  
+  def index
+    @habits = @user.habits.all
+    render json: @habits, status: :ok  
   end
 
   def create
