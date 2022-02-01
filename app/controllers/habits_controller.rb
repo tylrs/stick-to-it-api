@@ -1,11 +1,18 @@
 class HabitsController < ApplicationController
-  before_action :authorize_request
+  # before_action :authorize_request
   before_action :find_user
 
-  def index
+  def index  
   end
 
   def create
+    @habit = @user.habits.create!(habit_params)
+    if @habit.save
+      render json: @habit, status: :created
+    else
+      render json: { errors: @habit.errors.full_messages },
+             status: :unprocessable_entity
+    end
   end
 
   def show
