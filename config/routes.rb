@@ -5,6 +5,6 @@ Rails.application.routes.draw do
       resources :habit_logs
     end
   end
-  post '/auth/login', to: 'authentication#login'
-  get '/*a', to: 'application#not_found'
+  post "/auth/login", to: "authentication#login"
+  get "/*a", to: "application#not_found"
 end
