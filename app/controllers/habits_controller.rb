@@ -3,7 +3,12 @@ class HabitsController < ApplicationController
 
   def index
     habits = @user.habits.all
-    render json: habits, status: :ok  
+    full_habits = habits.map do |habit|
+      full_habit = {habitInfo: habit}
+      full_habit[:logs] = HabitLogsWeeklyService.get_logs(habit.id)
+      full_habit
+    end
+    render json: full_habits, status: :ok  
   end
 
   def create
