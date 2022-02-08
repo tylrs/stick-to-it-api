@@ -14,17 +14,7 @@ class HabitsController < ApplicationController
   def create
     habit = @user.habits.build(name: habit_params[:name], description: habit_params[:description])
     if @user.habits << habit
-      date1 = Date.parse(habit_params[:start_datetime])
-      date2 = Date.parse(habit_params[:end_datetime])
-      num_logs = (date2 - date1).numerator
-      num_logs += 1
-      habit = @user.habits.order("created_at").last
-      current_date = date1
-      num_logs.times {
-        log = habit.habit_logs.build(scheduled_at: "#{current_date}")
-        habit.habit_logs << log
-        current_date += 1.day       
-      }
+      HabitCreationService.create(habit_params, habit, @user)
       render json: habit, status: :created
     else
       render json: { errors: habit.errors.full_messages },
