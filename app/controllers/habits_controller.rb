@@ -3,7 +3,9 @@ class HabitsController < ApplicationController
 
   def index
     full_habits = HabitLogsWeeklyService.get_logs(params[:user_id])
-    render json: full_habits, status: :ok  
+    render json: full_habits, 
+           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
+           status: :ok  
   end
 
   def create
