@@ -1,8 +1,8 @@
 class HabitsController < ApplicationController
-  before_action :find_user, except: :index
+  before_action :find_user, except: %i[index show_today]
 
   def index
-    full_habits = HabitLogsWeeklyService.get_logs(params[:user_id])
+    full_habits = HabitLogsFilterService.get_week_logs(params[:user_id])
     render json: full_habits, 
            include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
            status: :ok  
@@ -22,6 +22,13 @@ class HabitsController < ApplicationController
   def show
     habit = @user.habits.find_by id: params[:id]
     render json: habit, status: :ok
+  end
+
+  def show_today
+    full_habits = HabitLogsFilterService.get_today_logs(params[:user_id])
+    render json: full_habits, 
+           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
+           status: :ok  
   end
 
   def update
