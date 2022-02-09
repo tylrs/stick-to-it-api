@@ -1,13 +1,8 @@
 class HabitsController < ApplicationController
-  before_action :find_user
+  before_action :find_user, except: :index
 
   def index
-    habits = @user.habits.all
-    full_habits = habits.map do |habit|
-      full_habit = {habitInfo: habit}
-      full_habit[:logs] = HabitLogsWeeklyService.get_logs(habit.id)
-      full_habit
-    end
+    full_habits = HabitLogsWeeklyService.get_logs(params[:user_id])
     render json: full_habits, status: :ok  
   end
 
