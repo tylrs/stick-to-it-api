@@ -1,13 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  # before(:all) do
-  #   @user = User.create(name: "Brenda Johnson", 
-  #                       username: "brenjo1", 
-  #                       email: "brendajohnson@example.com", 
-  #                       password: "123456", 
-  #                       password_confirmation: "123456")
-  # end
 
   describe "validations" do
     it { should validate_presence_of(:name) }
