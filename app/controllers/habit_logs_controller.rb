@@ -4,10 +4,10 @@ class HabitLogsController < ApplicationController
   def update
     if @habit_log.completed_at
       @habit_log.update(completed_at: nil)
-      render json: {message: "Habit Marked Incomplete"}
+      render json: { message: "Habit Marked Incomplete" }
     else
       @habit_log.update(completed_at: @habit_log.scheduled_at)
-      render json: {message: "Habit Marked Complete"}
+      render json: { message: "Habit Marked Complete" }
     end
   end
 
