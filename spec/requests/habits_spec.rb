@@ -23,6 +23,8 @@ RSpec.describe "Habits", type: :request do
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
       expect(habit_logs.count).to eq 6
+      expect(habit_logs.first.scheduled_at.to_s).to eq "2022-02-10 00:00:00 UTC"
+      expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-15 00:00:00 UTC"
     end
   end
 end
