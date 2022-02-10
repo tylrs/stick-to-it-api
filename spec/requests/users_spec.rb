@@ -4,9 +4,9 @@ RSpec.describe "Users", type: :request do
   describe "Create" do
     it "should create a user with successful info" do
       user_details = {
-        name: "Taylor Smith",
-        username: "johnsmith69",
-        email: "johnsmith5@example.com",
+        name: "John Bob",
+        username: "johnbob79",
+        email: "johnbob7@example.com",
         password: "123456",
         password_confirmation: "123456"
       }
@@ -16,8 +16,8 @@ RSpec.describe "Users", type: :request do
       created_user = User.last
 
       expect(response.status).to eq 201
-      expect(JSON.parse(response.body)["name"]).to eq "Taylor Smith"
-      expect(created_user.name).to eq "Taylor Smith"
+      expect(JSON.parse(response.body)["name"]).to eq "John Bob"
+      expect(created_user.name).to eq "John Bob"
     end
   end
 end
