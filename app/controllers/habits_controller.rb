@@ -11,7 +11,7 @@ class HabitsController < ApplicationController
   def create
     habit = @user.habits.build(name: habit_params[:name], description: habit_params[:description])
     if @user.habits << habit
-      HabitCreationService.create(habit_params, habit, @user)
+      HabitCreationService.create(habit_params, @user)
       render json: habit, status: :created
     else
       render json: { errors: habit.errors.full_messages },
@@ -51,7 +51,7 @@ class HabitsController < ApplicationController
   def find_user
     @user = User.find_by id: params[:user_id]
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'User not found' }, status: :not_found
+    render json: { errors: "User not found" }, status: :not_found
   end
 
   def habit_params
