@@ -3,16 +3,16 @@ class AuthenticationController < ApplicationController
 
   # POST /auth/login
   def login
-    @user = User.find_by_email(login_params[:email])
+    user = User.find_by_email(login_params[:email])
 
-    if @user&.authenticate(login_params[:password])
-      token = JsonWebTokenService.encode(user_id: @user.id)
+    if user&.authenticate(login_params[:password])
+      token = JsonWebTokenService.encode(user_id: user.id)
       expiration_time = (Time.now + 24.hours.to_i).strftime("%m-%d-%Y %H:%M")
       user_payload = { 
-        id: @user.id, 
-        name: @user.name, 
-        username: @user.username, 
-        email: @user.email 
+        id: user.id, 
+        name: user.name, 
+        username: user.username, 
+        email: user.email 
       }
 
       render json: { 
