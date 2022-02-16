@@ -21,7 +21,7 @@ class AuthenticationController < ApplicationController
         user: user_payload
       }, status: :ok
     else
-      render json: { error: 'unauthorized' }, status: :unauthorized
+      render json: { error: "unauthorized" }, status: :unauthorized
     end
   end
 

@@ -42,7 +42,7 @@ class UsersController < ApplicationController
   def find_user
     @user = User.select("id, name, username, email").find_by id: params[:id]
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'User not found' }, status: :not_found
+    render json: { errors: "User not found" }, status: :not_found
   end
 
   def user_params

@@ -16,6 +16,6 @@ class HabitLogsController < ApplicationController
   def find_habit_log
     @habit_log = HabitLog.find_by id: params[:id]
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'Habit Log Not Found' }, status: :not_found
+    render json: { errors: "Habit Log Not Found" }, status: :not_found
   end
 end

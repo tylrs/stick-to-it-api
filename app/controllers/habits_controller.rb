@@ -51,7 +51,7 @@ class HabitsController < ApplicationController
   def find_user
     @user = User.find_by id: params[:user_id]
   rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'User not found' }, status: :not_found
+    render json: { errors: "User not found" }, status: :not_found
   end
 
   def habit_params
