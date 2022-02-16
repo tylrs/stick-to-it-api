@@ -15,11 +15,11 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new(user_params)
-    if @user.save
-      render json: @user, status: :created
+    user = User.new(user_params)
+    if user.save
+      render json: user, status: :created
     else
-      render json: { errors: @user.errors.full_messages },
+      render json: { errors: user.errors.full_messages },
              status: :unprocessable_entity
     end
   end
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    @user = User.select("id, name, username, email").find_by id: params[:id]
+    @user = User.find_by id: params[:id]
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "User not found" }, status: :not_found
   end
