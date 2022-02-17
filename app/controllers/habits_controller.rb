@@ -49,7 +49,7 @@ class HabitsController < ApplicationController
   private
 
   def find_user
-    @user = User.find id: params[:user_id]
+    @user = User.find params[:user_id]
   rescue ActiveRecord::RecordNotFound
     render json: { errors: "User not found" }, status: :not_found
   end
