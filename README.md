@@ -1,24 +1,47 @@
-# README
+# Stick To It API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This API was built with Ruby on Rails with a PostgreSQL database for the front-end [Stick To It](https://github.com/tylrs/stick-to-it-ui).
 
-Things you may want to cover:
+The API is deployed on Heroku [https://stick-to-it-api.herokuapp.com/](https://stick-to-it-api.herokuapp.com/)
 
-* Ruby version
+Fetches can be made directly from the link above or this repo can be installed and run locally
 
-* System dependencies
+## Badges
 
-* Configuration
+<p style="text-align: center;"> 
+    <img alt="Ruby Badge" src="https://img.shields.io/badge/ruby-%23CC342D.svg?style=for-the-badge&logo=ruby&logoColor=white" />
+    <img alt="Rails Badge" src="https://img.shields.io/badge/rails-%23CC0000.svg?style=for-the-badge&logo=ruby-on-rails&logoColor=white" />
+</p>
 
-* Database creation
+## Features
 
-* Database initialization
+-
 
-* How to run the test suite
+## Installation
 
-* Services (job queues, cache servers, search engines, etc.)
+Clone the repository and install dependencies
 
-* Deployment instructions
+```szh
+git clone
+cd
+ install
+```
 
-* ...
+## Deployment
+
+To deploy, `cd` into the project folder and run
+
+```zsh
+rails s
+```
+
+Fetches can be made from the following endpoints:
+
+## Endpoints
+
+| Purpose        | URL | Verb   | Request Body | Sample Response |
+| :------------- | :-- | :----- | :----------- | :-------------- |
+| Log In         | /   | GET    | N/A          | ``              |
+| Create Account | /   | POST   | ``           |
+| Create a Habit | /   | DELETE | ``           | ""              |
+| Update a habit | /   | PATCH  | ``           | ""              |
