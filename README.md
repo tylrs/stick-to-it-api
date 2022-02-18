@@ -8,36 +8,41 @@ Fetches can be made directly from the link above or this repo can be installed a
 
 ## Badges
 
-<p style="text-align: center;"> 
+<p style="text-align: left;"> 
     <img alt="Ruby Badge" src="https://img.shields.io/badge/ruby-%23CC342D.svg?style=for-the-badge&logo=ruby&logoColor=white" />
     <img alt="Rails Badge" src="https://img.shields.io/badge/rails-%23CC0000.svg?style=for-the-badge&logo=ruby-on-rails&logoColor=white" />
 </p>
 
 ## Features
 
--
+- The following endpoints are available without authorization: Log In, Create User
+- Other endpoints are available with authorization (JWT received from Log In response):
+  - Creating a habit including setting the date range to generate habit logs from
+  - Getting all habits associated with a user including all the habit logs for the current week
+  - Updating a habit log marking it as completed or not
+  - Deleting a habit and all associated habit logs
 
 ## Installation
 
 Clone the repository and install dependencies
 
 ```zsh
-git clone
-cd
- install
+git clone (link from GitHub)
+cd stick_to_it_api
+bundle install
 ```
 
 ## Deployment
 
-To deploy, `cd` into the project folder and run
+To run locally, `cd` into the project folder and run
 
 ```zsh
 rails s
 ```
 
-Fetches can be made from the following endpoints:
-
 ## Endpoints
+
+Fetches can be made from the following endpoints:
 
 | Purpose                                            | URL                                                      | Verb  | Request Body                                                                                                                 | Sample Response                                                                                                                                                            |
 | -------------------------------------------------- | -------------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
