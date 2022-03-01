@@ -4,6 +4,7 @@ class CreateWeeklyHabitLogsJob < ApplicationJob
   def perform
     date = Date.today
     puts "This job ran on #{date}"
+    puts "This Job will be scheduled"
   end
 
 end
