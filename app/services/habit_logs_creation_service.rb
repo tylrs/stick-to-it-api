@@ -10,7 +10,19 @@ module HabitLogsCreationService
       habit.habit_logs << log
       current_date += 1.day       
     }
-  end   
+  end
+  
+  def self.create_initial_logs(date1, date2)
+    today = Date.today
+    next_saturday = today.end_of_week(start_day = :sunday)
+   if date1 > next_saturday
+     puts "create no logs because background job will take care of it"
+   elsif date2 < next_saturday
+     puts "create logs from date 1 to date 2 because date 2 is sooner than Saturday and we don't need a log for saturday"
+   else
+     puts "create logs from date1 till next saturday"
+   end
+  end  
 
   def self.get_num_logs(date1, date2)
     num_logs = (date2 - date1).to_i
