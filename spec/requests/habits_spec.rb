@@ -96,5 +96,26 @@ RSpec.describe "Habits", type: :request do
       expect(habitResponse["habit_logs"][0]["scheduled_at"]).to eq "2022-02-03T00:00:00.000Z"
       expect(habitResponse["habit_logs"][2]["scheduled_at"]).to eq "2022-02-05T00:00:00.000Z"
     end
+
+    it "Should return no habit info and no habit logs if there are no habit logs for the current week" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,3)
+      habitInfo = {
+        name: "Running",
+        description: "Run every day",
+        start_datetime: "2022/02/07",
+        end_datetime: "2022/02/10"
+      }
+      token = JsonWebTokenService.encode(user_id: @user.id)
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+
+      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+
+      get "/users/#{@user.id}/habits", headers: headers
+      habitResponse = JSON.parse(response.body)[0]
+      
+      expect(response.status).to eq 200
+      expect(habitResponse).to eq nil
+    end
+
   end
 end
