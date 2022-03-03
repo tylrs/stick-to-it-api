@@ -72,5 +72,29 @@ RSpec.describe "Habits", type: :request do
       expect(created_habit.name).to eq "Running"
       expect(habit_logs.count).to eq 0
     end
+
+    it "Should return habit info and the current week's habit logs" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,3)
+      habitInfo = {
+        name: "Running",
+        description: "Run every day",
+        start_datetime: "2022/02/03",
+        end_datetime: "2022/02/05"
+      }
+      token = JsonWebTokenService.encode(user_id: @user.id)
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+
+      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+
+      get "/users/#{@user.id}/habits", headers: headers
+      habitResponse = JSON.parse(response.body)[0]
+      
+      expect(response.status).to eq 200
+      expect(habitResponse["user_id"]).to eq @user.id
+      expect(habitResponse["name"]).to eq habitInfo[:name]
+      expect(habitResponse["habit_logs"].length).to eq 3
+      expect(habitResponse["habit_logs"][0]["scheduled_at"]).to eq "2022-02-03T00:00:00.000Z"
+      expect(habitResponse["habit_logs"][2]["scheduled_at"]).to eq "2022-02-05T00:00:00.000Z"
+    end
   end
 end
