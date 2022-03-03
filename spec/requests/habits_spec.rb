@@ -154,5 +154,34 @@ RSpec.describe "Habits", type: :request do
       expect(habitsResponse[0]["habit_logs"].length).to eq 1
       expect(habitsResponse[0]["habit_logs"][0]["scheduled_at"]).to eq "2022-02-03T00:00:00.000Z"
     end
+
+    it "Should be able to delete a habit and associated habit logs" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,10)
+      habitInfo1 = {
+        name: "Running",
+        description: "Run every day",
+        start_datetime: "2022/02/03",
+        end_datetime: "2022/02/05"
+      }
+      habitInfo2 = {
+        name: "Meditation",
+        description: "Every morning",
+        start_datetime: "2022/02/06",
+        end_datetime: "2022/02/09"
+      }
+      token = JsonWebTokenService.encode(user_id: @user.id)
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+
+      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo1)
+      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo2)
+
+      habit1 = Habit.find_by name: "Running"
+      habit2 = Habit.find_by name: "Meditation"
+      delete "/users/#{@user.id}/habits/#{habit1.id}", headers: headers
+
+      expect(response.status).to eq 204
+      expect(Habit.all.length).to eq 1
+      expect(Habit.find_by name: "Running").to eq nil
+    end
   end
 end
