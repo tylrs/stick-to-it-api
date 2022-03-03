@@ -6,7 +6,8 @@ RSpec.describe "Habits", type: :request do
       @user = create(:user)
     end
 
-    it "Should create a habit with required info" do
+    it "Should create a habit and only current week's habit logs until next Saturday if the end date is after next Saturday" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,10)
       habitInfo = {
         name: "Running",
         description: "Run every day",
@@ -15,6 +16,7 @@ RSpec.describe "Habits", type: :request do
       }
       token = JsonWebTokenService.encode(user_id: @user.id)
       headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
