@@ -156,7 +156,7 @@ RSpec.describe "Habits", type: :request do
     end
 
     it "Should be able to delete a habit and associated habit logs" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,10)
+      allow(Date).to receive(:today).and_return Date.new(2022,2,3)
       habitInfo1 = {
         name: "Running",
         description: "Run every day",
@@ -166,8 +166,8 @@ RSpec.describe "Habits", type: :request do
       habitInfo2 = {
         name: "Meditation",
         description: "Every morning",
-        start_datetime: "2022/02/06",
-        end_datetime: "2022/02/09"
+        start_datetime: "2022/02/03",
+        end_datetime: "2022/02/05"
       }
       token = JsonWebTokenService.encode(user_id: @user.id)
       headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
@@ -182,6 +182,8 @@ RSpec.describe "Habits", type: :request do
       expect(response.status).to eq 204
       expect(Habit.all.length).to eq 1
       expect(Habit.find_by name: "Running").to eq nil
+      expect(HabitLog.find_by habit_id: habit1.id).to eq nil
+      expect(HabitLog.where(habit_id: habit2.id).length).to eq 3
     end
   end
 end
