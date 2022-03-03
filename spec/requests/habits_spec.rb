@@ -6,7 +6,7 @@ RSpec.describe "Habits", type: :request do
       @user = create(:user)
     end
 
-    it "Should create a habit and only habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
+    it "Should create a habit and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,10)
       habitInfo = {
         name: "Running",
@@ -29,7 +29,7 @@ RSpec.describe "Habits", type: :request do
       expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-12 00:00:00 UTC"
     end
 
-    it "Should create a habit and only habit logs until the end date if the end date is before the current week's next Saturday" do
+    it "Should create a habit and habit logs until the end date if the end date is before the current week's next Saturday" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,10)
       habitInfo = {
         name: "Running",
