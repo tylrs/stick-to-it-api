@@ -11,7 +11,7 @@ RSpec.describe "Users", type: :request do
         password_confirmation: "123456"
       }
 
-      headers = {"CONTENT_TYPE"  => "application/json"}
+      headers = {"Content-type": "application/json"}
       post "/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
 
@@ -29,7 +29,7 @@ RSpec.describe "Users", type: :request do
         password_confirmation: ""
       }
 
-      headers = {"CONTENT_TYPE"  => "application/json"}
+      headers = {"Content-type": "application/json"}
       post "/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
       data = JSON.parse(response.body)
