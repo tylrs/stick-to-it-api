@@ -37,5 +37,17 @@ RSpec.describe "Users", type: :request do
       expect(data["errors"][0]).to eq "Password confirmation doesn't match Password"
       expect(data["errors"][1]).to eq "Name can't be blank"
     end
+
+    it "Should be able to delete a user" do
+      create(:user)
+      user = User.first
+      token = JsonWebTokenService.encode(user_id: user.id)
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+
+      delete "/users/#{user.id}", headers: headers
+
+      expect(response.status).to eq 204
+      expect(User.all.length).to eq 0
+    end
   end
 end
