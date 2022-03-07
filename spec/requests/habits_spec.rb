@@ -4,7 +4,8 @@ RSpec.describe "Habits", type: :request do
   describe "Create" do
     before(:all) do
       @user = create(:user)
-      @token = JsonWebTokenService.encode(user_id: @user.id)
+      token = JsonWebTokenService.encode(user_id: @user.id)
+      @headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
     end
 
     it "Should create a habit and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
@@ -15,9 +16,8 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/10",
         end_datetime: "2022/02/15"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
       habit_logs = HabitLog.where(habit_id: created_habit.id)
@@ -37,9 +37,8 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/10",
         end_datetime: "2022/02/11"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
       habit_logs = HabitLog.where(habit_id: created_habit.id)
@@ -59,9 +58,8 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
       habit_logs = HabitLog.where(habit_id: created_habit.id)
@@ -79,11 +77,10 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/05"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
-      get "/users/#{@user.id}/habits", headers: headers
+      get "/users/#{@user.id}/habits", headers: @headers
       habitResponse = JSON.parse(response.body)[0]
       
       expect(response.status).to eq 200
@@ -102,11 +99,10 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/07",
         end_datetime: "2022/02/10"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
-      get "/users/#{@user.id}/habits", headers: headers
+      get "/users/#{@user.id}/habits", headers: @headers
       habitResponse = JSON.parse(response.body)[0]
 
       expect(response.status).to eq 200
@@ -133,13 +129,12 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/09"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo1)
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo2)
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo3)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo3)
 
-      get "/users/#{@user.id}/habits/today", headers: headers
+      get "/users/#{@user.id}/habits/today", headers: @headers
       habitsResponse = JSON.parse(response.body)
       
       expect(response.status).to eq 200
@@ -164,14 +159,13 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/05"
       }
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo1)
-      post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo2)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
+      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
 
       habit1 = Habit.find_by name: "Running"
       habit2 = Habit.find_by name: "Meditation"
-      delete "/users/#{@user.id}/habits/#{habit1.id}", headers: headers
+      delete "/users/#{@user.id}/habits/#{habit1.id}", headers: @headers
 
       expect(response.status).to eq 204
       expect(Habit.all.length).to eq 1
