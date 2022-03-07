@@ -4,6 +4,7 @@ RSpec.describe "Habits", type: :request do
   describe "Create" do
     before(:all) do
       @user = create(:user)
+      @token = JsonWebTokenService.encode(user_id: @user.id)
     end
 
     it "Should create a habit and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
@@ -14,8 +15,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/10",
         end_datetime: "2022/02/15"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
@@ -37,8 +37,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/10",
         end_datetime: "2022/02/11"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
@@ -60,8 +59,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
@@ -81,8 +79,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/05"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
@@ -105,8 +102,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/07",
         end_datetime: "2022/02/10"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo)
 
@@ -137,8 +133,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/09"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo1)
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo2)
@@ -169,8 +164,7 @@ RSpec.describe "Habits", type: :request do
         start_datetime: "2022/02/03",
         end_datetime: "2022/02/05"
       }
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
 
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo1)
       post "/users/#{@user.id}/habits", headers: headers, params: JSON.generate(habitInfo2)

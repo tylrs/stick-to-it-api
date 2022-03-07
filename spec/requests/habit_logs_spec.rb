@@ -6,11 +6,11 @@ RSpec.describe "HabitLogs", type: :request do
       @habit_log = create(:habit_log)
       @user = User.last
       @habit = Habit.last
+      @token = JsonWebTokenService.encode(user_id: @user.id)
     end
 
     it "Should be able to mark an incomplete habit log as completed" do
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
       patch "/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
 
       updated_logs = HabitLog.where(habit_id: @habit.id)
@@ -19,8 +19,7 @@ RSpec.describe "HabitLogs", type: :request do
     end
 
     it "Should be able to mark a completed habit log as incomplete" do
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
       patch "/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
       patch "/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
 
