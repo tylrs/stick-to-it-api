@@ -15,7 +15,7 @@ module HabitLogsCreationService
   def self.determine_date_limit(date1, date2)
     @date_limit
 
-    if date1 < @next_saturday && date2 > @next_saturday
+    if date1 < @next_saturday && date2 >= @next_saturday
       @date_limit = @next_saturday
     elsif date2 < @next_saturday
       @date_limit = date2
