@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_08_225930) do
+ActiveRecord::Schema.define(version: 2022_03_08_231224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2022_03_08_225930) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "habit_plan_id"
+    t.index ["habit_plan_id"], name: "index_habit_logs_on_habit_plan_id"
   end
 
   create_table "habit_plans", force: :cascade do |t|
@@ -35,12 +36,12 @@ ActiveRecord::Schema.define(version: 2022_03_08_225930) do
   end
 
   create_table "habits", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "creator_id", null: false
     t.string "name"
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_habits_on_user_id"
+    t.index ["creator_id"], name: "index_habits_on_creator_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -54,5 +55,5 @@ ActiveRecord::Schema.define(version: 2022_03_08_225930) do
 
   add_foreign_key "habit_plans", "habits"
   add_foreign_key "habit_plans", "users"
-  add_foreign_key "habits", "users"
+  add_foreign_key "habits", "users", column: "creator_id"
 end
