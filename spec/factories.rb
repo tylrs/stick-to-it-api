@@ -1,4 +1,11 @@
 FactoryBot.define do
+  factory :habit_plan do
+    start_date { "2022-02-03 11:07:31" }
+    end_date { "2022-02-10 11:07:31" }
+    user { nil }
+    habit { nil }
+  end
+
   factory :user do
     name {"Jim Bob"}
     username {"jimbob79"}
