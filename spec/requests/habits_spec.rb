@@ -25,10 +25,10 @@ RSpec.describe "Habits", type: :request do
 
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
-      exepect(created_habit_plan.user_id).to eq @user.id
-      exepect(created_habit_plan.habit_id).to eq created_habit.id
-      exepect(created_habit_plan.start_datetime).to eq "2022-02-02 00:00:00 UTC"
-      exepect(created_habit_plan.end_datetime).to eq "2022-02-05 00:00:00 UTC"
+      expect(created_habit_plan.user_id).to eq @user.id
+      expect(created_habit_plan.habit_id).to eq created_habit.id
+      expect(created_habit_plan.start_datetime).to eq "2022-02-02 00:00:00 UTC"
+      expect(created_habit_plan.end_datetime).to eq "2022-02-08 00:00:00 UTC"
       expect(habit_logs.count).to eq 4
       expect(habit_logs.first.scheduled_at.to_s).to eq "2022-02-02 00:00:00 UTC"
       expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-05 00:00:00 UTC"
