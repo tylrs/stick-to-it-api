@@ -9,10 +9,9 @@ class HabitsController < ApplicationController
   end
 
   def create
-    created_habit = @user.created_habits.build(name: habit_params[:name], description: habit_params[:description])
-    if @user.created_habits << created_habit
-      created_habit = @user.created_habits.order("created_at").last
-      @user.habit_plans.create!(start_datetime: habit_params[:start_datetime], end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
+    created_habit = @user.created_habits.create(name: habit_params[:name], description: habit_params[:description])
+    if created_habit.errors.count == 0
+      habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
       HabitLogsCreationService.create(habit_params, @user)
       render json: created_habit, status: :created
     else

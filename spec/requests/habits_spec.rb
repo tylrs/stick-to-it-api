@@ -18,11 +18,10 @@ RSpec.describe "Habits", type: :request do
       }
 
       post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
-
       created_habit = Habit.last
       created_habit_plan = HabitPlan.last
       habit_logs = HabitLog.where(habit_plan_id: created_habit_plan.id)
-
+      
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
       expect(created_habit_plan.user_id).to eq @user.id
