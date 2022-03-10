@@ -17,7 +17,7 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/08"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
       created_habit = Habit.last
       created_habit_plan = HabitPlan.last
       habit_logs = HabitLog.where(habit_plan_id: created_habit_plan.id)
@@ -42,7 +42,7 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/04"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
       created_habit_plan = HabitPlan.last
@@ -68,7 +68,7 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/20"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
       created_habit_plan = HabitPlan.last
@@ -92,9 +92,9 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/05"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
-      get "/users/#{@user.id}/habits", headers: @headers
+      get "/api/v2/users/#{@user.id}/habits", headers: @headers
       habitResponse = JSON.parse(response.body)[0]
       
       expect(response.status).to eq 200
@@ -114,9 +114,9 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/10"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
-      get "/users/#{@user.id}/habits", headers: @headers
+      get "/api/v2/users/#{@user.id}/habits", headers: @headers
       habitResponse = JSON.parse(response.body)[0]
 
       expect(response.status).to eq 200
@@ -144,11 +144,11 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/09"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo3)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo3)
 
-      get "/users/#{@user.id}/habits/today", headers: @headers
+      get "/api/v2/users/#{@user.id}/habits/today", headers: @headers
       habitsResponse = JSON.parse(response.body)
       
       expect(response.status).to eq 200
@@ -174,12 +174,12 @@ RSpec.describe "Habits", type: :request do
         end_datetime: "2022/02/05"
       }
 
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
-      post "/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo1)
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo2)
 
       habit1 = Habit.find_by name: "Running"
       habit2 = Habit.find_by name: "Meditation"
-      delete "/users/#{@user.id}/habits/#{habit1.id}", headers: @headers
+      delete "/api/v2/users/#{@user.id}/habits/#{habit1.id}", headers: @headers
 
       expect(response.status).to eq 204
       expect(Habit.all.length).to eq 1

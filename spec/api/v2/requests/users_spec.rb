@@ -12,7 +12,7 @@ RSpec.describe "Users", type: :request do
       }
 
       headers = {"Content-type": "application/json"}
-      post "/users", headers: headers, params: JSON.generate(user_details)
+      post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
 
       expect(response.status).to eq 201
@@ -30,7 +30,7 @@ RSpec.describe "Users", type: :request do
       }
 
       headers = {"Content-type": "application/json"}
-      post "/users", headers: headers, params: JSON.generate(user_details)
+      post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
       data = JSON.parse(response.body)
       expect(response.status).to eq 422
@@ -44,7 +44,7 @@ RSpec.describe "Users", type: :request do
       token = JsonWebTokenService.encode(user_id: user.id)
       headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
 
-      delete "/users/#{user.id}", headers: headers
+      delete "/api/v2/users/#{user.id}", headers: headers
 
       expect(response.status).to eq 204
       expect(User.all.length).to eq 0
