@@ -1,4 +1,4 @@
-class HabitsController < ApplicationController
+class Api::V1::HabitsController < ApplicationController
   before_action :find_user, except: %i[index show_today]
 
   def index
