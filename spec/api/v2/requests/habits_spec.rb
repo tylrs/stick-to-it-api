@@ -8,7 +8,7 @@ RSpec.describe "Habits", type: :request do
       @headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
     end
 
-    it "Should create a habit, habit plan, and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
+    it "Should create a Habit, HabitPlan, and HabitLogs until the current week's next Saturday if the end date is after or equal to next Saturday" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
       habitInfo = {
         name: "Running",
@@ -33,7 +33,7 @@ RSpec.describe "Habits", type: :request do
       expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-05 00:00:00 UTC"
     end
 
-    it "Should create a habit, habit plan, and habit logs until the end date if the end date is before the current week's next Saturday" do
+    it "Should create a Habit, HabitPlan, and HabitLogs until the end date if the end date is before the current week's next Saturday" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
       habitInfo = {
         name: "Running",
@@ -59,7 +59,7 @@ RSpec.describe "Habits", type: :request do
       expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-04 00:00:00 UTC"
     end
 
-    it "Should create a habit, habit plan, and no habit logs if the start date is after the current week's next Saturday" do
+    it "Should create a Habit, HabitPlan, and no HabitLogs if the start date is after the current week's next Saturday" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
       habitInfo = {
         name: "Running",
@@ -83,7 +83,7 @@ RSpec.describe "Habits", type: :request do
       expect(habit_logs.count).to eq 0
     end
 
-    it "Should not be able to create a habit if there is missing information" do
+    it "Should not be able to create a Habit if there is missing information" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
       habitInfo = {
         name: "Running",
