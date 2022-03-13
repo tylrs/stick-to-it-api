@@ -23,16 +23,16 @@ RSpec.describe "HabitPlans", type: :request do
 
       habits = JSON.parse(response.body)
       habit1 = habits[0]
-
-      expect(response.status).to eq 201
+      
+      expect(response.status).to eq 200
       expect(habits.length).to eq 1
+      expect(habit1["id"]).to eq @habit_plan.id
       expect(habit1["user_id"]).to eq @user.id
       expect(habit1["habit_id"]).to eq @habit_plan.habit_id
-      expect(habit1["habit_plan_id"]).to eq @habit_plan.id
-      expect(habit1["name"]).to eq "Running"
-      expect(habit1["description"]).to eq "Run every day"
-      expect(habit1["start_datetime"]).to eq Date.new("2022/02/02")
-      expect(habit1["end_datetime"]).to eq Date.new("2022/02/10")
+      expect(habit1["habit"]["name"]).to eq "Running"
+      expect(habit1["habit"]["description"]).to eq "Run every day"
+      expect(habit1["start_datetime"].to_s).to eq "2022-02-02T00:00:00.000Z"
+      expect(habit1["end_datetime"].to_s).to eq "2022-02-10T00:00:00.000Z"
       expect(habit1["habit_logs"].length).to eq 4   
     end
 
