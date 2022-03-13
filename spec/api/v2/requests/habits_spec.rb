@@ -82,5 +82,22 @@ RSpec.describe "Habits", type: :request do
       expect(created_habit_plan.end_datetime).to eq "2022-02-20 00:00:00 UTC"
       expect(habit_logs.count).to eq 0
     end
+
+    it "Should not be able to create a habit if there is missing information" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      habitInfo = {
+        name: "Running",
+        description: "",
+        start_datetime: "2022/02/13",
+        end_datetime: "2022/02/20"
+      }
+
+      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+
+      errors = JSON.parse(response.body)["errors"]
+      
+      expect(response.status).to eq 422
+      expect(errors[0]).to eq "Description can't be blank"
+    end
   end
 end
