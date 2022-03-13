@@ -37,13 +37,35 @@ RSpec.describe "HabitPlans", type: :request do
     end
 
     it "Should not return HabitPlans for this week if there are none scheduled" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,8)
+      allow(Date).to receive(:today).and_return Date.new(2022,2,11)
       
+      get "/api/v2/users/#{@user.id}/habit_plans/week", headers: @headers
+
+      habits = JSON.parse(response.body)
+      habit1 = habits[0]
+      
+      expect(response.status).to eq 200
+      expect(habits.length).to eq 0
     end
 
     it "Should return HabitPlans for today" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,2)
+      allow(Date).to receive(:today).and_return Date.new(2022,2,3)
+
+      get "/api/v2/users/#{@user.id}/habit_plans/today", headers: @headers
+
+      habits = JSON.parse(response.body)
+      habit1 = habits[0]
       
+      expect(response.status).to eq 200
+      expect(habits.length).to eq 1
+      expect(habit1["id"]).to eq @habit_plan.id
+      expect(habit1["user_id"]).to eq @user.id
+      expect(habit1["habit_id"]).to eq @habit_plan.habit_id
+      expect(habit1["habit"]["name"]).to eq "Running"
+      expect(habit1["habit"]["description"]).to eq "Run every day"
+      expect(habit1["start_datetime"].to_s).to eq "2022-02-02T00:00:00.000Z"
+      expect(habit1["end_datetime"].to_s).to eq "2022-02-10T00:00:00.000Z"
+      expect(habit1["habit_logs"].length).to eq 1   
     end
   end
 end
