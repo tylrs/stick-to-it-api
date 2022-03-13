@@ -1,12 +1,5 @@
 class Api::V2::HabitsController < ApplicationController
-  before_action :find_user, except: %i[index show_today]
-
-  def index
-    full_habits = HabitLogsFilterService.get_week_logs(params[:user_id])
-    render json: full_habits, 
-           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
-           status: :ok  
-  end
+  before_action :find_user
 
   def create
     created_habit = @user.created_habits.create(name: habit_params[:name], description: habit_params[:description])
@@ -23,13 +16,6 @@ class Api::V2::HabitsController < ApplicationController
   def show
     habit = @user.habits.find_by id: params[:id]
     render json: habit, status: :ok
-  end
-
-  def show_today
-    full_habits = HabitLogsFilterService.get_today_logs(params[:user_id])
-    render json: full_habits, 
-           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
-           status: :ok  
   end
 
   def update
