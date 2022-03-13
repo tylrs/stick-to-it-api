@@ -67,5 +67,17 @@ RSpec.describe "HabitPlans", type: :request do
       expect(habit1["end_datetime"].to_s).to eq "2022-02-10T00:00:00.000Z"
       expect(habit1["habit_logs"].length).to eq 1   
     end
+
+    it "Should not return HabitPlans for today if there are none scheduled" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,11)
+      
+      get "/api/v2/users/#{@user.id}/habit_plans/today", headers: @headers
+
+      habits = JSON.parse(response.body)
+      habit1 = habits[0]
+      
+      expect(response.status).to eq 200
+      expect(habits.length).to eq 0
+    end
   end
 end
