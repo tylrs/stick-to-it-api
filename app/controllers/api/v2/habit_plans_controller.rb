@@ -14,4 +14,9 @@ class Api::V2::HabitPlansController < ApplicationController
            status: :ok
   end
 
+  def destroy
+    user = User.find params[:user_id]
+    user.habit_plans.destroy(params[:id])
+  end
+
 end
