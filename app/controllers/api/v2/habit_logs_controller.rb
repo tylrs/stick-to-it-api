@@ -1,4 +1,4 @@
-class HabitLogsController < ApplicationController
+class Api::V2::HabitLogsController < ApplicationController
   before_action :find_habit_log
 
   def update

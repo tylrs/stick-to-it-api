@@ -7,7 +7,8 @@ RSpec.describe Habit, type: :model do
   end
 
   describe "Relationships" do
-    it { should have_many(:habit_logs) }
-    it { should belong_to(:user) }
+    it { should have_many(:habit_plans) }
+    it { should have_many(:users) }
+    it { should belong_to(:creator) }
   end
 end

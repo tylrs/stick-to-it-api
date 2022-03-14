@@ -14,7 +14,6 @@ module HabitLogsCreationService
   
   def self.determine_date_limit(date1, date2)
     @date_limit
-
     if date1 < @next_saturday && date2 >= @next_saturday
       @date_limit = @next_saturday
     elsif date2 < @next_saturday
@@ -29,11 +28,11 @@ module HabitLogsCreationService
   end
 
   def self.create_logs(num_logs, date1, user)
-    habit = user.habits.order("created_at").last
+    habit_plan = user.habit_plans.order("created_at").last
     current_date = date1
     num_logs.times {
-      log = habit.habit_logs.build(scheduled_at: "#{current_date}")
-      habit.habit_logs << log
+      log = habit_plan.habit_logs.build(scheduled_at: "#{current_date}")
+      habit_plan.habit_logs << log
       current_date += 1.day       
     }
   end

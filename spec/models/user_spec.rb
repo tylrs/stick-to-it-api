@@ -14,6 +14,9 @@ RSpec.describe User, type: :model do
 
   describe "relationships" do
     it { should have_many(:habits) }
+    it { should have_many(:habit_plans) }
+    it { should have_many(:habit_logs) }
+    it { should have_many(:created_habits) }
   end
 
 end

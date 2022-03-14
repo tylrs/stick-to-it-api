@@ -10,27 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_04_221832) do
+ActiveRecord::Schema.define(version: 2022_03_08_233325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "habit_logs", force: :cascade do |t|
-    t.bigint "habit_id", null: false
     t.datetime "scheduled_at"
     t.datetime "completed_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["habit_id"], name: "index_habit_logs_on_habit_id"
+    t.bigint "habit_plan_id", null: false
+    t.index ["habit_plan_id"], name: "index_habit_logs_on_habit_plan_id"
+  end
+
+  create_table "habit_plans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "habit_id", null: false
+    t.datetime "start_datetime", precision: 6
+    t.datetime "end_datetime", precision: 6
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["habit_id"], name: "index_habit_plans_on_habit_id"
+    t.index ["user_id"], name: "index_habit_plans_on_user_id"
   end
 
   create_table "habits", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "creator_id", null: false
     t.string "name"
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_habits_on_user_id"
+    t.index ["creator_id"], name: "index_habits_on_creator_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -42,6 +53,8 @@ ActiveRecord::Schema.define(version: 2022_02_04_221832) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "habit_logs", "habits"
-  add_foreign_key "habits", "users"
+  add_foreign_key "habit_logs", "habit_plans"
+  add_foreign_key "habit_plans", "habits"
+  add_foreign_key "habit_plans", "users"
+  add_foreign_key "habits", "users", column: "creator_id"
 end
