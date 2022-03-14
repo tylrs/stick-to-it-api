@@ -20,7 +20,8 @@ RSpec.describe "Habits", type: :request do
       post "/api/v1/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
-      habit_logs = HabitLog.where(habit_id: created_habit.id)
+      habit_plan = HabitPlan.last
+      habit_logs = HabitLog.where(habit_plan_id: habit_plan.id)
 
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
@@ -41,7 +42,8 @@ RSpec.describe "Habits", type: :request do
       post "/api/v1/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
-      habit_logs = HabitLog.where(habit_id: created_habit.id)
+      habit_plan = HabitPlan.last
+      habit_logs = HabitLog.where(habit_plan_id: habit_plan.id)
 
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
@@ -62,7 +64,8 @@ RSpec.describe "Habits", type: :request do
       post "/api/v1/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
 
       created_habit = Habit.last
-      habit_logs = HabitLog.where(habit_id: created_habit.id)
+      habit_plan = HabitPlan.last
+      habit_logs = HabitLog.where(habit_plan_id: habit_plan.id)
 
       expect(response.status).to eq 201
       expect(created_habit.name).to eq "Running"
