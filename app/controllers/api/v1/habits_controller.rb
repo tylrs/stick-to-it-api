@@ -4,7 +4,7 @@ class Api::V1::HabitsController < ApplicationController
   def index
     full_habits = HabitLogsFilterService.get_week_logs(params[:user_id])
     render json: full_habits, 
-           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
+           include: [habit: {only: [:name, :description]}, habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
            status: :ok  
   end
 
