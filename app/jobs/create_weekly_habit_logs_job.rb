@@ -2,9 +2,9 @@ class CreateWeeklyHabitLogsJob < ApplicationJob
   sidekiq_options queue: :default, retry: 3
 
   def perform
-    next_sunday = Date.today.next_occurring(:sunday)
-    following_saturday = next_sunday.next_occurring(:saturday)
-    habit_plans = HabitPlan.where(start_datetime: ..following_saturday, end_datetime: next_sunday..)
+    # habit plans filter service . get_new_week_habit_plans
+    # determine habit plans num logs
+    habit_plans = HabitPlansFilterService.get_next_week_plans
     habit_plans.each do |habit_plan|
       range_beginning = habit_plan.start_datetime.to_datetime
       range_end = habit_plan.end_datetime.to_datetime
