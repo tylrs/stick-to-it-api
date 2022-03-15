@@ -4,10 +4,11 @@ module HabitLogsCreationService
     date2 = Date.parse(habit_params[:end_datetime])
     today = Date.today
     @next_saturday = today.end_of_week(start_day = :sunday)
+    habit_plan = user.habit_plans.order("created_at").last
     if date1 <= @next_saturday
       date_limit = HabitLogsCreationService.determine_date_limit(date1, date2)
       num_logs = HabitLogsCreationService.get_num_logs(date1, date_limit)
-      HabitLogsCreationService.create_logs(num_logs, date1, user)
+      HabitLogsCreationService.create_logs(num_logs, date1, habit_plan)
     end
     #Should I return something if the starting date is later than Saturday?
   end
@@ -27,8 +28,7 @@ module HabitLogsCreationService
     num_logs += 1
   end
 
-  def self.create_logs(num_logs, date1, user)
-    habit_plan = user.habit_plans.order("created_at").last
+  def self.create_logs(num_logs, date1, habit_plan)
     current_date = date1
     num_logs.times {
       log = habit_plan.habit_logs.build(scheduled_at: "#{current_date}")
