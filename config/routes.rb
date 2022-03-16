@@ -13,12 +13,12 @@ Rails.application.routes.draw do
     end
     namespace :v2 do
       resources :users, only: [:create] do 
-        resources :habit_plans do
+        resources :habit_plans, only: [:week, :today] do
           get :week, on: :collection, to: "habit_plans#show_week"
           get :today, on: :collection, to: "habit_plans#show_today"
-          resources :habit_logs
+          resources :habit_logs, only: [:update]
         end
-        resources :habits 
+        resources :habits, only: [:create, :destroy] 
       end
       post "/auth/login", to: "authentication#login"
       get "/*a", to: "application#not_found"     
