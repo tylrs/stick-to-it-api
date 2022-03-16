@@ -3,9 +3,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create] do 
-        resources :habits do
+        resources :habits, only: [:index, :today, :create, :destroy] do
           get :today, on: :collection, to: "habits#show_today"
-          resources :habit_logs
+          resources :habit_logs, only: [:update]
         end   
       end
       post "/auth/login", to: "authentication#login"
