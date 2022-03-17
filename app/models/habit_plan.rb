@@ -6,7 +6,8 @@ class HabitPlan < ApplicationRecord
   validates :start_datetime, presence: true
   validates :end_datetime, presence: true
    
-  scope :current_week, lambda {where("start_datetime <= ? AND end_datetime >= ?", 
-                                          Date.today.next_occurring(:saturday), 
-                                          Date.today.beginning_of_week(:sunday))}
+  scope :with_current_week_logs, lambda { 
+    includes(:habit_logs)
+    .where(habit_logs: {scheduled_at: Date.today.beginning_of_week(:sunday)..Date.today.next_occurring(:saturday)}) 
+  }
 end
