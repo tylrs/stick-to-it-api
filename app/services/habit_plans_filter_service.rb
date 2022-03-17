@@ -1,11 +1,10 @@
 module HabitPlansFilterService
-  def self.get_week_plans(user_id)
-    week_start = Date.today
-    if !week_start.sunday?
-      week_start = week_start.beginning_of_week(start_day = :sunday)
-    end
-    habit_plans = HabitPlan.includes(:habit, :habit_logs)
-                           .where(user_id: user_id, habit_logs:{scheduled_at: week_start..(week_start + 6.days)})
+
+  def self.get_week_and_partner_plans(user_id)
+    habit_ids = Habit.includes(:habit_plans).where(habit_plans:{user_id: user_id}).ids
+    HabitPlan.with_current_week_logs
+             .includes(:user, :habit)
+             .where(habit_id: [habit_ids])
   end
 
   def self.get_next_week_plans
