@@ -13,9 +13,10 @@ module HabitPlansFilterService
     if !week_start.sunday?
       week_start = week_start.beginning_of_week(start_day = :sunday)
     end
-    # HabitPlan.create(user_id: 1, habit_id: 46, start_datetime: Date.new(2022,03,13), end_datetime: Date.new(2022,03,30))
+    
     habit_ids = Habit.includes(:habit_plans).where(habit_plans:{user_id: user_id}).ids
-    HabitPlan.includes(:user, :habit, :habit_logs)
+    HabitPlan.current_week
+             .includes(:user, :habit, :habit_logs)
              .where(habit_id: [habit_ids])
   end
 
