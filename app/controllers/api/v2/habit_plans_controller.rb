@@ -8,7 +8,7 @@ class Api::V2::HabitPlansController < ApplicationController
   end
 
   def show_today
-    today_habit_plans = HabitPlansFilterService.get_today_plans(params[:user_id])
+    today_habit_plans = HabitPlansFilterService.get_today_and_partner_plans(params[:user_id])
     render json: today_habit_plans,
            include: [habit: {only: [:creator_id, :name, :description]}, user: {only: [:name]}, habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
            status: :ok
