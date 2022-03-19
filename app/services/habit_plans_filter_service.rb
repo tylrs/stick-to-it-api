@@ -14,9 +14,10 @@ module HabitPlansFilterService
     HabitPlan.where(start_datetime: ..following_saturday, end_datetime: next_sunday..)
   end
 
-  def self.get_today_plans(user_id)
-    habits = HabitPlan.includes(:habit, :habit_logs)
-                      .where(user_id: user_id, habit_logs:{scheduled_at: Date.today})
+  def self.get_today_and_partner_plans(user_id)
+    habit_ids = Habit.includes(:habit_plans).where(habit_plans:{user_id: user_id}).ids
+    habits = HabitPlan.includes(:user, :habit, :habit_logs)
+                      .where(habit_id: [habit_ids], habit_logs:{scheduled_at: Date.today})
   end
 
   def self.determine_next_week_range(habit_plan)
