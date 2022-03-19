@@ -8,6 +8,6 @@ class HabitPlan < ApplicationRecord
    
   scope :with_current_week_logs, lambda { 
     includes(:habit_logs)
-    .where(habit_logs: {scheduled_at: Date.today.beginning_of_week(:sunday)..Date.today.next_occurring(:saturday)}) 
+    .where(habit_logs: {scheduled_at: Date.today.beginning_of_week(:sunday)..Date.today.end_of_week(:sunday)}) 
   }
 end
