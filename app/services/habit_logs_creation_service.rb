@@ -8,7 +8,6 @@ module HabitLogsCreationService
     if date1 <= @next_saturday
       self.create_current_week_logs(date1, date2, habit_plan)
     end
-    ##this is necessary because if habits are being created on a saturday then they have missed the background job window
     if today == @next_saturday && date1 <= @next_saturday.next_occurring(:saturday) 
       self.create_next_week_logs(habit_plan)                                                 
     end
