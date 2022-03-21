@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     end
     namespace :v2 do
       resources :users, only: [:create] do 
-        resources :habit_plans, only: [:week, :today] do
+        resources :habit_plans, only: [:week, :today, :destroy] do
           get :week, on: :collection, to: "habit_plans#show_week"
           get :today, on: :collection, to: "habit_plans#show_today"
           resources :habit_logs, only: [:update]
