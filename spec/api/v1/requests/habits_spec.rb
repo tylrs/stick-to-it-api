@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Habits", type: :request do
+RSpec.describe "Habits v1", type: :request do
   describe "Create" do
     before(:all) do
       @user = create(:user)

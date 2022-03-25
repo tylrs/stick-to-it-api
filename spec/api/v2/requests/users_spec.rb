@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Users", type: :request do
+RSpec.describe "Users v2", type: :request do
   describe "Create" do
     it "Should create a user with successful info" do
       user_details = {
@@ -36,18 +36,6 @@ RSpec.describe "Users", type: :request do
       expect(response.status).to eq 422
       expect(data["errors"][0]).to eq "Password confirmation doesn't match Password"
       expect(data["errors"][1]).to eq "Name can't be blank"
-    end
-
-    it "Should be able to delete a user" do
-      create(:user)
-      user = User.first
-      token = JsonWebTokenService.encode(user_id: user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
-
-      delete "/api/v2/users/#{user.id}", headers: headers
-
-      expect(response.status).to eq 204
-      expect(User.all.length).to eq 0
     end
   end
 end

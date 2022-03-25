@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "HabitPlans", type: :request do
+RSpec.describe "HabitPlans v2", type: :request do
   describe "Get HabitPlans" do
     before(:all) do
       @habit_log = create(:habit_log)
