@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "HabitLogs v2", type: :request do
   describe "Update" do
-    before(:all) do
+    before do
       @habit_log = create(:habit_log)
       @user = User.last
       @habit_plan = HabitPlan.last

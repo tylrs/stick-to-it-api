@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Habits v2", type: :request do
   describe "Create" do
-    before(:all) do
+    before do
       # all is redundant
       @user = create(:user)
       token = JsonWebTokenService.encode(user_id: @user.id)
