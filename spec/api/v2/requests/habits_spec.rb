@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Habits v2", type: :request do
-  describe "Create" do
+  describe "create habits" do
     before do
       # all is redundant
       @user = create(:user)

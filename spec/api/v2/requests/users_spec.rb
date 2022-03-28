@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Users v2", type: :request do
-  describe "Create" do
+  describe "create user" do
     it "Should create a user with successful info" do
       user_details = {
         name: "John Bob",
