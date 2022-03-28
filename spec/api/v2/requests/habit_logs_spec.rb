@@ -9,7 +9,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       @token = JsonWebTokenService.encode(user_id: @user.id)
     end
 
-    it "Should be able to mark an incomplete habit log as completed" do
+    it "should be able to mark an incomplete habit log as completed" do
       headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
       patch "/api/v2/users/#{@user.id}/habit_plans/#{@habit_plan.id}/habit_logs/#{@habit_log.id}", headers: headers
 
@@ -18,7 +18,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       expect(updated_logs.last.completed_at).to eq "2022-02-02 00:00:00 UTC"
     end
 
-    it "Should be able to mark a completed habit log as incomplete" do
+    it "should be able to mark a completed habit log as incomplete" do
       headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
       patch "/api/v2/users/#{@user.id}/habit_plans/#{@habit_plan.id}/habit_logs/#{@habit_log.id}", headers: headers
       patch "/api/v2/users/#{@user.id}/habit_plans/#{@habit_plan.id}/habit_logs/#{@habit_log.id}", headers: headers

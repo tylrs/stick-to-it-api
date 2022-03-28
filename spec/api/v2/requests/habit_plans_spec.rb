@@ -16,7 +16,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
     end
 
-    it "Should return HabitPlans, habit info, and HabitLogs for this week and not any other week" do
+    it "should return habit plans, habit info, and habit logs for this week and not any other week" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
 
       get "/api/v2/users/#{@user.id}/habit_plans/week", headers: @headers
@@ -36,7 +36,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect(habit1["habit_logs"].length).to eq 4   
     end
 
-    it "Should not return HabitPlans for this week if there are none scheduled" do
+    it "should not return habit plans for this week if there are none scheduled" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,11)
       
       get "/api/v2/users/#{@user.id}/habit_plans/week", headers: @headers
@@ -48,7 +48,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect(habits.length).to eq 0
     end
 
-    it "Should return HabitPlans for today" do
+    it "should return habit plans for today" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,3)
 
       get "/api/v2/users/#{@user.id}/habit_plans/today", headers: @headers
@@ -68,7 +68,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect(habit1["habit_logs"].length).to eq 1   
     end
 
-    it "Should not return HabitPlans for today if there are none scheduled" do
+    it "should not return habit plans for today if there are none scheduled" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,11)
       
       get "/api/v2/users/#{@user.id}/habit_plans/today", headers: @headers
@@ -80,7 +80,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect(habits.length).to eq 0
     end
 
-    it "Should be able to delete a HabitPlan and associated habit logs" do
+    it "should be able to delete a habit plan and associated habit logs" do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
 
       delete "/api/v2/users/#{@user.id}/habit_plans/#{@habit_plan.id}", headers: @headers

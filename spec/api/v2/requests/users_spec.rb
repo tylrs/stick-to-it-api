@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Users v2", type: :request do
   describe "create user" do
-    it "Should create a user with successful info" do
+    it "should create a user with successful info" do
       user_details = {
         name: "John Bob",
         username: "johnbob79",
@@ -20,7 +20,7 @@ RSpec.describe "Users v2", type: :request do
       expect(created_user.name).to eq "John Bob"
     end
 
-    it "Should not be able to create a user without all required info" do
+    it "should not be able to create a user without all required info" do
       user_details = {
         name: "",
         username: "johnbob79",
