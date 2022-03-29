@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "HabitLogs v2", type: :request do
   describe "update habit logs" do
     before do
-      @habit_log = create(:habit_log)
+      @habit_log = create(:habit_log, { scheduled_at: "2022/02/02" })
       @user = User.last
       @habit_plan = HabitPlan.last
       @token = JsonWebTokenService.encode(user_id: @user.id)

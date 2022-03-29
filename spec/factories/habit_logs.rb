@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :habit_log do
-    scheduled_at { "2022/02/02" }
+    scheduled_at { Faker::Date.in_date_period(year: 2022) }
     completed_at { nil }
     habit_plan
   end
