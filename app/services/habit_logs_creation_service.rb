@@ -29,7 +29,7 @@ module HabitLogsCreationService
   def self.determine_date_limit_initial_creation(date1, date2, next_saturday)
     date_limit = if date1 > next_saturday
       nil
-    elsif date1 <= next_saturday && date2 >= next_saturday
+    elsif date2 >= next_saturday
       next_saturday
     elsif date2 < next_saturday
       date2
