@@ -69,7 +69,7 @@ RSpec.describe HabitLogsCreationService do
     end
   end
 
-  describe "create_next_week_logs" do
+  describe ".create_next_week_logs" do
     let(:habit_plan) { 
       create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
     }
@@ -84,7 +84,7 @@ RSpec.describe HabitLogsCreationService do
     end
   end
 
-  describe "create_current_week_logs" do
+  describe ".create_current_week_logs" do
     let(:habit_plan) { 
       create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
     }
@@ -100,7 +100,38 @@ RSpec.describe HabitLogsCreationService do
     end
   end
 
-  describe "create" do
+  describe ".create" do
+    let(:habit_plan) { 
+      create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
+    }
+    let(:params) {{
+      name: "Running", 
+      description: "Run every day",
+      user_id: 1,
+      start_datetime: "2022/02/02",
+      end_datetime: "2022/02/10"  
+    }}
+    let(:start_date) {Date.new(2022,02,02)}
+    let(:end_date) {Date.new(2022,02,10)}
 
+    context "when start date is on or before next Saturday" do
+      it "calls create_current_week_logs with correct start and end date, habit plan, and next saturday" do
+        allow(Date).to receive(:today).and_return Date.new(2022,02,02)
+        
+        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, end_date, habit_plan, next_saturday)
+
+        HabitLogsCreationService.create(params, user)
+      end
+    end
+
+    context "when today is Saturday and start date is on or before next Saturday" do
+      it "calls create_next_week_logs" do
+        allow(Date).to receive(:today).and_return Date.new(2022,02,05)
+        
+        expect(HabitLogsCreationService).to receive(:create_next_week_logs).with(habit_plan)
+
+        HabitLogsCreationService.create(params, user)
+      end
+    end
   end
 end
