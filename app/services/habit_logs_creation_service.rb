@@ -27,13 +27,13 @@ module HabitLogsCreationService
   end
   
   def self.determine_date_limit_initial_creation(date1, date2)
-    @date_limit
+    date_limit
     if date1 <= @next_saturday && date2 >= @next_saturday
-      @date_limit = @next_saturday
+      date_limit = @next_saturday
     elsif date2 < @next_saturday
-      @date_limit = date2
+      date_limit = date2
     end
-    @date_limit
+    date_limit
   end
   
   def self.get_num_logs(date1, date_limit)
