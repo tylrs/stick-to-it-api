@@ -54,13 +54,6 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     context "when the end date is on or after next Saturday" do
-      let(:habit_info) {{
-        name: "Running",
-        description: "Run every day",
-        start_datetime: "2022/02/02",
-        end_datetime: "2022/02/08"
-      }}
-
       it "should create habit logs", :skip_before do
         expect {
           post "/api/v2/users/#{user.id}/habits", 
