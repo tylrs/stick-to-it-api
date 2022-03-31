@@ -12,6 +12,7 @@ RSpec.describe "Users v2", type: :request do
         password: "123456",
         password_confirmation: "123456"
       }}
+
       before do 
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
       end
@@ -21,7 +22,13 @@ RSpec.describe "Users v2", type: :request do
       end
 
       it "should respond with the created user info" do
-        expect(JSON.parse(response.body)["name"]).to eq "John Bob"
+        data = JSON.parse(response.body).symbolize_keys
+        expect(data).to include(
+          name: "John Bob",
+          username: "johnbob79",
+          email: "johnbob7@example.com",
+          id: an_instance_of(Integer)
+        )
       end
       
       it "should create a user in the database" do
