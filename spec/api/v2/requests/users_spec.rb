@@ -12,17 +12,18 @@ RSpec.describe "Users v2", type: :request do
         password: "123456",
         password_confirmation: "123456"
       }}
-
-      before do 
-        post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
-      end
       
       it "should respond with a success message" do
+        post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
+
         expect(response.status).to eq 201
       end
 
       it "should respond with the created user info" do
+        post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
+
         data = JSON.parse(response.body).symbolize_keys
+
         expect(data).to include(
           name: "John Bob",
           username: "johnbob79",
@@ -32,9 +33,10 @@ RSpec.describe "Users v2", type: :request do
       end
       
       it "should create a user in the database" do
-        created_user = User.last
-  
-        expect(created_user.name).to eq "John Bob"
+        expect { post "/api/v2/users", 
+                 headers: headers, 
+                 params: JSON.generate(user_details) 
+               }.to change {User.count}.by 1
       end      
     end
 
