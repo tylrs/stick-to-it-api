@@ -1,106 +1,134 @@
 require "rails_helper"
 
 RSpec.describe "Habits v2", type: :request do
-  describe "create habits" do
-    before do
-      @user = create(:user)
-      token = JsonWebTokenService.encode(user_id: @user.id)
-      @headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+  describe ".create" do
+    let(:user) {create(:user)}
+    let(:token) {token = JsonWebTokenService.encode(user_id: user.id)}
+    let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
+    let(:habit_info) {{
+      name: "Running",
+      description: "Run every day",
+      start_datetime: "2022/02/02",
+      end_datetime: "2022/02/08"
+    }}
+
+    before do |test|
+      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+
+      unless test.metadata[:skip_before]
+        post "/api/v2/users/#{user.id}/habits", 
+             headers: headers, 
+             params: JSON.generate(habit_info) 
+      end
     end
 
-    it "should create a habit, habit plan, and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-      habitInfo = {
+    it "should respond with a success status" do
+      expect(response.status).to eq 201
+    end
+
+    it "should create a habit", :skip_before do
+      expect {
+        post "/api/v2/users/#{user.id}/habits", 
+        headers: headers, 
+        params: JSON.generate(habit_info)
+      }.to change {Habit.count}
+    end
+
+    it "should respond with the created habit" do
+      data = JSON.parse(response.body).symbolize_keys
+
+      expect(data).to include(
+        id: an_instance_of(Integer),
+        creator_id: user.id,
+        name: "Running",
+        description: "Run every day"
+      )
+    end
+
+    it "should create a habit plan", :skip_before do
+      expect {
+        post "/api/v2/users/#{user.id}/habits", 
+        headers: headers, 
+        params: JSON.generate(habit_info)
+      }.to change {HabitPlan.count}
+    end
+
+    context "when the end date is on or after next Saturday" do
+      let(:habit_info) {{
         name: "Running",
         description: "Run every day",
         start_datetime: "2022/02/02",
         end_datetime: "2022/02/08"
-      }
+      }}
 
-      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
-      created_habit = Habit.last
-      created_habit_plan = HabitPlan.last
-      habit_logs = HabitLog.where(habit_plan_id: created_habit_plan.id)
-      
-      expect(response.status).to eq 201
-      
-      expect(created_habit.name).to eq "Running"
-
-      expect(created_habit_plan.user_id).to eq @user.id
-      expect(created_habit_plan.habit_id).to eq created_habit.id
-      expect(created_habit_plan.start_datetime).to eq "2022-02-02 00:00:00 UTC"
-      expect(created_habit_plan.end_datetime).to eq "2022-02-08 00:00:00 UTC"
-
-      expect(habit_logs.count).to eq 4
-      expect(habit_logs.first.scheduled_at.to_s).to eq "2022-02-02 00:00:00 UTC"
-      expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-05 00:00:00 UTC"
+      it "should create habit logs", :skip_before do
+        expect {
+          post "/api/v2/users/#{user.id}/habits", 
+          headers: headers, 
+          params: JSON.generate(habit_info)
+        }.to change {HabitLog.count}.by(4)
+      end
     end
 
-    it "should create a habit, habit plan, and habit logs until the end date if the end date is before the current week's next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-      habitInfo = {
+    context "when the end date is before next Saturday" do
+      let(:habit_info) {{
         name: "Running",
         description: "Run every day",
         start_datetime: "2022/02/02",
         end_datetime: "2022/02/04"
-      }
+      }}
 
-      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
-
-      created_habit = Habit.last
-      created_habit_plan = HabitPlan.last
-      habit_logs = HabitLog.where(habit_plan_id: created_habit_plan.id)
-      
-      expect(response.status).to eq 201
-      expect(created_habit.name).to eq "Running"
-      expect(created_habit_plan.user_id).to eq @user.id
-      expect(created_habit_plan.habit_id).to eq created_habit.id
-      expect(created_habit_plan.start_datetime).to eq "2022-02-02 00:00:00 UTC"
-      expect(created_habit_plan.end_datetime).to eq "2022-02-04 00:00:00 UTC"
-      expect(habit_logs.count).to eq 3
-      expect(habit_logs.first.scheduled_at.to_s).to eq "2022-02-02 00:00:00 UTC"
-      expect(habit_logs.last.scheduled_at.to_s).to eq "2022-02-04 00:00:00 UTC"
+      it "should create habit logs until the end date", :skip_before do
+        expect {
+          post "/api/v2/users/#{user.id}/habits", 
+          headers: headers, 
+          params: JSON.generate(habit_info)
+        }.to change {HabitLog.count}.by(3)
+      end
     end
 
-    it "should create a habit, habit plan, and no habit logs if the start date is after the current week's next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-      habitInfo = {
+    context "when the start date is after next Saturday" do
+      let(:habit_info) {{
         name: "Running",
         description: "Run every day",
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
-      }
+      }}
 
-      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
-
-      created_habit = Habit.last
-      created_habit_plan = HabitPlan.last
-      habit_logs = HabitLog.where(habit_plan_id: created_habit_plan.id)
-
-      expect(response.status).to eq 201
-      expect(created_habit.name).to eq "Running"
-      expect(created_habit_plan.user_id).to eq @user.id
-      expect(created_habit_plan.habit_id).to eq created_habit.id
-      expect(created_habit_plan.start_datetime).to eq "2022-02-13 00:00:00 UTC"
-      expect(created_habit_plan.end_datetime).to eq "2022-02-20 00:00:00 UTC"
-      expect(habit_logs.count).to eq 0
+      it "should not create habit logs", :skip_before do
+        expect {
+          post "/api/v2/users/#{user.id}/habits", 
+          headers: headers, 
+          params: JSON.generate(habit_info)
+        }.to_not change {HabitLog.count}
+      end
     end
 
-    it "should not be able to create a habit if there is missing information" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-      habitInfo = {
+    context "when some required parameters are empty" do
+      let(:habit_info) {{        
         name: "Running",
         description: "",
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
-      }
+      }}
+  
+      it "should return an error code" do        
+        expect(response.status).to eq 422
+      end
 
-      post "/api/v2/users/#{@user.id}/habits", headers: @headers, params: JSON.generate(habitInfo)
+      it "should respond with specific error messages" do
+        errors = JSON.parse(response.body)["errors"]
+        
+        expect(errors[0]).to eq "Description can't be blank"
+      end
 
-      errors = JSON.parse(response.body)["errors"]
-      
-      expect(response.status).to eq 422
-      expect(errors[0]).to eq "Description can't be blank"
+      it "should not be able to create a habit", :skip_before do
+        expect {
+          post "/api/v2/users/#{user.id}/habits", 
+          headers: headers, 
+          params: JSON.generate(habit_info)
+        }.to_not change {Habit.count}
+      end
     end
   end
 end
