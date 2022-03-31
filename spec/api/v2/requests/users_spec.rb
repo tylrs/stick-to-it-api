@@ -22,9 +22,7 @@ RSpec.describe "Users v2", type: :request do
       it "should respond with the created user info" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        data = JSON.parse(response.body).symbolize_keys
-
-        expect(data).to include(
+        expect(json.symbolize_keys).to include(
           name: "John Bob",
           username: "johnbob79",
           email: "johnbob7@example.com",
@@ -58,9 +56,7 @@ RSpec.describe "Users v2", type: :request do
       it "should respond with specific error messages" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        data = JSON.parse(response.body)
-
-        expect(data["errors"]).to include( 
+        expect(json["errors"]).to include( 
           "Password confirmation doesn't match Password",
           "Name can't be blank"
         )

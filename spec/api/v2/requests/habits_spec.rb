@@ -35,9 +35,7 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     it "should respond with the created habit" do
-      data = JSON.parse(response.body).symbolize_keys
-
-      expect(data).to include(
+      expect(json.symbolize_keys).to include(
         id: an_instance_of(Integer),
         creator_id: user.id,
         name: "Running",
@@ -110,7 +108,7 @@ RSpec.describe "Habits v2", type: :request do
       end
 
       it "should respond with specific error messages" do
-        errors = JSON.parse(response.body)["errors"]
+        errors = json["errors"]
         
         expect(errors[0]).to eq "Description can't be blank"
       end
