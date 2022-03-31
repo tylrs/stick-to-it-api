@@ -40,21 +40,38 @@ RSpec.describe "Users v2", type: :request do
       end      
     end
 
-    it "should not be able to create a user without all required info" do
-      user_details = {
+    context "when not all required user info is submitted" do
+      let(:user_details) {{
         name: "",
         username: "johnbob79",
         email: "johnbob7@example.com",
         password: "123456",
         password_confirmation: ""
-      }
+      }}
 
-      post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
-      created_user = User.last
-      data = JSON.parse(response.body)
-      expect(response.status).to eq 422
-      expect(data["errors"][0]).to eq "Password confirmation doesn't match Password"
-      expect(data["errors"][1]).to eq "Name can't be blank"
+      it "should respond with an error code" do
+        post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
+
+        expect(response.status).to eq 422
+      end
+      
+      it "should respond with error messages indicating what submitted info is wrong" do
+        post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
+
+        data = JSON.parse(response.body)
+
+        expect(data["errors"]).to include( 
+                                      "Password confirmation doesn't match Password",
+                                      "Name can't be blank"
+                                     )
+      end
+
+      it "should not create anything in the database" do
+        expect { post "/api/v2/users", 
+          headers: headers, 
+          params: JSON.generate(user_details) 
+        }.to_not change {User.count}
+      end
     end
   end
 end
