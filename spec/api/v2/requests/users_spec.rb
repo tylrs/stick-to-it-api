@@ -13,7 +13,7 @@ RSpec.describe "Users v2", type: :request do
         password_confirmation: "123456"
       }}
       
-      it "should respond with a success message" do
+      it "should respond with a success status" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         expect(response.status).to eq 201
@@ -40,7 +40,7 @@ RSpec.describe "Users v2", type: :request do
       end      
     end
 
-    context "when not all required user info is submitted" do
+    context "when some required parameters are empty" do
       let(:user_details) {{
         name: "",
         username: "johnbob79",
@@ -55,18 +55,18 @@ RSpec.describe "Users v2", type: :request do
         expect(response.status).to eq 422
       end
       
-      it "should respond with error messages indicating what submitted info is wrong" do
+      it "should respond with specific error messages" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         data = JSON.parse(response.body)
 
         expect(data["errors"]).to include( 
-                                      "Password confirmation doesn't match Password",
-                                      "Name can't be blank"
-                                     )
+          "Password confirmation doesn't match Password",
+          "Name can't be blank"
+        )
       end
 
-      it "should not create anything in the database" do
+      it "should not create a user in the database" do
         expect { post "/api/v2/users", 
           headers: headers, 
           params: JSON.generate(user_details) 
