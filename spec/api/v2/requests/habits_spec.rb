@@ -31,7 +31,7 @@ RSpec.describe "Habits v2", type: :request do
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
         params: JSON.generate(habit_info)
-      }.to change {Habit.count}
+      }.to change {Habit.count}.by(1)
     end
 
     it "should respond with the created habit" do
@@ -48,7 +48,7 @@ RSpec.describe "Habits v2", type: :request do
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
         params: JSON.generate(habit_info)
-      }.to change {HabitPlan.count}
+      }.to change {HabitPlan.count}.by(1)
     end
 
     context "when the end date is on or after next Saturday" do
