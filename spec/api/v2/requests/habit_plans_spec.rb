@@ -140,7 +140,6 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe ".destroy" do
-
     before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
     end
