@@ -13,11 +13,11 @@ RSpec.describe "HabitLogs v2", type: :request do
     end
 
     context "when a habit log is incomplete to start" do
-      it "should respond with a success status" do
-        expect(response.status).to eq 200
+      it "responds with a success status" do
+        expect(response).to be_ok
       end
 
-      it "should respond with an updated habit log" do
+      it "responds with an updated habit log" do
         expect(json["habit_log"]["completed_at"]).not_to be_empty
       end
     end
@@ -27,11 +27,11 @@ RSpec.describe "HabitLogs v2", type: :request do
         patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
       end
 
-      it "should respond with a success status" do
+      it "responds with a success status" do
         expect(response.status).to eq 200
       end
 
-      it "should be able to mark a completed habit log as incomplete" do
+      it "marks a completed habit log as incomplete" do
         expect(json["habit_log"]["completed_at"]).to be_nil
       end
     end

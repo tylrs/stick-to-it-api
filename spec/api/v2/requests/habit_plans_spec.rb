@@ -19,22 +19,22 @@ RSpec.describe "HabitPlans v2", type: :request do
 
   describe ".show_week" do
     context "when a user has one habit plan for this week" do
-      let(:habit_plan_details) {json[0]}
+      let(:habit_plan_details) { json[0] }
 
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
 
-      it "should respond with a success status" do
+      it "responds with a success status" do
         expect(response.status).to eq 200
       end
 
-      it "should return one habit plan" do
+      it "returns one habit plan" do
         expect(json.length).to eq 1
       end
 
-      it "should return habit plan info" do
+      it "returns habit plan info" do
         habit_plan_info_keys = %w[
           id
           user_id
@@ -50,13 +50,13 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
       end
 
-      it "should return habit info" do
+      it "returns habit info" do
         habit_info_keys = %w[name description creator_id] 
 
         expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
       end
 
-      it "should return habit_logs for this week" do
+      it "returns habit_logs for this week" do
         expect(habit_plan_details["habit_logs"].length).to eq 4  
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe "HabitPlans v2", type: :request do
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
       
-      it "should return multiple habit plans" do
+      it "returns multiple habit plans" do
         expect(json.length).to eq 2
       end
     end
@@ -77,7 +77,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     context "when a user does not have any habit plans for the current week" do
       let(:user) {create(:user)}
 
-      it "should not return habit plans for this week" do
+      it "does not return habit plans for this week" do
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
         
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
@@ -97,11 +97,11 @@ RSpec.describe "HabitPlans v2", type: :request do
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
       end
 
-      it "should respond with a success status" do
+      it "responds with a success status" do
         expect(response.status).to eq 200
       end
 
-      it "should return habit plan info" do
+      it "returns habit plan info" do
         habit_plan_info_keys = %w[
           id
           user_id
@@ -117,19 +117,19 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
       end
 
-      it "should return habit info" do
+      it "returns habit info" do
         habit_info_keys = %w[name description creator_id] 
 
         expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
       end
 
-      it "should return one habit log per habit plan" do
+      it "returns one habit log per habit plan" do
         expect(habit_plan_details["habit_logs"].length).to eq(1)
       end
     end
 
     context "when a user does not have any habit plans for today" do
-      it "should not return habit plans for today" do
+      it "does not return habit plans for today" do
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
         
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
@@ -144,27 +144,27 @@ RSpec.describe "HabitPlans v2", type: :request do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
     end
 
-    it "should return a success status" do
+    it "returns a success status" do
       delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", headers: headers
 
       expect(response.status).to eq 204
     end
 
-    it "should not destroy a habit" do
+    it "does not destroy a habit" do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers
       }.to_not change {Habit.count}
     end
 
-    it "should destroy a habit plan" do
+    it "destroys a habit plan" do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers
       }.to change {HabitPlan.count}.by(-1)
     end
 
-    it "should destroy associated habit logs" do
+    it "destroys associated habit logs" do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers

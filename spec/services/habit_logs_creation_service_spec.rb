@@ -16,8 +16,8 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_logs" do
-    let(:logs) { HabitLog.all }
-    let(:start_date) { Date.new(2022,02,02) }
+    let(:logs) {HabitLog.all}
+    let(:start_date) {Date.new(2022,02,02)}
 
     before do
       HabitLogsCreationService.create_logs(3, start_date, habit_plan)

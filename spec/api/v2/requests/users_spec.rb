@@ -13,13 +13,13 @@ RSpec.describe "Users v2", type: :request do
         password_confirmation: "123456"
       }}
       
-      it "should respond with a success status" do
+      it "responds with a success status" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         expect(response.status).to eq 201
       end
 
-      it "should respond with the created user info" do
+      it "responds with the created user info" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         expect(json.symbolize_keys).to include(
@@ -30,7 +30,7 @@ RSpec.describe "Users v2", type: :request do
         )
       end
       
-      it "should create a user in the database" do
+      it "creates a user in the database" do
         expect { post "/api/v2/users", 
                  headers: headers, 
                  params: JSON.generate(user_details) 
@@ -38,7 +38,7 @@ RSpec.describe "Users v2", type: :request do
       end      
     end
 
-    context "when some required parameters are empty" do
+    context "when any required parameters are empty" do
       let(:user_details) {{
         name: "",
         username: "johnbob79",
@@ -47,13 +47,13 @@ RSpec.describe "Users v2", type: :request do
         password_confirmation: ""
       }}
 
-      it "should respond with an error code" do
+      it "responds with an error code" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         expect(response.status).to eq 422
       end
       
-      it "should respond with specific error messages" do
+      it "responds with specific error messages" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
         expect(json["errors"]).to include( 
@@ -62,7 +62,7 @@ RSpec.describe "Users v2", type: :request do
         )
       end
 
-      it "should not create a user in the database" do
+      it "does not create a user in the database" do
         expect { post "/api/v2/users", 
           headers: headers, 
           params: JSON.generate(user_details) 

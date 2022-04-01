@@ -22,11 +22,11 @@ RSpec.describe "Habits v2", type: :request do
       end
     end
 
-    it "should respond with a success status" do
+    it "responds with a success status" do
       expect(response.status).to eq 201
     end
 
-    it "should create a habit", :skip_before do
+    it "creates a habit", :skip_before do
       expect {
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
@@ -34,7 +34,7 @@ RSpec.describe "Habits v2", type: :request do
       }.to change {Habit.count}.by(1)
     end
 
-    it "should respond with the created habit" do
+    it "responds with the created habit" do
       expect(json.symbolize_keys).to include(
         id: an_instance_of(Integer),
         creator_id: user.id,
@@ -43,7 +43,7 @@ RSpec.describe "Habits v2", type: :request do
       )
     end
 
-    it "should create a habit plan", :skip_before do
+    it "creates a habit plan", :skip_before do
       expect {
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
@@ -52,7 +52,7 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     context "when the end date is on or after next Saturday" do
-      it "should create habit logs", :skip_before do
+      it "creates habit logs", :skip_before do
         expect {
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
@@ -69,7 +69,7 @@ RSpec.describe "Habits v2", type: :request do
         end_datetime: "2022/02/04"
       }}
 
-      it "should create habit logs until the end date", :skip_before do
+      it "creates habit logs until the end date", :skip_before do
         expect {
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
@@ -86,7 +86,7 @@ RSpec.describe "Habits v2", type: :request do
         end_datetime: "2022/02/20"
       }}
 
-      it "should not create habit logs", :skip_before do
+      it "does not create habit logs", :skip_before do
         expect {
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
@@ -103,17 +103,17 @@ RSpec.describe "Habits v2", type: :request do
         end_datetime: "2022/02/20"
       }}
   
-      it "should return an error code" do        
+      it "returns an error code" do        
         expect(response.status).to eq 422
       end
 
-      it "should respond with specific error messages" do
+      it "responds with specific error messages" do
         errors = json["errors"]
         
         expect(errors[0]).to eq "Description can't be blank"
       end
 
-      it "should not be able to create a habit", :skip_before do
+      it "does not create a habit", :skip_before do
         expect {
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
