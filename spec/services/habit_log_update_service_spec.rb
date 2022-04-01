@@ -10,7 +10,7 @@ RSpec.describe HabitLogUpdateService do
       expect(updated_habit_log.completed_at).to eq habit_log.scheduled_at
     end
 
-    it "should be able to mark a compeleted habit log as incomplete" do
+    it "should be able to mark a completed habit log as incomplete" do
       habit_log = create(:habit_log)
       updated_habit_log = HabitLogUpdateService.update(habit_log)
       updated_habit_log = HabitLogUpdateService.update(updated_habit_log)
