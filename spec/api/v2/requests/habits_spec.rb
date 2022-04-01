@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Habits v2", type: :request do
-  describe ".create" do
+  describe "#create" do
     let(:user) {create(:user)}
     let(:token) {token = JsonWebTokenService.encode(user_id: user.id)}
     let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}

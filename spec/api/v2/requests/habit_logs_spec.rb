@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "HabitLogs v2", type: :request do
-  describe ".update" do
+  describe "#update" do
     let(:habit_log) {create(:habit_log)}
     let(:habit_plan) {habit_log.habit_plan}
     let(:user) {habit_log.habit_plan.user}

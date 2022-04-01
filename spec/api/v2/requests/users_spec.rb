@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Users v2", type: :request do
-  describe "create user" do
+  describe "#create user" do
     let(:headers) {{"Content-type": "application/json"}}
 
     context "when all required user info is submitted" do

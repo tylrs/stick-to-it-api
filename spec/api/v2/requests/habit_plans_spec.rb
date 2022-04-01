@@ -17,7 +17,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
   end
 
-  describe ".show_week" do
+  describe "#show_week" do
     context "when a user has one habit plan for this week" do
       let(:habit_plan_details) { json[0] }
 
@@ -87,7 +87,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
   end
 
-  describe ".show_today" do
+  describe "#show_today" do
     context "when a user has a habit plan for today" do
       let(:habit_plan_details) {json[0]}
 
@@ -139,7 +139,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
   end
 
-  describe ".destroy" do
+  describe "#destroy" do
     before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
     end
