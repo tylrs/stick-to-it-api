@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "HabitPlans v2", type: :request do
   let(:habit_log) {create(:habit_log)}
   let(:user) {habit_log.habit_plan.user}
-  let(:token) {token = JsonWebTokenService.encode(user_id: user.id)}
+  let(:token) {JsonWebTokenService.encode(user_id: user.id)}
   let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
   let(:habit_plan) {habit_log.habit_plan}
   let(:habit) {habit_plan.habit}
