@@ -28,7 +28,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       end
 
       it "responds with a success status" do
-        expect(response.status).to eq 200
+        expect(response).to be_ok
       end
 
       it "marks a completed habit log as incomplete" do

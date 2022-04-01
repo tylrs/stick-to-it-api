@@ -44,7 +44,7 @@ RSpec.describe HabitLogsCreationService do
         end_date = Date.new(2022,02,22)
         date_limit = HabitLogsCreationService.determine_date_limit_initial_creation(start_date, end_date, next_saturday)
   
-        expect(date_limit).to eq nil
+        expect(date_limit).to be_nil
       end
     end
 

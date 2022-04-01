@@ -23,7 +23,7 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     it "responds with a success status" do
-      expect(response.status).to eq 201
+      expect(response).to have_http_status(201)
     end
 
     it "creates a habit", :skip_before do
@@ -104,7 +104,7 @@ RSpec.describe "Habits v2", type: :request do
       } }
   
       it "returns an error code" do        
-        expect(response.status).to eq 422
+        expect(response).to have_http_status(422)
       end
 
       it "responds with specific error messages" do

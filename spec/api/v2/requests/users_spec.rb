@@ -16,7 +16,7 @@ RSpec.describe "Users v2", type: :request do
       it "responds with a success status" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(response.status).to eq 201
+        expect(response).to have_http_status(201)
       end
 
       it "responds with the created user info" do
@@ -50,7 +50,7 @@ RSpec.describe "Users v2", type: :request do
       it "responds with an error code" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(response.status).to eq 422
+        expect(response).to have_http_status(422)
       end
       
       it "responds with specific error messages" do

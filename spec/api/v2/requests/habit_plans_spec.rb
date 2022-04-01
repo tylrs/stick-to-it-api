@@ -27,7 +27,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
 
       it "responds with a success status" do
-        expect(response.status).to eq 200
+        expect(response).to be_ok
       end
 
       it "returns one habit plan" do
@@ -124,7 +124,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
 
       it "returns one habit log per habit plan" do
-        expect(habit_plan_details["habit_logs"].length).to eq(1)
+        expect(habit_plan_details["habit_logs"].length).to eq 1
       end
     end
 
@@ -147,7 +147,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     it "returns a success status" do
       delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", headers: headers
 
-      expect(response.status).to eq 204
+      expect(response).to have_http_status(204)
     end
 
     it "does not destroy a habit" do
