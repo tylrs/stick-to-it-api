@@ -129,17 +129,12 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user does not have any habit plans for today" do
-      it "should not return habit plans for today if there are none scheduled" do
-        pending
+      it "should not return habit plans for today" do
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
         
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
-  
-        habits = JSON.parse(response.body)
-        habit1 = habits[0]
-        
-        expect(response.status).to eq 200
-        expect(habits.length).to eq 0
+
+        expect(json.length).to eq 0
       end
     end
   end
