@@ -2,16 +2,16 @@ require "rails_helper"
 
 RSpec.describe "Users v2", type: :request do
   describe "#create user" do
-    let(:headers) {{"Content-type": "application/json"}}
+    let(:headers) { {"Content-type": "application/json"} }
 
     context "when all required user info is submitted" do
-      let(:user_details) {{ 
+      let(:user_details) { { 
         name: "John Bob",
         username: "johnbob79",
         email: "johnbob7@example.com",
         password: "123456",
         password_confirmation: "123456"
-      }}
+      } }
       
       it "responds with a success status" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
@@ -39,13 +39,13 @@ RSpec.describe "Users v2", type: :request do
     end
 
     context "when any required parameters are empty" do
-      let(:user_details) {{
+      let(:user_details) { {
         name: "",
         username: "johnbob79",
         email: "johnbob7@example.com",
         password: "123456",
         password_confirmation: ""
-      }}
+      } }
 
       it "responds with an error code" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)

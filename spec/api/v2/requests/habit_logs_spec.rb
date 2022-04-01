@@ -2,11 +2,11 @@ require "rails_helper"
 
 RSpec.describe "HabitLogs v2", type: :request do
   describe "#update" do
-    let(:habit_log) {create(:habit_log)}
-    let(:habit_plan) {habit_log.habit_plan}
-    let(:user) {habit_log.habit_plan.user}
-    let(:token) {JsonWebTokenService.encode(user_id: user.id)}
-    let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
+    let(:habit_log) { create(:habit_log) }
+    let(:habit_plan) { habit_log.habit_plan }
+    let(:user) { habit_log.habit_plan.user }
+    let(:token) { JsonWebTokenService.encode(user_id: user.id) }
+    let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
 
     before do
       patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers

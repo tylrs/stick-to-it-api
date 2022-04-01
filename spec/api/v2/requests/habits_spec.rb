@@ -2,15 +2,15 @@ require "rails_helper"
 
 RSpec.describe "Habits v2", type: :request do
   describe "#create" do
-    let(:user) {create(:user)}
-    let(:token) {token = JsonWebTokenService.encode(user_id: user.id)}
-    let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
-    let(:habit_info) {{
+    let(:user) { create(:user) }
+    let(:token) { token = JsonWebTokenService.encode(user_id: user.id) }
+    let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
+    let(:habit_info) { {
       name: "Running",
       description: "Run every day",
       start_datetime: "2022/02/02",
       end_datetime: "2022/02/08"
-    }}
+    } }
 
     before do |test|
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
@@ -62,12 +62,12 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     context "when the end date is before next Saturday" do
-      let(:habit_info) {{
+      let(:habit_info) { {
         name: "Running",
         description: "Run every day",
         start_datetime: "2022/02/02",
         end_datetime: "2022/02/04"
-      }}
+      } }
 
       it "creates habit logs until the end date", :skip_before do
         expect {
@@ -79,12 +79,12 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     context "when the start date is after next Saturday" do
-      let(:habit_info) {{
+      let(:habit_info) { {
         name: "Running",
         description: "Run every day",
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
-      }}
+      } }
 
       it "does not create habit logs", :skip_before do
         expect {
@@ -96,12 +96,12 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     context "when some required parameters are empty" do
-      let(:habit_info) {{        
+      let(:habit_info) { {        
         name: "Running",
         description: "",
         start_datetime: "2022/02/13",
         end_datetime: "2022/02/20"
-      }}
+      } }
   
       it "returns an error code" do        
         expect(response.status).to eq 422

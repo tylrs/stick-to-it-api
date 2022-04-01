@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "HabitPlans v2", type: :request do
-  let(:habit_log) {create(:habit_log)}
-  let(:user) {habit_log.habit_plan.user}
-  let(:token) {JsonWebTokenService.encode(user_id: user.id)}
-  let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
-  let(:habit_plan) {habit_log.habit_plan}
-  let(:habit) {habit_plan.habit}
+  let(:habit_log) { create(:habit_log) }
+  let(:user) { habit_log.habit_plan.user }
+  let(:token) { JsonWebTokenService.encode(user_id: user.id) }
+  let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
+  let(:habit_plan) { habit_log.habit_plan }
+  let(:habit) { habit_plan.habit }
   
   before do
     FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
@@ -62,7 +62,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user has multiple habit plans for this week" do
-      let(:habit_plan_2) {create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user})}
+      let(:habit_plan_2) { create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user}) }
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
         create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2})
@@ -75,7 +75,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user does not have any habit plans for the current week" do
-      let(:user) {create(:user)}
+      let(:user) { create(:user) }
 
       it "does not return habit plans for this week" do
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
@@ -89,7 +89,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
   describe "#show_today" do
     context "when a user has a habit plan for today" do
-      let(:habit_plan_details) {json[0]}
+      let(:habit_plan_details) { json[0] }
 
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,3)
