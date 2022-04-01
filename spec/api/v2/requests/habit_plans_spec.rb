@@ -6,6 +6,7 @@ RSpec.describe "HabitPlans v2", type: :request do
   let(:token) {token = JsonWebTokenService.encode(user_id: user.id)}
   let(:headers) {{"Content-type": "application/json", "Authorization": "Bearer #{token}"}}
   let(:habit_plan) {habit_log.habit_plan}
+  let(:habit) {habit_plan.habit}
   
   before do
     FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
@@ -34,20 +35,24 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
 
       it "should return habit_plan_info" do
-        expect(habit_plan_details.symbolize_keys).to include(
-          id: habit_plan.id,
-          user_id: user.id,
-          habit_id: habit_plan.habit_id,
-          start_datetime: "2022-02-02T00:00:00.000Z",
-          end_datetime: "2022-02-10T00:00:00.000Z" 
-        ) 
+        habit_plan_info_keys = %w[
+          id
+          user_id
+          user
+          habit_id
+          habit
+          start_datetime
+          end_datetime
+          habit_logs
+          created_at
+          updated_at
+        ]
+        expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
       end
 
       it "should return habit_info" do
-        expect(habit_plan_details["habit"].symbolize_keys).to include(
-          name: "Running",
-          description: "Run every day"
-        ) 
+        habit_info_keys = %w[name description creator_id] 
+        expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
       end
 
       it "should return habit_logs for this week" do
@@ -56,7 +61,16 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user has multiple habit plans for this week" do
-      pending
+      let(:habit_plan_2) {create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user})}
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+        create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2})
+        get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
+      end
+      
+      it "should return multiple habit plans" do
+        expect(json.length).to eq 2
+      end
     end
 
     context "when a user does not have any habit plans for the current week" do
@@ -76,9 +90,9 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe ".show_today" do
-    pending
     context "when a user has a habit plan for today" do
       it "should return habit plans for today" do
+        pending
         allow(Date).to receive(:today).and_return Date.new(2022,2,3)
   
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
@@ -101,6 +115,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
     context "when a user does not have any habit plans for today" do
       it "should not return habit plans for today if there are none scheduled" do
+        pending
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
         
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
