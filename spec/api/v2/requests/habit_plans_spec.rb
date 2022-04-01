@@ -140,16 +140,36 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe ".destroy" do
-    pending
-    it "should be able to delete a habit plan and associated habit logs" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
 
+    before do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+    end
+
+    it "should return a success status" do
       delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", headers: headers
 
       expect(response.status).to eq 204
-      expect(Habit.all.length).to eq 1
-      expect(HabitPlan.all.length).to eq 0
-      expect(HabitLog.find_by habit_plan_id: habit_plan.id).to eq nil
+    end
+
+    it "should not destroy a habit" do
+      expect {
+        delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
+        headers: headers
+      }.to_not change {Habit.count}
+    end
+
+    it "should destroy a habit plan" do
+      expect {
+        delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
+        headers: headers
+      }.to change {HabitPlan.count}.by(-1)
+    end
+
+    it "should destroy associated habit logs" do
+      expect {
+        delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
+        headers: headers
+      }.to change {HabitLog.count}.by(-4)
     end
   end
 end
