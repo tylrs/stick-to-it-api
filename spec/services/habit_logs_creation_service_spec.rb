@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe HabitLogsCreationService do
-  let(:user) {create(:user)}
-  let(:habit_plan) {create(:habit_plan, {user: user})}
-  let(:next_saturday) {Date.new(2022,02,01).end_of_week(:sunday)}
+  let(:user) { create(:user) }
+  let(:habit_plan) { create(:habit_plan, {user: user}) }
+  let(:next_saturday) { Date.new(2022,02,01).end_of_week(:sunday) }
 
   describe ".get_num_logs" do
     it "returns number of days between and including 2 dates" do
@@ -16,8 +16,8 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_logs" do
-    let(:logs) {HabitLog.all}
-    let(:start_date) {Date.new(2022,02,02)}
+    let(:logs) { HabitLog.all }
+    let(:start_date) { Date.new(2022,02,02) }
 
     before do
       HabitLogsCreationService.create_logs(3, start_date, habit_plan)
@@ -70,7 +70,7 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_next_week_logs" do
-    let(:habit_plan) { 
+    let(:habit_plan) {
       create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
     }
 
@@ -85,7 +85,7 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_current_week_logs" do
-    let(:habit_plan) { 
+    let(:habit_plan) {
       create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
     }
 
@@ -101,18 +101,18 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create" do
-    let(:habit_plan) { 
+    let(:habit_plan) {
       create(:habit_plan, user: user, start_datetime: "2022-02-02 00:00:00", end_datetime: "2022-02-20 00:00:00")
     }
-    let(:params) {{
+    let(:params) { {
       name: "Running", 
       description: "Run every day",
       user_id: 1,
       start_datetime: "2022/02/02",
       end_datetime: "2022/02/10"  
-    }}
-    let(:start_date) {Date.new(2022,02,02)}
-    let(:end_date) {Date.new(2022,02,10)}
+    } }
+    let(:start_date) { Date.new(2022,02,02) }
+    let(:end_date) { Date.new(2022,02,10) }
 
     context "when start date is on or before next Saturday" do
       it "calls create_current_week_logs with correct start and end date, habit plan, and next saturday" do
