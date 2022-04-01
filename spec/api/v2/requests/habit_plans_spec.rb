@@ -34,7 +34,7 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(json.length).to eq 1
       end
 
-      it "should return habit_plan_info" do
+      it "should return habit plan info" do
         habit_plan_info_keys = %w[
           id
           user_id
@@ -50,8 +50,9 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
       end
 
-      it "should return habit_info" do
+      it "should return habit info" do
         habit_info_keys = %w[name description creator_id] 
+
         expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
       end
 
@@ -88,25 +89,42 @@ RSpec.describe "HabitPlans v2", type: :request do
 
   describe ".show_today" do
     context "when a user has a habit plan for today" do
-      it "should return habit plans for today" do
-        pending
+      let(:habit_plan_details) {json[0]}
+
+      before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,3)
-  
+
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
-  
-        habits = JSON.parse(response.body)
-        habit1 = habits[0]
-        
+      end
+
+      it "should respond with a success status" do
         expect(response.status).to eq 200
-        expect(habits.length).to eq 1
-        expect(habit1["id"]).to eq habit_plan.id
-        expect(habit1["user_id"]).to eq user.id
-        expect(habit1["habit_id"]).to eq habit_plan.habit_id
-        expect(habit1["habit"]["name"]).to eq "Running"
-        expect(habit1["habit"]["description"]).to eq "Run every day"
-        expect(habit1["start_datetime"].to_s).to eq "2022-02-02T00:00:00.000Z"
-        expect(habit1["end_datetime"].to_s).to eq "2022-02-10T00:00:00.000Z"
-        expect(habit1["habit_logs"].length).to eq 1   
+      end
+
+      it "should return habit plan info" do
+        habit_plan_info_keys = %w[
+          id
+          user_id
+          user
+          habit_id
+          habit
+          start_datetime
+          end_datetime
+          habit_logs
+          created_at
+          updated_at
+        ]
+        expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
+      end
+
+      it "should return habit info" do
+        habit_info_keys = %w[name description creator_id] 
+
+        expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
+      end
+
+      it "should return one habit log per habit plan" do
+        expect(habit_plan_details["habit_logs"].length).to eq(1)
       end
     end
 
