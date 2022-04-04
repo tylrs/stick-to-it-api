@@ -30,35 +30,38 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(response).to be_ok
       end
 
-      it "returns one habit plan" do
-        expect(parsed_response.length).to eq 1
+      describe "return value includes" do
+        it "one habit plan" do
+          expect(parsed_response.length).to eq 1
+        end
+  
+        it "habit plan info" do
+          habit_plan_info_keys = %w[
+            id
+            user_id
+            user
+            habit_id
+            habit
+            start_datetime
+            end_datetime
+            habit_logs
+            created_at
+            updated_at
+          ]
+          expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
+        end
+  
+        it "habit info" do
+          habit_info_keys = %w[name description creator_id] 
+  
+          expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
+        end
+  
+        it "habit_logs for this week" do
+          expect(habit_plan_details["habit_logs"].length).to eq 4  
+        end
       end
 
-      it "returns habit plan info" do
-        habit_plan_info_keys = %w[
-          id
-          user_id
-          user
-          habit_id
-          habit
-          start_datetime
-          end_datetime
-          habit_logs
-          created_at
-          updated_at
-        ]
-        expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
-      end
-
-      it "returns habit info" do
-        habit_info_keys = %w[name description creator_id] 
-
-        expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
-      end
-
-      it "returns habit_logs for this week" do
-        expect(habit_plan_details["habit_logs"].length).to eq 4  
-      end
     end
 
     context "when a user has multiple habit plans for this week" do
@@ -101,30 +104,32 @@ RSpec.describe "HabitPlans v2", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "returns habit plan info" do
-        habit_plan_info_keys = %w[
-          id
-          user_id
-          user
-          habit_id
-          habit
-          start_datetime
-          end_datetime
-          habit_logs
-          created_at
-          updated_at
-        ]
-        expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
-      end
-
-      it "returns habit info" do
-        habit_info_keys = %w[name description creator_id] 
-
-        expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
-      end
-
-      it "returns one habit log per habit plan" do
-        expect(habit_plan_details["habit_logs"].length).to eq 1
+      describe "return value includes" do
+        it "habit plan info" do
+          habit_plan_info_keys = %w[
+            id
+            user_id
+            user
+            habit_id
+            habit
+            start_datetime
+            end_datetime
+            habit_logs
+            created_at
+            updated_at
+          ]
+          expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
+        end
+  
+        it "habit info" do
+          habit_info_keys = %w[name description creator_id] 
+  
+          expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
+        end
+  
+        it "one habit log per habit plan" do
+          expect(habit_plan_details["habit_logs"].length).to eq 1
+        end
       end
     end
 
