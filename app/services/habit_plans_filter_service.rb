@@ -5,7 +5,6 @@ module HabitPlansFilterService
     HabitPlan.with_current_week_logs
              .includes(:user, :habit)
              .where(habit_id: [habit_ids])
-    
   end
 
   def self.get_next_week_plans
