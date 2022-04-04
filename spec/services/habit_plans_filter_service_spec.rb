@@ -8,14 +8,14 @@ RSpec.describe HabitPlansFilterService do
   let(:habit) { habit_plan.habit }
 
   before do
-      FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
-        date = Date.new(2022,2,3)
-        date += i.days
-        habit_log.scheduled_at = date
-        habit_log.save
-      end
-  
-      create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_2})
+    FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
+      date = Date.new(2022,2,3)
+      date += i.days
+      habit_log.scheduled_at = date
+      habit_log.save
+    end
+
+    create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_2})
   end
 
   describe ".get_week_and_partner_plans" do
@@ -175,22 +175,19 @@ RSpec.describe HabitPlansFilterService do
   describe ".determine_next_week_range" do
     let(:next_sunday) { Date.new(2022,2,6) }
     let(:following_saturday) { Date.new(2022,2,12) }
+    let(:habit_plan) { create(:habit_plan, start_datetime: "2022/02/08", end_datetime: "2022/02/11") }
+    let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
 
     before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,2)
     end
 
-    context "habit plan start date is on or before the following Saturday and end date is on or after next Sunday" do
-      let(:habit_plan) { create(:habit_plan, start_datetime: "2022/02/08", end_datetime: "2022/02/11") }
-      let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
- 
-      it "returns range_beginning equal to habit plan start date" do
-        expect(range[:range_beginning]).to eq Date.new(2022,2,8)
-      end 
+    it "returns range_beginning equal to habit plan start date" do
+      expect(range[:range_beginning]).to eq Date.new(2022,2,8)
+    end 
 
-      it "returns range_end equal to habit plan end date" do
-        expect(range[:range_end]).to eq Date.new(2022,2,11)
-      end
+    it "returns range_end equal to habit plan end date" do
+      expect(range[:range_end]).to eq Date.new(2022,2,11)
     end
 
     context "habit plan start date is before next Sunday" do
