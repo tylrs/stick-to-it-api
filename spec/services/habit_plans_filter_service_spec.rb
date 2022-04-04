@@ -155,4 +155,20 @@ RSpec.describe HabitPlansFilterService do
       end
     end
   end
+
+  describe ".get_next_week_plans" do
+    let(:next_week_plans) { HabitPlansFilterService.get_next_week_plans }
+
+    it "should return habit plans with a start date on or before the following Saturday" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+
+      expect(next_week_plans.length).to eq 2
+    end
+
+    it "should return habit plans with an end date on or after next Sunday" do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,9)
+
+      expect(next_week_plans.length).to eq 0
+    end
+  end
 end
