@@ -19,7 +19,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
   describe "#show_week" do
     context "when a user has one habit plan for this week" do
-      let(:habit_plan_details) { json[0] }
+      let(:habit_plan_details) { parsed_response[0] }
 
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
@@ -31,7 +31,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
 
       it "returns one habit plan" do
-        expect(json.length).to eq 1
+        expect(parsed_response.length).to eq 1
       end
 
       it "returns habit plan info" do
@@ -70,7 +70,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
       
       it "returns multiple habit plans" do
-        expect(json.length).to eq 2
+        expect(parsed_response.length).to eq 2
       end
     end
 
@@ -82,14 +82,14 @@ RSpec.describe "HabitPlans v2", type: :request do
         
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
 
-        expect(json.length).to eq 0
+        expect(parsed_response.length).to eq 0
       end
     end
   end
 
   describe "#show_today" do
     context "when a user has a habit plan for today" do
-      let(:habit_plan_details) { json[0] }
+      let(:habit_plan_details) { parsed_response[0] }
 
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,3)
@@ -134,7 +134,7 @@ RSpec.describe "HabitPlans v2", type: :request do
         
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
 
-        expect(json.length).to eq 0
+        expect(parsed_response.length).to eq 0
       end
     end
   end

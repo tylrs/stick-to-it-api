@@ -18,7 +18,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       end
 
       it "responds with an updated habit log" do
-        expect(json["habit_log"]["completed_at"]).not_to be_empty
+        expect(parsed_response["habit_log"]["completed_at"]).not_to be_empty
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       end
 
       it "marks a completed habit log as incomplete" do
-        expect(json["habit_log"]["completed_at"]).to be_nil
+        expect(parsed_response["habit_log"]["completed_at"]).to be_nil
       end
     end
   end

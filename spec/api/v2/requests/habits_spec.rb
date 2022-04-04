@@ -37,7 +37,7 @@ RSpec.describe "Habits v2", type: :request do
     it "responds with the created habit" do
       habit_keys = %w[id creator_id name description updated_at created_at]
 
-      expect(json.keys).to match_array(habit_keys)
+      expect(parsed_response.keys).to match_array(habit_keys)
     end
 
     it "creates a habit plan", :skip_before do
@@ -105,7 +105,7 @@ RSpec.describe "Habits v2", type: :request do
       end
 
       it "responds with specific error messages" do
-        errors = json["errors"]
+        errors = parsed_response["errors"]
         
         expect(errors[0]).to eq "Description can't be blank"
       end

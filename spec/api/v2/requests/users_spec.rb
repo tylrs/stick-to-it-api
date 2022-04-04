@@ -24,7 +24,7 @@ RSpec.describe "Users v2", type: :request do
 
         user_keys = %w[name username email id]
 
-        expect(json.keys).to match_array(user_keys)
+        expect(parsed_response.keys).to match_array(user_keys)
       end
       
       it "creates a user in the database" do
@@ -53,7 +53,7 @@ RSpec.describe "Users v2", type: :request do
       it "responds with specific error messages" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(json["errors"]).to include( 
+        expect(parsed_response["errors"]).to include( 
           "Password confirmation doesn't match Password",
           "Name can't be blank"
         )
