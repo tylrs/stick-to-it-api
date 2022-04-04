@@ -35,7 +35,7 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     it "responds with the created habit" do
-      habit_keys = %w[id, creator_id, name, description]
+      habit_keys = %w[id creator_id name description updated_at created_at]
 
       expect(json.keys).to match_array(habit_keys)
     end
