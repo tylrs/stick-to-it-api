@@ -31,7 +31,7 @@ RSpec.describe "Users v2", type: :request do
         expect { post "/api/v2/users", 
                  headers: headers, 
                  params: JSON.generate(user_details) 
-               }.to change {User.count}.by 1
+               }.to change { User.count }.by 1
       end      
     end
 
@@ -63,7 +63,7 @@ RSpec.describe "Users v2", type: :request do
         expect { post "/api/v2/users", 
           headers: headers, 
           params: JSON.generate(user_details) 
-        }.to_not change {User.count}
+        }.to_not change { User.count }
       end
     end
   end

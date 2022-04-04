@@ -154,21 +154,21 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers
-      }.to_not change {Habit.count}
+      }.to_not change { Habit.count }
     end
 
     it "destroys a habit plan" do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers
-      }.to change {HabitPlan.count}.by(-1)
+      }.to change { HabitPlan.count }.by(-1)
     end
 
     it "destroys associated habit logs" do
       expect {
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
         headers: headers
-      }.to change {HabitLog.count}.by(-4)
+      }.to change { HabitLog.count }.by(-4)
     end
   end
 end
