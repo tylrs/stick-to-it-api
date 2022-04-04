@@ -8,7 +8,7 @@ RSpec.describe HabitPlansFilterService do
   let(:habit) { habit_plan.habit }
 
   before do
-    FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
+    FactoryBot.create_list(:habit_log, 4, habit_plan_id: habit_plan.id) do |habit_log, i|
       date = Date.new(2022,2,3)
       date += i.days
       habit_log.scheduled_at = date
@@ -25,21 +25,25 @@ RSpec.describe HabitPlansFilterService do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
     end
 
-    describe "return value includes" do
-      it "user's habit plans only for the current week" do
+    describe "return value" do
+      it "includes user's habit plans only for the current week" do
         expect(habit_plans.length).to eq 1
       end
 
-      it "matching user" do
+      it "includes matching user" do
         expect(habit_plans[0].user).to eq user
       end
   
-      it "habit for each habit plan" do
+      it "includes habit for each habit plan" do
         expect(habit_plans[0].habit).to eq habit
       end
   
-      it "only current week's logs" do
+      it "includes only current week's logs" do
         expect(habit_plans[0].habit_logs.length).to eq 4
+      end
+
+      it "includes habit logs with " do
+        
       end
     end
 
@@ -56,20 +60,20 @@ RSpec.describe HabitPlansFilterService do
         end
       end
  
-      describe "return value includes" do
-        it "partner's habit plan only for the current week" do
+      describe "return value" do
+        it "includes partner's habit plan only for the current week" do
           expect(habit_plans.length).to eq 2
         end
 
-        it "matching partner" do
+        it "includes matching partner" do
           expect(habit_plans[1].user).to eq partner
         end
     
-        it "habit for partner's habit plan" do
+        it "includes habit for partner's habit plan" do
           expect(habit_plans[1].habit).to eq habit
         end
     
-        it "only current week's logs" do
+        it "includes only current week's logs" do
           expect(habit_plans[1].habit_logs.length).to eq 4
         end
       end
@@ -93,25 +97,24 @@ RSpec.describe HabitPlansFilterService do
       allow(Date).to receive(:today).and_return Date.new(2022,2,2)
     end
 
-    
-    describe "return value includes" do
-      it "user's habit plans only for today" do
+    describe "return value" do
+      it "includes user's habit plans only for today" do
         expect(habit_plans.length).to eq 1
       end
 
-      it "matching user" do
+      it "includes matching user" do
         expect(habit_plans[0].user).to eq user
       end
   
-      it "habit for each habit plan" do
+      it "includes habit for each habit plan" do
         expect(habit_plans[0].habit).to eq habit
       end
   
-      it "only one log per habit plan" do
+      it "includes only one log per habit plan" do
         expect(habit_plans[0].habit_logs.length).to eq 1
       end
   
-      it "the habit log for the current day" do
+      it "includes the habit log for the current day" do
         expect(habit_plans[0].habit_logs[0].scheduled_at).to eq Date.new(2022,02,02)
       end
     end
@@ -130,23 +133,23 @@ RSpec.describe HabitPlansFilterService do
         end
       end
 
-      describe "return value includes" do
-        it "partner's habit plan only for today" do
+      describe "return value" do
+        it "includes partner's habit plan only for today" do
           expect(habit_plans.length).to eq 2
         end
-        it "matching partner" do
+        it "includes matching partner" do
           expect(habit_plans[1].user).to eq partner
         end
     
-        it "habit for partner's habit plan" do
+        it "includes habit for partner's habit plan" do
           expect(habit_plans[1].habit).to eq habit
         end
     
-        it "only one log per habit plan" do
+        it "includes only one log per habit plan" do
           expect(habit_plans[1].habit_logs.length).to eq 1
         end
   
-        it "the habit log for the current day" do
+        it "includes the habit log for the current day" do
           expect(habit_plans[1].habit_logs[0].scheduled_at).to eq Date.new(2022,02,02)
         end
       end
