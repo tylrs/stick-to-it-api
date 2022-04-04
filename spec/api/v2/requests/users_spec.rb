@@ -22,12 +22,9 @@ RSpec.describe "Users v2", type: :request do
       it "responds with the created user info" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(json.symbolize_keys).to include(
-          name: "John Bob",
-          username: "johnbob79",
-          email: "johnbob7@example.com",
-          id: an_instance_of(Integer)
-        )
+        user_keys = %w[name username email id]
+
+        expect(json.keys).to match_array(user_keys)
       end
       
       it "creates a user in the database" do

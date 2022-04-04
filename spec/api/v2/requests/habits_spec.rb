@@ -35,12 +35,9 @@ RSpec.describe "Habits v2", type: :request do
     end
 
     it "responds with the created habit" do
-      expect(json.symbolize_keys).to include(
-        id: an_instance_of(Integer),
-        creator_id: user.id,
-        name: "Running",
-        description: "Run every day"
-      )
+      habit_keys = %w[id, creator_id, name, description]
+
+      expect(json.keys).to match_array(habit_keys)
     end
 
     it "creates a habit plan", :skip_before do
