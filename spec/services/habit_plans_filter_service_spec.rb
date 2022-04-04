@@ -26,7 +26,7 @@ RSpec.describe HabitPlansFilterService do
     end
 
     it "returns user's habit plans only for the current week" do
-      expect(habit_plans.count).to eq 1
+      expect(habit_plans.length).to eq 1
     end
 
     it "returns matching user" do
@@ -38,7 +38,7 @@ RSpec.describe HabitPlansFilterService do
     end
 
     it "returns only current week's logs" do
-      expect(habit_plans[0].habit_logs.count).to eq 4
+      expect(habit_plans[0].habit_logs.length).to eq 4
     end
 
     context "when user has a partner on a habit" do
@@ -55,7 +55,7 @@ RSpec.describe HabitPlansFilterService do
       end
 
       it "returns partner's habit plan only for the current week" do
-        expect(habit_plans.count).to eq 2
+        expect(habit_plans.length).to eq 2
       end
   
       it "returns matching partner" do
@@ -67,7 +67,7 @@ RSpec.describe HabitPlansFilterService do
       end
   
       it "returns only current week's logs" do
-        expect(habit_plans[1].habit_logs.count).to eq 4
+        expect(habit_plans[1].habit_logs.length).to eq 4
       end
     end
 
@@ -77,7 +77,81 @@ RSpec.describe HabitPlansFilterService do
       it "returns no habit plans" do
         response = HabitPlansFilterService.get_week_and_partner_plans(user.id)
         
-        expect(response.count).to eq 0
+        expect(response.length).to eq 0
+      end
+    end
+  end
+
+  describe ".get_today_and_partner_plans" do
+    let(:habit_plans) { HabitPlansFilterService.get_today_and_partner_plans(user.id) }
+
+    before do
+      allow(Date).to receive(:today).and_return Date.new(2022,2,2)
+    end
+
+    it "returns user's habit plans only for today" do
+      expect(habit_plans.length).to eq 1
+    end
+
+    it "returns matching user" do
+      expect(habit_plans[0].user).to eq user
+    end
+
+    it "returns habit for each habit plan" do
+      expect(habit_plans[0].habit).to eq habit
+    end
+
+    it "returns only one log per habit plan" do
+      expect(habit_plans[0].habit_logs.length).to eq 1
+    end
+
+    it "returns the habit log for the current day" do
+      expect(habit_plans[0].habit_logs[0].scheduled_at).to eq Date.new(2022,02,02)
+    end
+
+    context "when user has a partner on a habit" do
+      let(:partner) { create(:user) }
+      let(:partner_habit_plan) { create(:habit_plan, {user: partner, habit: habit}) }
+
+      before do
+        FactoryBot.create_list(:habit_log, 4, habit_plan_id: partner_habit_plan.id) do |habit_log, i|
+          date = Date.new(2022,2,2)
+          date += i.days
+          habit_log.scheduled_at = date
+          habit_log.save
+        end
+      end
+
+      it "returns partner's habit plan only for today" do
+        expect(habit_plans.length).to eq 2
+      end
+  
+      it "returns matching partner" do
+        expect(habit_plans[1].user).to eq partner
+      end
+  
+      it "returns habit for partner's habit plan" do
+        expect(habit_plans[1].habit).to eq habit
+      end
+  
+      it "returns only one log per habit plan" do
+        expect(habit_plans[1].habit_logs.length).to eq 1
+      end
+
+      it "returns the habit log for the current day" do
+        expect(habit_plans[1].habit_logs[0].scheduled_at).to eq Date.new(2022,02,02)
+      end
+    end
+
+    context "when a user has no habit plans for the current day" do
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022,01,30)
+      end
+
+      it "returns no habit plans" do
+        response = HabitPlansFilterService.get_today_and_partner_plans(user.id)
+        
+        expect(response.length).to eq 0
       end
     end
   end
