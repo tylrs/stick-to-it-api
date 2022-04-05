@@ -216,11 +216,11 @@ RSpec.describe HabitPlansFilterService do
     end
 
     it "returns range_beginning equal to habit plan start date" do
-      expect(range[:range_beginning]).to eq Date.new(2022,2,8)
+      expect(range[:range_beginning]).to eq habit_plan.start_datetime
     end 
 
     it "returns range_end equal to habit plan end date" do
-      expect(range[:range_end]).to eq Date.new(2022,2,11)
+      expect(range[:range_end]).to eq habit_plan.end_datetime
     end
 
     context "habit plan start date is before next Sunday" do
