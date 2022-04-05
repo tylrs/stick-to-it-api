@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe HabitLogUpdateService do
   describe ".update_log" do
-    
     it "Marks an incomplete habit log as completed" do
       habit_log = create(:habit_log)
       updated_habit_log = HabitLogUpdateService.update(habit_log)
