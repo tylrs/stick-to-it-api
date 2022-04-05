@@ -186,18 +186,22 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".get_next_week_plans" do
+    let!(:habit_plan_next_week_2) { create(:habit_plan, {start_datetime: "2022/02/12", end_datetime: "2022/02/19"}) }
+    let!(:habit_plan_next_week_3) { create(:habit_plan, {start_datetime: "2022/02/04", end_datetime: "2022/02/06"}) }
+    let!(:habit_plan_current_week) { create(:habit_plan, {start_datetime: "2022/02/02", end_datetime: "2022/02/05"}) }
     let(:next_week_plans) { HabitPlansFilterService.get_next_week_plans }
 
-    it "returns habit plans with a start date on or before the following Saturday" do
+    before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-
-      expect(next_week_plans.length).to eq 2
     end
 
-    it "returns habit plans with an end date on or after next Sunday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,9)
-
-      expect(next_week_plans.length).to eq 0
+    it "returns habit plans with a start date on or before the following Saturday and on or after next Sunday" do
+      expect(next_week_plans).to contain_exactly(
+        an_object_having_attributes(id: habit_plan.id),
+        an_object_having_attributes(id: habit_plan_next_week.id),
+        an_object_having_attributes(id: habit_plan_next_week_2.id),
+        an_object_having_attributes(id: habit_plan_next_week_3.id)
+      )
     end
   end
 
@@ -236,6 +240,5 @@ RSpec.describe HabitPlansFilterService do
         expect(range[:range_end]).to eq following_saturday
       end
     end
-
   end
 end
