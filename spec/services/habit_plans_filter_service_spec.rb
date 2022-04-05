@@ -28,6 +28,9 @@ RSpec.describe HabitPlansFilterService do
     describe "return value" do
       it "includes user's habit plans only for the current week" do
         expect(habit_plans.length).to eq 1
+        expect(habit_plans).to contain_exactly(
+          an_object_having_attributes(id: habit_plan.id)
+        )
       end
 
       it "includes matching user" do
@@ -68,6 +71,10 @@ RSpec.describe HabitPlansFilterService do
       describe "return value" do
         it "includes partner's habit plan only for the current week" do
           expect(habit_plans.length).to eq 2
+          expect(habit_plans).to contain_exactly(
+            an_object_having_attributes(id: habit_plan.id),
+            an_object_having_attributes(id: partner_habit_plan.id)
+          )
         end
 
         it "includes matching partner" do
@@ -83,7 +90,7 @@ RSpec.describe HabitPlansFilterService do
         end
 
         it "includes habit logs with scheduled_at dates for the current week" do
-          expect(habit_plans[0].habit_logs).to contain_exactly(
+          expect(habit_plans[1].habit_logs).to contain_exactly(
             an_object_having_attributes(scheduled_at: Date.new(2022,2,2)),
             an_object_having_attributes(scheduled_at: Date.new(2022,2,3)),
             an_object_having_attributes(scheduled_at: Date.new(2022,2,4)),
