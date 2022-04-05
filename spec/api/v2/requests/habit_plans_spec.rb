@@ -102,7 +102,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       end
 
       it "responds with a success status" do
-        expect(response.status).to eq 200
+        expect(response).to be_ok
       end
 
       describe "return value" do
