@@ -66,6 +66,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
     context "when a user has multiple habit plans for this week" do
       let(:habit_plan_2) { create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user}) }
+      
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
         create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2})
