@@ -22,8 +22,8 @@ RSpec.describe "Habits v2", type: :request do
       end
     end
 
-    it "responds with a success status" do
-      expect(response).to have_http_status(201)
+    it "responds with created status" do
+      expect(response).to have_http_status(:created)
     end
 
     it "creates a habit", :skip_before do
@@ -100,8 +100,8 @@ RSpec.describe "Habits v2", type: :request do
         end_datetime: "2022/02/20"
       } }
   
-      it "returns an error code" do        
-        expect(response).to have_http_status(422)
+      it "returns an unprocessable_entity status" do        
+        expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "responds with specific error messages" do

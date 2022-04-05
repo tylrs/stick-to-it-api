@@ -153,7 +153,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     it "returns a success status" do
       delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", headers: headers
 
-      expect(response).to have_http_status(204)
+      expect(response).to have_http_status(:no_content)
     end
 
     it "does not destroy a habit" do

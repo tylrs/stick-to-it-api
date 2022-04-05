@@ -13,10 +13,10 @@ RSpec.describe "Users v2", type: :request do
         password_confirmation: "123456"
       } }
       
-      it "responds with a success status" do
+      it "responds with status created" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(response).to have_http_status(201)
+        expect(response).to have_http_status(:created)
       end
 
       it "responds with the created user info" do
@@ -44,10 +44,10 @@ RSpec.describe "Users v2", type: :request do
         password_confirmation: ""
       } }
 
-      it "responds with an error code" do
+      it "responds with unprocessable entity status" do
         post "/api/v2/users", headers: headers, params: JSON.generate(user_details)
 
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
       
       it "responds with specific error messages" do
