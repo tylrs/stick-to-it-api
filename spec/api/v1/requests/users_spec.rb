@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Users v1", type: :request do
   describe "Create" do
-    it "Should create a user with successful info" do
+    skip it "Should create a user with successful info" do
       user_details = {
         name: "John Bob",
         username: "johnbob79",
@@ -20,7 +20,7 @@ RSpec.describe "Users v1", type: :request do
       expect(created_user.name).to eq "John Bob"
     end
 
-    it "Should not be able to create a user without all required info" do
+    skip it "Should not be able to create a user without all required info" do
       user_details = {
         name: "",
         username: "johnbob79",
@@ -38,7 +38,7 @@ RSpec.describe "Users v1", type: :request do
       expect(data["errors"][1]).to eq "Name can't be blank"
     end
 
-    it "Should be able to delete a user" do
+    skip it "Should be able to delete a user" do
       create(:user)
       user = User.first
       token = JsonWebTokenService.encode(user_id: user.id)
