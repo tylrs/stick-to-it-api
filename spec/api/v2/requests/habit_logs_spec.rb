@@ -35,5 +35,20 @@ RSpec.describe "HabitLogs v2", type: :request do
         expect(parsed_response["habit_log"]["completed_at"]).to be_nil
       end
     end
+
+    context "when a habit log cannot be found" do
+      before do
+        HabitLog.destroy_all
+        patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
+      end
+
+      it "responds with an error status" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "responds with an error message" do
+        expect(parsed_response["errors"]).to eq "Habit Log Not Found"
+      end
+    end
   end
 end
