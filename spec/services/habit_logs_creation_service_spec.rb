@@ -126,11 +126,11 @@ RSpec.describe HabitLogsCreationService do
       expect(logs.count).to eq 3
     end
 
-    it "creates a habit log with the start date" do
+    it "schedules the first habit log with the start date" do
       expect(logs.first.scheduled_at).to eq start_date
     end
 
-    it "schedules a habit log for specified number of days past the date limit" do
+    it "schedules the last habit log with a chosen number of days past the start date" do
       expect(logs.last.scheduled_at).to eq(start_date + 2.days)
     end
   end
