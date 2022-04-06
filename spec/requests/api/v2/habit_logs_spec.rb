@@ -4,20 +4,21 @@ RSpec.describe "HabitLogs v2", type: :request do
   describe "#update" do
     let(:habit_log) { create(:habit_log) }
     let(:habit_plan) { habit_log.habit_plan }
-    let(:user) { habit_log.habit_plan.user }
+    let!(:user) { habit_log.habit_plan.user }
     let(:token) { JsonWebTokenService.encode(user_id: user.id) }
     let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
 
-    before do
-      patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
-    end
-
+    
     it_behaves_like "a protected route" do
       let(:request_type) { :patch }
       let(:path) { "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}" }
     end
-
+    
     context "when a habit log is incomplete to start" do
+      before do
+        patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
+      end
+
       it "responds with a success status" do
         expect(response).to be_ok
       end
@@ -28,8 +29,12 @@ RSpec.describe "HabitLogs v2", type: :request do
     end
 
     context "when a habit log is marked completed to start" do
+      let(:habit_log_complete) { create(:habit_log, {completed_at: Date.new(2022,2,2)}) }
+      let(:habit_plan) { habit_log_complete.habit_plan }
+      let(:user) { habit_log_complete.habit_plan.user }
+
       before do
-        patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
+        patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log_complete.id}", headers: headers
       end
 
       it "responds with a success status" do
