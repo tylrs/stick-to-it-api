@@ -20,20 +20,13 @@ RSpec.describe "Authentications v2", type: :request do
 
       describe "return value" do
         it "includes token, expiration time, and user info" do
-          base_keys = %w[
-            token
-            exp
-            user]
+          base_keys = %w[token exp user]
 
           expect(parsed_response.keys).to match_array(base_keys)
         end
 
         it "includes correct user info" do
-          user_keys = %w[
-            id
-            name
-            username
-            email]
+          user_keys = %w[id name username email]
 
           expect(parsed_response["user"].keys).to match_array(user_keys)
         end
