@@ -12,6 +12,11 @@ RSpec.describe "HabitLogs v2", type: :request do
       patch "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}", headers: headers
     end
 
+    it_behaves_like "a protected route" do
+      let(:request_type) { :patch }
+      let(:path) { "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/habit_logs/#{habit_log.id}" }
+    end
+
     context "when a habit log is incomplete to start" do
       it "responds with a success status" do
         expect(response).to be_ok

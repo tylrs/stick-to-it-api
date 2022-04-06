@@ -18,6 +18,11 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe "#show_week" do
+    it_behaves_like "a protected route" do
+      let(:request_type) { :get }
+      let(:path) { "/api/v2/users/#{user.id}/habit_plans/week" }
+    end
+
     context "when a user has one habit plan for this week" do
       let(:habit_plan_details) { parsed_response[0] }
 
@@ -92,6 +97,11 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe "#show_today" do
+    it_behaves_like "a protected route" do
+      let(:request_type) { :get }
+      let(:path) { "/api/v2/users/#{user.id}/habit_plans/today" }
+    end
+
     context "when a user has a habit plan for today" do
       let(:habit_plan_details) { parsed_response[0] }
 
@@ -146,6 +156,11 @@ RSpec.describe "HabitPlans v2", type: :request do
   end
 
   describe "#destroy" do
+    it_behaves_like "a protected route" do
+      let(:request_type) { :delete }
+      let(:path) { "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}" }
+    end
+
     before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,1)
     end

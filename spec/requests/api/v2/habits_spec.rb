@@ -22,6 +22,11 @@ RSpec.describe "Habits v2", type: :request do
       end
     end
 
+    it_behaves_like "a protected route" do
+      let(:request_type) { :post }
+      let(:path) { "/api/v2/users/#{user.id}/habits" }
+    end
+
     it "responds with created status" do
       expect(response).to have_http_status(:created)
     end
