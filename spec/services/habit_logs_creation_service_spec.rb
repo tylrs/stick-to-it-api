@@ -105,7 +105,7 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".get_num_logs" do
-    it "returns number of days between and including 2 dates" do
+    it "returns number of days between 2 dates- inclusive of both dates" do
       start_date = Date.new(2022,02,02)
       date_limit = Date.new(2022,02,12)
       num_logs = HabitLogsCreationService.get_num_logs(start_date, date_limit)
