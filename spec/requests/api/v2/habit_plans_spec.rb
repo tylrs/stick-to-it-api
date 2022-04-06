@@ -7,6 +7,8 @@ RSpec.describe "HabitPlans v2", type: :request do
   let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
   let(:habit_plan) { habit_log.habit_plan }
   let(:habit) { habit_plan.habit }
+  let(:habit_plan_next_week) { create(:habit_plan, {start_datetime: "2022/02/06", user: user}) }
+  let!(:habit_log_next_week) { create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_next_week}) }
   
   before do
     FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
@@ -93,12 +95,12 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user does not have any habit plans for the current week" do
-      let(:user) { create(:user) }
+      let(:user_2) { create(:user) }
 
       it "does not return habit plans for this week" do
         allow(Date).to receive(:today).and_return Date.new(2022,2,11)
         
-        get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
+        get "/api/v2/users/#{user_2.id}/habit_plans/week", headers: headers
 
         expect(parsed_response.length).to eq 0
       end
