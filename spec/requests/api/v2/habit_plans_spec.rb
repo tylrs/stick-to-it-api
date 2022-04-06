@@ -83,6 +83,13 @@ RSpec.describe "HabitPlans v2", type: :request do
       it "returns multiple habit plans" do
         expect(parsed_response.length).to eq 2
       end
+
+      it "returns the correct habit plans" do
+        expect(parsed_response).to include(
+          include("id" => habit_plan.id),
+          include("id" => habit_plan_2.id)
+        )
+      end
     end
 
     context "when a user does not have any habit plans for the current week" do
