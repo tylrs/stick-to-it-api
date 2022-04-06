@@ -5,6 +5,7 @@ RSpec.describe HabitPlansFilterService do
   let(:user) { habit_log.habit_plan.user }
   let(:habit_plan) { habit_log.habit_plan }
   let(:habit_plan_next_week) { create(:habit_plan, {start_datetime: "2022/02/06", user: user}) }
+  let!(:habit_log_next_week) { create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_next_week}) }
   let(:habit) { habit_plan.habit }
 
   before do
@@ -14,8 +15,6 @@ RSpec.describe HabitPlansFilterService do
       habit_log.scheduled_at = date
       habit_log.save
     end
-
-    create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_next_week})
   end
 
   describe ".get_week_and_partner_plans" do
@@ -113,11 +112,10 @@ RSpec.describe HabitPlansFilterService do
   describe ".get_today_and_partner_plans" do
     let(:habit_plans) { HabitPlansFilterService.get_today_and_partner_plans(user.id) }
     let(:habit_plan_tomorrow) { create(:habit_plan, {start_datetime: "2022/02/03", user: user}) }
+    let!(:habit_log_tomorrow) { create(:habit_log, {scheduled_at: Date.new(2022,2,3), habit_plan: habit_plan_tomorrow}) }
 
     before do
       allow(Date).to receive(:today).and_return Date.new(2022,2,2)
-      
-      create(:habit_log, {scheduled_at: Date.new(2022,2,3), habit_plan: habit_plan_tomorrow})
     end
 
     describe "return value" do

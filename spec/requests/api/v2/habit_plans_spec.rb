@@ -28,6 +28,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
 
@@ -51,8 +52,8 @@ RSpec.describe "HabitPlans v2", type: :request do
             end_datetime
             habit_logs
             created_at
-            updated_at
-          ]
+            updated_at]
+
           expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
         end
   
@@ -71,10 +72,11 @@ RSpec.describe "HabitPlans v2", type: :request do
 
     context "when a user has multiple habit plans for this week" do
       let(:habit_plan_2) { create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user}) }
+      let!(:habit_log_2) { create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2}) }
       
       before do
         allow(Date).to receive(:today).and_return Date.new(2022,2,1)
-        create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2})
+
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
       
@@ -127,8 +129,8 @@ RSpec.describe "HabitPlans v2", type: :request do
             end_datetime
             habit_logs
             created_at
-            updated_at
-          ]
+            updated_at]
+            
           expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
         end
   
