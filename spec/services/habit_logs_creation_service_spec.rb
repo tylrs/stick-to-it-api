@@ -19,24 +19,41 @@ RSpec.describe HabitLogsCreationService do
     let(:start_date) { Date.new(2022,02,02) }
     let(:end_date) { Date.new(2022,02,10) }
 
-    context "when start date is on or before next Saturday" do
-      it "calls create_current_week_logs with correct start and end date, habit plan, and next saturday" do
+    context "when today is not Saturday and start date is on or before next Saturday" do
+      before do
         allow(Date).to receive(:today).and_return Date.new(2022,02,02)
-        
+      end
+
+      it "calls create_current_week_logs with correct arguments" do
         expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, end_date, habit_plan, next_saturday)
+
+        HabitLogsCreationService.create(params, user)
+      end
+
+      it "does not call create_next_week_logs" do
+        expect(HabitLogsCreationService).not_to receive(:create_next_week_logs).with(habit_plan)
 
         HabitLogsCreationService.create(params, user)
       end
     end
 
     context "when today is Saturday and start date is on or before next Saturday" do
-      it "calls create_next_week_logs" do
+      before do
         allow(Date).to receive(:today).and_return Date.new(2022,02,05)
-        
+      end
+
+      it "calls create_current_week_logs with correct arguments" do
+        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, end_date, habit_plan, next_saturday)
+
+        HabitLogsCreationService.create(params, user)
+      end
+
+      it "calls create_next_week_logs" do
         expect(HabitLogsCreationService).to receive(:create_next_week_logs).with(habit_plan)
 
         HabitLogsCreationService.create(params, user)
       end
+
     end
   end
 
