@@ -72,8 +72,7 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".determine_date_limit_initial_creation" do
-
-    context "when start_date is after next Saturday" do
+    context "when start date is after next Saturday" do
       it "sets date limit to nil" do
         start_date = Date.new(2022,02,20)
         end_date = Date.new(2022,02,22)
