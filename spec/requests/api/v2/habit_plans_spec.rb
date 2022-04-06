@@ -63,7 +63,7 @@ RSpec.describe "HabitPlans v2", type: :request do
           expect(habit_plan_details["habit"].keys).to match_array(habit_info_keys)
         end
   
-        it "includes habit_logs for this week" do
+        it "includes the correct number of habit_logs for this week" do
           expect(habit_plan_details["habit_logs"].length).to eq 4  
         end
       end
