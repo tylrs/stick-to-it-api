@@ -24,7 +24,7 @@ RSpec.describe "HabitLogs v2", type: :request do
       end
 
       it "responds with an updated habit log" do
-        expect(parsed_response["habit_log"]["completed_at"]).to eq habit_log.scheduled_at.iso8601(3)
+        expect(parsed_response["habit_log"]["completed_at"].to_date).to eq habit_log.scheduled_at
       end
     end
 
