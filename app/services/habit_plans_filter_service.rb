@@ -1,5 +1,4 @@
 module HabitPlansFilterService
-
   def self.get_week_and_partner_plans(user_id)
     habit_ids = Habit.includes(:habit_plans).where(habit_plans:{user_id: user_id}).ids
     HabitPlan.with_current_week_logs
