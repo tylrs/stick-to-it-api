@@ -53,7 +53,6 @@ RSpec.describe HabitLogsCreationService do
 
         HabitLogsCreationService.create(params, user)
       end
-
     end
   end
 
@@ -131,7 +130,6 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_logs" do
-    let(:logs) { HabitLog.all }
     let(:start_date) { Date.new(2022,02,02) }
 
     before do
@@ -139,15 +137,15 @@ RSpec.describe HabitLogsCreationService do
     end
 
     it "creates a fixed number of habit logs starting at a specified date" do
-      expect(logs.count).to eq 3
+      expect(user.habit_logs.count).to eq 3
     end
 
     it "schedules the first habit log with the start date" do
-      expect(logs.first.scheduled_at).to eq start_date
+      expect(user.habit_logs.first.scheduled_at).to eq start_date
     end
 
     it "schedules the last habit log with a chosen number of days past the start date" do
-      expect(logs.last.scheduled_at).to eq(start_date + 2.days)
+      expect(user.habit_logs.last.scheduled_at).to eq(start_date + 2.days)
     end
   end
 end

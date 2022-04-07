@@ -36,7 +36,7 @@ RSpec.describe "Habits v2", type: :request do
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
         params: JSON.generate(habit_info)
-      }.to change { Habit.count }.by(1)
+      }.to change { user.habits.count }.by(1)
     end
 
     it "responds with the created habit" do
@@ -50,7 +50,7 @@ RSpec.describe "Habits v2", type: :request do
         post "/api/v2/users/#{user.id}/habits", 
         headers: headers, 
         params: JSON.generate(habit_info)
-      }.to change { HabitPlan.count }.by(1)
+      }.to change { user.habit_plans.count }.by(1)
     end
 
     context "when the end date is on or after next Saturday" do
@@ -59,7 +59,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
           params: JSON.generate(habit_info)
-        }.to change { HabitLog.count }.by(4)
+        }.to change { user.habit_logs.count }.by(4)
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
           params: JSON.generate(habit_info)
-        }.to change { HabitLog.count }.by(3)
+        }.to change { user.habit_logs.count }.by(3)
       end
     end
 
@@ -93,7 +93,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
           params: JSON.generate(habit_info)
-        }.to_not change { HabitLog.count }
+        }.to_not change { user.habit_logs.count }
       end
     end
 
@@ -120,7 +120,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
           headers: headers, 
           params: JSON.generate(habit_info)
-        }.to_not change { Habit.count }
+        }.to_not change { user.habits.count }
       end
     end
   end
