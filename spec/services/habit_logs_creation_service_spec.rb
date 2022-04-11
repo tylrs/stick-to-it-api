@@ -67,12 +67,13 @@ RSpec.describe HabitLogsCreationService do
                           end_datetime: Date.new(2022, 2, 20))
     end
 
-    it "calls create_logs with correct number of logs, range beginning, and habit plan" do
+    it "calls create_logs with correct date range and habit plan" do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
       start_date = Date.new(2022, 2, 2)
       end_date = Date.new(2022, 2, 20)
+      range = Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
 
-      expect(HabitLogsCreationService).to receive(:create_logs).with(4, start_date, habit_plan)
+      expect(HabitLogsCreationService).to receive(:create_logs).with(range, habit_plan)
       
       HabitLogsCreationService.create_current_week_logs(start_date, end_date, habit_plan, 
                                                         next_saturday)
@@ -85,11 +86,11 @@ RSpec.describe HabitLogsCreationService do
                           end_datetime: Date.new(2022, 2, 20))
     end
 
-    it "calls create_logs with correct number of logs, range beginning, and habit plan" do
+    it "calls create_logs with correct range and habit plan" do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
-      range_beginning = Date.new(2022, 2, 6)
+      range = Date.new(2022, 2, 6)..Date.new(2022, 2, 12)
 
-      expect(HabitLogsCreationService).to receive(:create_logs).with(7, range_beginning, habit_plan)
+      expect(HabitLogsCreationService).to receive(:create_logs).with(range, habit_plan)
       
       HabitLogsCreationService.create_next_week_logs(habit_plan)
     end
@@ -130,21 +131,12 @@ RSpec.describe HabitLogsCreationService do
     end
   end
 
-  describe ".get_num_logs" do
-    it "returns number of days between 2 dates- inclusive of both dates" do
-      start_date = Date.new(2022, 2, 2)
-      date_limit = Date.new(2022, 2, 12)
-      num_logs = HabitLogsCreationService.get_num_logs(start_date, date_limit)
-
-      expect(num_logs).to eq 11
-    end
-  end
-
   describe ".create_logs" do
     let(:start_date) { Date.new(2022, 2, 2) }
 
     before do
-      HabitLogsCreationService.create_logs(3, start_date, habit_plan)
+      date_limit = Date.new(2022, 2, 4)
+      HabitLogsCreationService.create_logs(start_date..date_limit, habit_plan)
     end
 
     it "creates a fixed number of habit logs starting at a specified date" do
