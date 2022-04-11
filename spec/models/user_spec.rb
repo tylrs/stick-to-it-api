@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-
   describe "validations" do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:username) }
@@ -18,5 +17,4 @@ RSpec.describe User, type: :model do
     it { should have_many(:habit_logs) }
     it { should have_many(:created_habits) }
   end
-
 end

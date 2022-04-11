@@ -5,11 +5,11 @@ RSpec.describe "Habits v1", type: :request do
     before(:all) do
       @user = create(:user)
       token = JsonWebTokenService.encode(user_id: @user.id)
-      @headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      @headers = { "Content-type": "application/json", "Authorization": "Bearer #{token}" }
     end
 
     skip it "Should create a habit and habit logs until the current week's next Saturday if the end date is after or equal to next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info = {
         name: "Running",
         description: "Run every day",
@@ -31,7 +31,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should create a habit and habit logs until the end date if the end date is before the current week's next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info = {
         name: "Running",
         description: "Run every day",
@@ -53,7 +53,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should create a habit and no habit logs if the start date is after the current week's next Saturday" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info = {
         name: "Running",
         description: "Run every day",
@@ -73,7 +73,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should return habit info and the current week's habit logs" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info = {
         name: "Running",
         description: "Run every day",
@@ -95,7 +95,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should return no habit info and no habit logs if there are no habit logs for the current week" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info = {
         name: "Running",
         description: "Run every day",
@@ -113,7 +113,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should return habits for today and associated habit logs" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info1 = {
         name: "Running",
         description: "Run every day",
@@ -149,7 +149,7 @@ RSpec.describe "Habits v1", type: :request do
     end
 
     skip it "Should be able to delete a habit and associated habit logs" do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
       habit_info1 = {
         name: "Running",
         description: "Run every day",
@@ -172,8 +172,8 @@ RSpec.describe "Habits v1", type: :request do
 
       expect(response.status).to eq 204
       expect(Habit.all.length).to eq 1
-      expect(Habit.find_by name: "Running").to eq nil
-      expect(HabitLog.find_by habit_id: habit1.id).to eq nil
+      expect(Habit.find_by(name: "Running")).to eq nil
+      expect(HabitLog.find_by(habit_id: habit1.id)).to eq nil
       expect(HabitLog.where(habit_id: habit2.id).length).to eq 3
     end
   end

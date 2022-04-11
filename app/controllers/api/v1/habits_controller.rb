@@ -4,14 +4,18 @@ class Api::V1::HabitsController < ApplicationController
   def index
     full_habits = HabitLogsFilterService.get_week_logs(params[:user_id])
     render json: full_habits, 
-           include: [habit: {only: [:name, :description]}, habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
+           include: [habit: { only: %i[name
+                                       description] }, habit_logs: { only: %i[id habit_id
+                                                                              scheduled_at completed_at] }], 
            status: :ok  
   end
 
   def create
-    created_habit = @user.created_habits.create(name: habit_params[:name], description: habit_params[:description])
+    created_habit = @user.created_habits.create(name: habit_params[:name], 
+                                                description: habit_params[:description])
     if created_habit.errors.count == 0
-      habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
+      habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], 
+                                            end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
       HabitLogsCreationService.create(habit_params, @user)
       render json: created_habit, status: :created
     else
@@ -28,7 +32,7 @@ class Api::V1::HabitsController < ApplicationController
   def show_today
     full_habits = HabitLogsFilterService.get_today_logs(params[:user_id])
     render json: full_habits, 
-           include: [habit_logs: {only: [:id, :habit_id, :scheduled_at, :completed_at]}], 
+           include: [habit_logs: { only: %i[id habit_id scheduled_at completed_at] }], 
            status: :ok  
   end
 
@@ -56,8 +60,8 @@ class Api::V1::HabitsController < ApplicationController
   end
 
   def habit_params
-      params.permit(
-        :name, :description, :user_id, :start_datetime, :end_datetime
-      )
+    params.permit(
+      :name, :description, :user_id, :start_datetime, :end_datetime
+    )
   end  
 end
