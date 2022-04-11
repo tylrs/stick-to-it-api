@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:create] do 
-        resources :habits, only: [:index, :today, :create, :destroy] do
+        resources :habits, only: %i[index today create destroy] do
           get :today, on: :collection, to: "habits#show_today"
           resources :habit_logs, only: [:update]
         end   
@@ -13,12 +13,12 @@ Rails.application.routes.draw do
     end
     namespace :v2 do
       resources :users, only: [:create] do 
-        resources :habit_plans, only: [:week, :today, :destroy] do
+        resources :habit_plans, only: %i[week today destroy] do
           get :week, on: :collection, to: "habit_plans#show_week"
           get :today, on: :collection, to: "habit_plans#show_today"
           resources :habit_logs, only: [:update]
         end
-        resources :habits, only: [:create, :destroy] 
+        resources :habits, only: %i[create destroy] 
       end
       post "/auth/login", to: "authentication#login"
       get "/*a", to: "application#not_found"     

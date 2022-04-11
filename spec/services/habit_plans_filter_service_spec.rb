@@ -4,13 +4,17 @@ RSpec.describe HabitPlansFilterService do
   let(:habit_log) { create(:habit_log) }
   let(:user) { habit_log.habit_plan.user }
   let(:habit_plan) { habit_log.habit_plan }
-  let(:habit_plan_next_week) { create(:habit_plan, {start_datetime: Date.new(2022,2,6), user: user}) }
-  let!(:habit_log_next_week) { create(:habit_log, {scheduled_at: Date.new(2022,2,6), habit_plan: habit_plan_next_week}) }
+  let(:habit_plan_next_week) do
+    create(:habit_plan, { start_datetime: Date.new(2022, 2, 6), user: user })
+  end  
+  let!(:habit_log_next_week) do
+    create(:habit_log, { scheduled_at: Date.new(2022, 2, 6), habit_plan: habit_plan_next_week })
+  end  
   let(:habit) { habit_plan.habit }
 
   before do
     FactoryBot.create_list(:habit_log, 4, habit_plan_id: habit_plan.id) do |habit_log, i|
-      date = Date.new(2022,2,3)
+      date = Date.new(2022, 2, 3)
       date += i.days
       habit_log.scheduled_at = date
       habit_log.save
@@ -21,7 +25,7 @@ RSpec.describe HabitPlansFilterService do
     let(:habit_plans) { HabitPlansFilterService.get_week_and_partner_plans(user.id) }
 
     before do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
     end
 
     describe "return value" do
@@ -47,20 +51,22 @@ RSpec.describe HabitPlansFilterService do
 
       it "includes habit logs with scheduled_at dates for the current week" do
         expect(habit_plans[0].habit_logs).to contain_exactly(
-          an_object_having_attributes(scheduled_at: Date.new(2022,2,2)),
-          an_object_having_attributes(scheduled_at: Date.new(2022,2,3)),
-          an_object_having_attributes(scheduled_at: Date.new(2022,2,4)),
-          an_object_having_attributes(scheduled_at: Date.new(2022,2,5)))
+          an_object_having_attributes(scheduled_at: Date.new(2022, 2, 2)),
+          an_object_having_attributes(scheduled_at: Date.new(2022, 2, 3)),
+          an_object_having_attributes(scheduled_at: Date.new(2022, 2, 4)),
+          an_object_having_attributes(scheduled_at: Date.new(2022, 2, 5))
+        )
       end
     end
 
     context "when user has a partner on a habit" do
       let(:partner) { create(:user) }
-      let(:partner_habit_plan) { create(:habit_plan, {user: partner, habit: habit}) }
+      let(:partner_habit_plan) { create(:habit_plan, { user: partner, habit: habit }) }
 
       before do
-        FactoryBot.create_list(:habit_log, 5, habit_plan_id: partner_habit_plan.id) do |habit_log, i|
-          date = Date.new(2022,2,2)
+        FactoryBot.create_list(:habit_log, 5, 
+                               habit_plan_id: partner_habit_plan.id) do |habit_log, i|
+          date = Date.new(2022, 2, 2)
           date += i.days
           habit_log.scheduled_at = date
           habit_log.save
@@ -89,10 +95,10 @@ RSpec.describe HabitPlansFilterService do
 
         it "includes habit logs with scheduled_at dates for the current week" do
           expect(habit_plans[1].habit_logs).to contain_exactly(
-            an_object_having_attributes(scheduled_at: Date.new(2022,2,2)),
-            an_object_having_attributes(scheduled_at: Date.new(2022,2,3)),
-            an_object_having_attributes(scheduled_at: Date.new(2022,2,4)),
-            an_object_having_attributes(scheduled_at: Date.new(2022,2,5)),
+            an_object_having_attributes(scheduled_at: Date.new(2022, 2, 2)),
+            an_object_having_attributes(scheduled_at: Date.new(2022, 2, 3)),
+            an_object_having_attributes(scheduled_at: Date.new(2022, 2, 4)),
+            an_object_having_attributes(scheduled_at: Date.new(2022, 2, 5))
           )
         end
       end
@@ -111,11 +117,15 @@ RSpec.describe HabitPlansFilterService do
 
   describe ".get_today_and_partner_plans" do
     let(:habit_plans) { HabitPlansFilterService.get_today_and_partner_plans(user.id) }
-    let(:habit_plan_tomorrow) { create(:habit_plan, {start_datetime: Date.new(2022,2,3), user: user}) }
-    let!(:habit_log_tomorrow) { create(:habit_log, {scheduled_at: Date.new(2022,2,3), habit_plan: habit_plan_tomorrow}) }
+    let(:habit_plan_tomorrow) do
+      create(:habit_plan, { start_datetime: Date.new(2022, 2, 3), user: user })
+    end    
+    let!(:habit_log_tomorrow) do
+      create(:habit_log, { scheduled_at: Date.new(2022, 2, 3), habit_plan: habit_plan_tomorrow })
+    end    
 
     before do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,2)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
     end
 
     describe "return value" do
@@ -136,18 +146,18 @@ RSpec.describe HabitPlansFilterService do
       end
   
       it "includes the habit log for the current day" do
-        expect(habit_plans[0].habit_logs[0].scheduled_at).to eq Date.new(2022,2,2)
+        expect(habit_plans[0].habit_logs[0].scheduled_at).to eq Date.new(2022, 2, 2)
       end
     end
 
-
     context "when user has a partner on a habit" do
       let(:partner) { create(:user) }
-      let(:partner_habit_plan) { create(:habit_plan, {user: partner, habit: habit}) }
+      let(:partner_habit_plan) { create(:habit_plan, { user: partner, habit: habit }) }
 
       before do
-        FactoryBot.create_list(:habit_log, 4, habit_plan_id: partner_habit_plan.id) do |habit_log, i|
-          date = Date.new(2022,2,2)
+        FactoryBot.create_list(:habit_log, 4, 
+                               habit_plan_id: partner_habit_plan.id) do |habit_log, i|
+          date = Date.new(2022, 2, 2)
           date += i.days
           habit_log.scheduled_at = date
           habit_log.save
@@ -171,14 +181,14 @@ RSpec.describe HabitPlansFilterService do
         end
   
         it "includes the habit log for the current day" do
-          expect(habit_plans[1].habit_logs[0].scheduled_at).to eq Date.new(2022,2,2)
+          expect(habit_plans[1].habit_logs[0].scheduled_at).to eq Date.new(2022, 2, 2)
         end
       end
     end
 
     context "when a user has no habit plans for the current day" do
       before do
-        allow(Date).to receive(:today).and_return Date.new(2022,1,30)
+        allow(Date).to receive(:today).and_return Date.new(2022, 1, 30)
       end
 
       it "returns no habit plans" do
@@ -190,13 +200,22 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".get_next_week_plans" do
-    let!(:habit_plan_next_week_2) { create(:habit_plan, {start_datetime: Date.new(2022,2,12), end_datetime: Date.new(2022,2,19)}) }
-    let!(:habit_plan_next_week_3) { create(:habit_plan, {start_datetime: Date.new(2022,2,4), end_datetime: Date.new(2022,2,6)}) }
-    let!(:habit_plan_current_week) { create(:habit_plan, {start_datetime: Date.new(2022,2,2), end_datetime: Date.new(2022,2,5)}) }
+    let!(:habit_plan_next_week_2) do
+      create(:habit_plan, 
+             { start_datetime: Date.new(2022, 2, 12), end_datetime: Date.new(2022, 2, 19) })
+    end    
+    let!(:habit_plan_next_week_3) do
+      create(:habit_plan, 
+             { start_datetime: Date.new(2022, 2, 4), end_datetime: Date.new(2022, 2, 6) })
+    end    
+    let!(:habit_plan_current_week) do
+      create(:habit_plan, 
+             { start_datetime: Date.new(2022, 2, 2), end_datetime: Date.new(2022, 2, 5) })
+    end    
     let(:next_week_plans) { HabitPlansFilterService.get_next_week_plans }
 
     before do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
     end
 
     it "returns habit plans with a start date on or before the following Saturday and on or after next Sunday" do
@@ -210,13 +229,15 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".determine_next_week_range" do
-    let(:next_sunday) { Date.new(2022,2,6) }
-    let(:following_saturday) { Date.new(2022,2,12) }
-    let(:habit_plan) { create(:habit_plan, start_datetime: Date.new(2022,2,8), end_datetime: Date.new(2022,2,11)) }
+    let(:next_sunday) { Date.new(2022, 2, 6) }
+    let(:following_saturday) { Date.new(2022, 2, 12) }
+    let(:habit_plan) do
+      create(:habit_plan, start_datetime: Date.new(2022, 2, 8), end_datetime: Date.new(2022, 2, 11))
+    end    
     let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
 
     before do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,2)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
     end
 
     it "returns range_beginning equal to habit plan start date" do
@@ -228,7 +249,10 @@ RSpec.describe HabitPlansFilterService do
     end
 
     context "habit plan start date is before next Sunday" do
-      let(:habit_plan) { create(:habit_plan, start_datetime: Date.new(2022,2,2), end_datetime: Date.new(2022,2,20)) }
+      let(:habit_plan) do
+        create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
+                            end_datetime: Date.new(2022, 2, 20))
+      end      
       let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
 
       it "returns range_beginning as next sunday" do
@@ -237,7 +261,10 @@ RSpec.describe HabitPlansFilterService do
     end
 
     context "habit plan end date is after the following Saturday" do
-      let(:habit_plan) { create(:habit_plan, start_datetime: Date.new(2022,2,2), end_datetime: Date.new(2022,2,20)) }
+      let(:habit_plan) do
+        create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
+                            end_datetime: Date.new(2022, 2, 20))
+      end      
       let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
 
       it "returns range_end as next_saturday" do

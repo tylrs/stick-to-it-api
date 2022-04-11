@@ -2,9 +2,11 @@ class Api::V2::HabitsController < ApplicationController
   before_action :find_user
 
   def create
-    created_habit = @user.created_habits.create(name: habit_params[:name], description: habit_params[:description])
+    created_habit = @user.created_habits.create(name: habit_params[:name], 
+                                                description: habit_params[:description])
     if created_habit.errors.count == 0
-      habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
+      habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], 
+                                            end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
       HabitLogsCreationService.create(habit_params, @user)
       render json: created_habit, status: :created
     else
@@ -42,8 +44,8 @@ class Api::V2::HabitsController < ApplicationController
   end
 
   def habit_params
-      params.permit(
-        :name, :description, :user_id, :start_datetime, :end_datetime
-      )
+    params.permit(
+      :name, :description, :user_id, :start_datetime, :end_datetime
+    )
   end  
 end

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Authentications v2", type: :request do
   describe "#login" do
     let(:user) { create(:user) }
-    let(:headers) { {"Content-type": "application/json"} }
+    let(:headers) { { "Content-type": "application/json" } }
 
     before do
       post "/api/v2/auth/login",
@@ -12,7 +12,7 @@ RSpec.describe "Authentications v2", type: :request do
     end
     
     context "when login is successful" do
-      let(:login_params) { {email: user.email, password: "123456"} }
+      let(:login_params) { { email: user.email, password: "123456" } }
 
       it "returns an ok status" do
         expect(response).to be_ok
@@ -31,11 +31,10 @@ RSpec.describe "Authentications v2", type: :request do
           expect(parsed_response["user"].keys).to match_array(user_keys)
         end
       end
-
     end 
 
     context "when login is unsuccessful" do
-      let(:login_params) { {email: user.email, password: "12"} }
+      let(:login_params) { { email: user.email, password: "12" } }
 
       it "returns an unauthorized status" do
         expect(response).to have_http_status(:unauthorized)

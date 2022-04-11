@@ -4,6 +4,6 @@ class Api::V1::StatusController < ApplicationController
 
     render json: {
       message: current_sha
-    }, status: 200
+    }, status: :ok
   end
 end

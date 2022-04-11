@@ -11,8 +11,9 @@ RSpec.describe "HabitLogs v1", type: :request do
     end
 
     skip it "Should be able to mark an incomplete habit log as completed" do
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
-      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
+      headers = { "Content-type": "application/json", "Authorization": "Bearer #{@token}" }
+      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", 
+            headers: headers
 
       updated_logs = HabitLog.where(habit_plan_id: @habit_plan.id)
 
@@ -20,9 +21,11 @@ RSpec.describe "HabitLogs v1", type: :request do
     end
 
     skip it "Should be able to mark a completed habit log as incomplete" do
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{@token}"}
-      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
-      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", headers: headers
+      headers = { "Content-type": "application/json", "Authorization": "Bearer #{@token}" }
+      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", 
+            headers: headers
+      patch "/api/v1/users/#{@user.id}/habits/#{@habit.id}/habit_logs/#{@habit_log.id}", 
+            headers: headers
 
       updated_logs = HabitLog.where(habit_plan_id: @habit_plan.id)
 

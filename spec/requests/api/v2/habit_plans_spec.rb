@@ -4,15 +4,17 @@ RSpec.describe "HabitPlans v2", type: :request do
   let(:habit_log) { create(:habit_log) }
   let(:user) { habit_log.habit_plan.user }
   let(:token) { JsonWebTokenService.encode(user_id: user.id) }
-  let(:headers) { {"Content-type": "application/json", "Authorization": "Bearer #{token}"} }
+  let(:headers) { { "Content-type": "application/json", "Authorization": "Bearer #{token}" } }
   let(:habit_plan) { habit_log.habit_plan }
   let(:habit) { habit_plan.habit }
-  let(:habit_plan_next_week) { create(:habit_plan, {start_datetime: "2022/02/06", user: user}) }
-  let!(:habit_log_next_week) { create(:habit_log, {scheduled_at: "2022/02/06", habit_plan: habit_plan_next_week}) }
+  let(:habit_plan_next_week) { create(:habit_plan, { start_datetime: "2022/02/06", user: user }) }
+  let!(:habit_log_next_week) do
+    create(:habit_log, { scheduled_at: "2022/02/06", habit_plan: habit_plan_next_week })
+  end  
   
   before do
     FactoryBot.create_list(:habit_log, 3, habit_plan_id: habit_plan.id) do |habit_log, i|
-      date = Date.new(2022,2,3)
+      date = Date.new(2022, 2, 3)
       date += i.days
       habit_log.scheduled_at = date
       habit_log.save
@@ -29,7 +31,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       let(:habit_plan_details) { parsed_response[0] }
 
       before do
-        allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
 
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
@@ -54,7 +56,8 @@ RSpec.describe "HabitPlans v2", type: :request do
             end_datetime
             habit_logs
             created_at
-            updated_at]
+            updated_at
+          ]
 
           expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
         end
@@ -69,15 +72,18 @@ RSpec.describe "HabitPlans v2", type: :request do
           expect(habit_plan_details["habit_logs"].length).to eq 4  
         end
       end
-
     end
 
     context "when a user has multiple habit plans for this week" do
-      let(:habit_plan_2) { create(:habit_plan, {start_datetime: "2022-02-05 00:00:00", user: user}) }
-      let!(:habit_log_2) { create(:habit_log, {scheduled_at: "2022/02/05", habit_plan: habit_plan_2}) }
+      let(:habit_plan_2) do
+        create(:habit_plan, { start_datetime: "2022-02-05 00:00:00", user: user })
+      end      
+      let!(:habit_log_2) do
+        create(:habit_log, { scheduled_at: "2022/02/05", habit_plan: habit_plan_2 })
+      end      
       
       before do
-        allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
 
         get "/api/v2/users/#{user.id}/habit_plans/week", headers: headers
       end
@@ -98,7 +104,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       let(:user_2) { create(:user) }
 
       it "does not return habit plans for this week" do
-        allow(Date).to receive(:today).and_return Date.new(2022,2,11)
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 11)
         
         get "/api/v2/users/#{user_2.id}/habit_plans/week", headers: headers
 
@@ -117,7 +123,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       let(:habit_plan_details) { parsed_response[0] }
 
       before do
-        allow(Date).to receive(:today).and_return Date.new(2022,2,3)
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 3)
 
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
       end
@@ -138,7 +144,8 @@ RSpec.describe "HabitPlans v2", type: :request do
             end_datetime
             habit_logs
             created_at
-            updated_at]
+            updated_at
+          ]
             
           expect(habit_plan_details.keys).to match_array(habit_plan_info_keys)
         end
@@ -157,7 +164,7 @@ RSpec.describe "HabitPlans v2", type: :request do
 
     context "when a user does not have any habit plans for today" do
       it "does not return habit plans for today" do
-        allow(Date).to receive(:today).and_return Date.new(2022,2,11)
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 11)
         
         get "/api/v2/users/#{user.id}/habit_plans/today", headers: headers
 
@@ -173,7 +180,7 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     before do
-      allow(Date).to receive(:today).and_return Date.new(2022,2,1)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
     end
 
     it "returns a success status" do
@@ -183,24 +190,24 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     it "does not destroy a habit" do
-      expect {
+      expect do
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
-        headers: headers
-      }.to_not change { user.created_habits.count }
+               headers: headers
+      end.to_not change { user.created_habits.count }
     end
 
     it "destroys a habit plan" do
-      expect {
+      expect do
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
-        headers: headers
-      }.to change { user.habit_plans.count }.by(-1)
+               headers: headers
+      end.to change { user.habit_plans.count }.by(-1)
     end
 
     it "destroys associated habit logs" do
-      expect {
+      expect do
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
-        headers: headers
-      }.to change { habit_plan.habit_logs.count }.by(-4)
+               headers: headers
+      end.to change { habit_plan.habit_logs.count }.by(-4)
     end
   end
 end

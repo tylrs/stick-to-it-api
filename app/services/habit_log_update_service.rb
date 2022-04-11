@@ -7,4 +7,4 @@ module HabitLogUpdateService
     end
     habit_log
   end   
-end  
+end

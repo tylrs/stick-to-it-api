@@ -11,7 +11,7 @@ RSpec.describe "Users v1", type: :request do
         password_confirmation: "123456"
       }
 
-      headers = {"Content-type": "application/json"}
+      headers = { "Content-type": "application/json" }
       post "/api/v1/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
 
@@ -29,7 +29,7 @@ RSpec.describe "Users v1", type: :request do
         password_confirmation: ""
       }
 
-      headers = {"Content-type": "application/json"}
+      headers = { "Content-type": "application/json" }
       post "/api/v1/users", headers: headers, params: JSON.generate(user_details)
       created_user = User.last
       data = JSON.parse(response.body)
@@ -42,7 +42,7 @@ RSpec.describe "Users v1", type: :request do
       create(:user)
       user = User.first
       token = JsonWebTokenService.encode(user_id: user.id)
-      headers = {"Content-type": "application/json", "Authorization": "Bearer #{token}"}
+      headers = { "Content-type": "application/json", "Authorization": "Bearer #{token}" }
 
       delete "/api/v1/users/#{user.id}", headers: headers
 

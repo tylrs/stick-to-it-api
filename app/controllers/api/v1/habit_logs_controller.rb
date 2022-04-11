@@ -3,7 +3,7 @@ class Api::V1::HabitLogsController < ApplicationController
 
   def update
     log = HabitLogUpdateService.update(@habit_log)
-    render json: {habit_log: log}, status: :ok
+    render json: { habit_log: log }, status: :ok
   end
 
   private
