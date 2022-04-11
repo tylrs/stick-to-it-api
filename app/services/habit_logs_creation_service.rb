@@ -10,10 +10,10 @@ module HabitLogsCreationService
     end
   end
 
-  def self.create_current_week_logs(habit_start, habit_end, habit_plan, next_saturday)
-    date_limit = determine_date_limit_initial_creation(habit_start, habit_end, next_saturday)
-    num_logs = get_num_logs(habit_start, date_limit)
-    create_logs(num_logs, habit_start, habit_plan)
+  def self.create_current_week_logs(plan_start, plan_end, habit_plan, next_saturday)
+    date_limit = determine_date_limit_initial_creation(plan_start, plan_end, next_saturday)
+    num_logs = get_num_logs(plan_start, date_limit)
+    create_logs(num_logs, plan_start, habit_plan)
   end
 
   def self.create_next_week_logs(habit_plan)
