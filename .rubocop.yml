@@ -3,3 +3,12 @@ Layout/LineLength:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/TimeZone:
+  Enabled: false
+
+Layout/TrailingWhitespace:
+  Enabled: false
