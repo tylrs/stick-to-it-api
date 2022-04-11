@@ -23,10 +23,10 @@ module HabitLogsCreationService
     create_logs(num_logs, range_beginning, habit_plan) 
   end
   
-  def self.determine_date_limit_initial_creation(habit_start, habit_end, next_saturday)
-    return if habit_start > next_saturday
+  def self.determine_date_limit_initial_creation(plan_start, plan_end, next_saturday)
+    return if plan_start > next_saturday
   
-    habit_end >= next_saturday ? next_saturday : habit_end
+    plan_end >= next_saturday ? next_saturday : plan_end
   end
   
   def self.get_num_logs(range_beginning, date_limit)
