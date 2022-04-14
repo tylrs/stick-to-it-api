@@ -2,9 +2,9 @@ module HabitLogsCreationService
   def self.create_initial_logs(habit_plan)
     plan_start = habit_plan.start_datetime.to_datetime
     today = Date.today  
-    next_saturday = today.end_of_week(:sunday)
-    create_logs(habit_plan, "current_week") if plan_start <= next_saturday
-    if today == next_saturday && plan_start <= next_saturday.next_occurring(:saturday) 
+    week_end = today.end_of_week(:sunday)
+    create_logs(habit_plan, "current_week") if plan_start <= week_end
+    if today == week_end && plan_start <= week_end.next_occurring(:saturday) 
       create_logs(habit_plan, "next_week")                                                 
     end
   end
