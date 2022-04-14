@@ -227,49 +227,4 @@ RSpec.describe HabitPlansFilterService do
       )
     end
   end
-
-  describe ".determine_next_week_range" do
-    let(:next_sunday) { Date.new(2022, 2, 6) }
-    let(:following_saturday) { Date.new(2022, 2, 12) }
-    let(:habit_plan) do
-      create(:habit_plan, start_datetime: Date.new(2022, 2, 8), end_datetime: Date.new(2022, 2, 11))
-    end    
-    let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
-
-    before do
-      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
-    end
-
-    it "returns range_beginning equal to habit plan start date" do
-      expect(range[:range_beginning]).to eq habit_plan.start_datetime
-    end 
-
-    it "returns range_end equal to habit plan end date" do
-      expect(range[:range_end]).to eq habit_plan.end_datetime
-    end
-
-    context "habit plan start date is before next Sunday" do
-      let(:habit_plan) do
-        create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
-                            end_datetime: Date.new(2022, 2, 20))
-      end      
-      let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
-
-      it "returns range_beginning as next sunday" do
-        expect(range[:range_beginning]).to eq next_sunday
-      end
-    end
-
-    context "habit plan end date is after the following Saturday" do
-      let(:habit_plan) do
-        create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
-                            end_datetime: Date.new(2022, 2, 20))
-      end      
-      let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
-
-      it "returns range_end as next_saturday" do
-        expect(range[:range_end]).to eq following_saturday
-      end
-    end
-  end
 end
