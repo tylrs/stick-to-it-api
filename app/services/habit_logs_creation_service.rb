@@ -10,22 +10,6 @@ module HabitLogsCreationService
     end
   end
 
-  def self.create_current_week_logs(habit_plan)
-    range = determine_date_range(habit_plan, "current_week")
-    create_logs(range, habit_plan) 
-  end
-
-  def self.create_next_week_logs(habit_plan)
-    range = determine_date_range(habit_plan, "next_week")
-    create_logs(range, habit_plan) 
-  end
-  
-  def self.determine_date_limit_initial_creation(plan_start, plan_end, next_saturday)
-    return if plan_start > next_saturday
-  
-    plan_end >= next_saturday ? next_saturday : plan_end
-  end
-
   def self.determine_date_range(habit_plan, week_type)
     plan_start = habit_plan.start_datetime.to_datetime
     plan_end = habit_plan.end_datetime.to_datetime
