@@ -5,7 +5,7 @@ RSpec.describe HabitLogsCreationService do
   let(:habit_plan) { create(:habit_plan, { user: user }) }
   let(:next_saturday) { Date.new(2022, 2, 1).end_of_week(:sunday) }
 
-  describe ".create" do
+  describe ".create_initial_logs" do
     let(:habit_plan) do
       create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
                           end_datetime: Date.new(2022, 2, 10))
@@ -30,13 +30,13 @@ RSpec.describe HabitLogsCreationService do
       it "calls create_logs with correct arguments" do
         expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "current_week")
 
-        HabitLogsCreationService.create(habit_plan)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
 
       it "does not call create_logs again" do
         expect(HabitLogsCreationService).not_to receive(:create_logs).with(habit_plan, "next_week")
 
-        HabitLogsCreationService.create(habit_plan)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe HabitLogsCreationService do
         expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "current_week")
         expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "next_week")
 
-        HabitLogsCreationService.create(habit_plan)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
     end
   end

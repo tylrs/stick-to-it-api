@@ -7,7 +7,7 @@ class Api::V2::HabitsController < ApplicationController
     if created_habit.errors.count == 0
       habit_plan = @user.habit_plans.create(start_datetime: habit_params[:start_datetime], 
                                             end_datetime: habit_params[:end_datetime], habit_id: created_habit.id)
-      HabitLogsCreationService.create(habit_plan)
+      HabitLogsCreationService.create_initial_logs(habit_plan)
       render json: created_habit, status: :created
     else
       render json: { errors: created_habit.errors.full_messages },
