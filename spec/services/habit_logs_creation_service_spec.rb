@@ -136,7 +136,7 @@ RSpec.describe HabitLogsCreationService do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
     end
     context "current week" do
-      context "when start date is before next Saturday and on or after the current Sunday" do
+      context "when start date is before current Saturday and on or after the current Sunday" do
         it "returns a date range starting on habit plan start date" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
           end_datetime: Date.new(2022, 2, 20))
@@ -146,7 +146,17 @@ RSpec.describe HabitLogsCreationService do
         end
       end
       
-      context "when start date is after next Saturday" do
+      context "when start date is after current Saturday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
+          end_datetime: Date.new(2022, 2, 22))
+          date_limit = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
+          
+          expect(date_limit).to be_nil
+        end
+      end
+
+      context "when end date is before current Sunday" do
         it "returns nil" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
           end_datetime: Date.new(2022, 2, 22))
@@ -156,7 +166,7 @@ RSpec.describe HabitLogsCreationService do
         end
       end
       
-      context "when end date is before next Saturday" do
+      context "when end date is before current Saturday" do
         it "returns a date range ending on habit plan end date" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
           end_datetime: Date.new(2022, 2, 4))
@@ -166,8 +176,8 @@ RSpec.describe HabitLogsCreationService do
         end
       end
       
-      context "when end date is on or after next Saturday" do
-        it "returns a date range ending on next Saturday" do
+      context "when end date is on or after current Saturday" do
+        it "returns a date range ending on current Saturday" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
           end_datetime: Date.new(2022, 2, 20))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
