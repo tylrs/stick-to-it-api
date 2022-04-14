@@ -131,6 +131,90 @@ RSpec.describe HabitLogsCreationService do
     end
   end
 
+  describe ".determine_date_range" do
+    before do
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+    end
+    context "when creating logs for current week" do
+      context "when start date is before next Saturday and on or after the current Sunday" do
+        it "returns a date range starting on habit plan start date" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+          end_datetime: Date.new(2022, 2, 20))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
+        end
+      end
+      
+      context "when start date is after next Saturday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
+          end_datetime: Date.new(2022, 2, 22))
+          date_limit = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
+          
+          expect(date_limit).to be_nil
+        end
+      end
+      
+      context "when end date is before next Saturday" do
+        it "returns a date range ending on habit plan end date" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+          end_datetime: Date.new(2022, 2, 4))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current week")
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 4)
+        end
+      end
+      
+      context "when end date is on or after next Saturday" do
+        it "returns a date range ending on next Saturday" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+          end_datetime: Date.new(2022, 2, 20))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current week")
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
+        end
+      end
+      
+    end
+
+    context "when creating logs for next week" do
+      context "when a habit plan start and end date occur within next week" do
+        it "returns a date range starting on habit plan start date" do
+          expect(range[:range_beginning]).to eq habit_plan.start_datetime
+        end 
+    
+        it "returns a date range ending on habit plan end date" do
+          expect(range[:range_end]).to eq habit_plan.end_datetime
+        end
+      end
+  
+      context "when habit plan start date is before next Sunday" do
+        let(:habit_plan) do
+          create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
+                              end_datetime: Date.new(2022, 2, 20))
+        end      
+        let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
+  
+        it "returns a date range starting on next sunday" do
+          expect(range[:range_beginning]).to eq next_sunday
+        end
+      end
+  
+      context "when habit plan end date is after the following Saturday" do
+        let(:habit_plan) do
+          create(:habit_plan, start_datetime: Date.new(2022, 2, 2), 
+                              end_datetime: Date.new(2022, 2, 20))
+        end      
+        let(:range) { HabitPlansFilterService.determine_next_week_range(habit_plan) }
+  
+        it "returns a date range ending on the following saturday" do
+          expect(range[:range_end]).to eq following_saturday
+        end
+      end
+    end
+  end
+
   describe ".create_logs" do
     let(:start_date) { Date.new(2022, 2, 2) }
 
@@ -139,7 +223,7 @@ RSpec.describe HabitLogsCreationService do
       HabitLogsCreationService.create_logs(start_date..date_limit, habit_plan)
     end
 
-    it "creates a fixed number of habit logs starting at a specified date" do
+    it "creates a fixed number of habit logs based on a date range" do
       expect(user.habit_logs.count).to eq 3
     end
 

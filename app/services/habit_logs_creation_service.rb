@@ -27,6 +27,27 @@ module HabitLogsCreationService
     plan_end >= next_saturday ? next_saturday : plan_end
   end
 
+  def self.determine_date_range(habit_plan, type)
+    plan_start = habit_plan.start_datetime.to_datetime
+    plan_end = habit_plan.end_datetime.to_datetime
+    current_sunday = Date.today.beginning_of_week(:sunday)
+    current_saturday = Date.today.end_of_week(:sunday)
+    range_start = current_sunday
+    range_end = current_saturday
+
+    return if plan_start > current_saturday
+
+    if plan_start >= current_sunday
+      range_start = plan_start 
+    end
+
+    if plan_end < current_saturday
+      range_end = plan_end
+    end
+
+    range_start..range_end
+  end
+
   def self.create_logs(date_range, habit_plan)
     date_range.each do |date|
       log = habit_plan.habit_logs.build(scheduled_at: date.to_s)
