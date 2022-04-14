@@ -36,6 +36,7 @@ module HabitLogsCreationService
     next_saturday = next_sunday.next_occurring(:saturday)
 
     return if plan_start > current_saturday && type == "current_week"
+    return if plan_end < current_sunday && type == "current_week"
     return if plan_start > next_saturday && type == "next_week"
     return if plan_end < next_sunday && type == "next_week"
 
