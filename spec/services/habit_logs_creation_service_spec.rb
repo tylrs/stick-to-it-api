@@ -6,24 +6,39 @@ RSpec.describe HabitLogsCreationService do
   let(:next_saturday) { Date.new(2022, 2, 1).end_of_week(:sunday) }
 
   describe ".create_logs" do
-    before do
-      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
-
-      HabitLogsCreationService.create_logs(habit_plan, "current_week")
+    context "when a habit plan has a date within the week type" do
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+  
+        HabitLogsCreationService.create_logs(habit_plan, "current_week")
+      end
+  
+      it "creates habit_logs based on the habit plan and week type" do
+        expect(user.habit_logs.count).to eq 4
+      end
+  
+      it "schedules the first habit log with the start date" do
+        expect(user.habit_logs.first.scheduled_at).to eq habit_plan.start_datetime
+      end
+  
+      it "schedules the last habit log with a chosen number of days past the start date" do
+        expect(user.habit_logs.last.scheduled_at).to eq(habit_plan.start_datetime + 3.days)
+      end
     end
 
-    it "creates habit_logs based on the habit plan and week type" do
-      expect(user.habit_logs.count).to eq 4
-    end
+    context "when a habit plan does not have a date within the week type" do
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 25)
+  
+        HabitLogsCreationService.create_logs(habit_plan, "current_week")
+      end
 
-    it "schedules the first habit log with the start date" do
-      expect(user.habit_logs.first.scheduled_at).to eq habit_plan.start_datetime
-    end
-
-    it "schedules the last habit log with a chosen number of days past the start date" do
-      expect(user.habit_logs.last.scheduled_at).to eq(habit_plan.start_datetime + 3.days)
+      it "does not create any logs" do
+        expect(user.habit_logs.count).to eq 0
+      end
     end
   end
+
   describe ".create_initial_logs" do
     let(:habit_plan) do
       create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
