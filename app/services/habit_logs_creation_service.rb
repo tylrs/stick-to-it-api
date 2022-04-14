@@ -4,13 +4,13 @@ module HabitLogsCreationService
     plan_end = habit_plan.end_datetime.to_datetime
     today = Date.today  
     next_saturday = today.end_of_week(:sunday)
-    create_current_week_logs(plan_start, plan_end, habit_plan, next_saturday) if plan_start <= next_saturday
+    create_current_week_logs(habit_plan) if plan_start <= next_saturday
     if today == next_saturday && plan_start <= next_saturday.next_occurring(:saturday) 
       create_next_week_logs(habit_plan)                                                 
     end
   end
 
-  def self.create_current_week_logs(plan_start, plan_end, habit_plan, next_saturday)
+  def self.create_current_week_logs(habit_plan)
     range = determine_date_range(habit_plan, "current_week")
     create_logs(range, habit_plan) 
   end

@@ -28,8 +28,7 @@ RSpec.describe HabitLogsCreationService do
       end
 
       it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, 
-                                                                                    end_date, habit_plan, next_saturday)
+        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(habit_plan)
 
         HabitLogsCreationService.create(habit_plan, user)
       end
@@ -47,8 +46,7 @@ RSpec.describe HabitLogsCreationService do
       end
 
       it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, 
-                                                                                    end_date, habit_plan, next_saturday)
+        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(habit_plan)
 
         HabitLogsCreationService.create(habit_plan, user)
       end
@@ -75,8 +73,7 @@ RSpec.describe HabitLogsCreationService do
 
       expect(HabitLogsCreationService).to receive(:create_logs).with(range, habit_plan)
       
-      HabitLogsCreationService.create_current_week_logs(start_date, end_date, habit_plan, 
-                                                        next_saturday)
+      HabitLogsCreationService.create_current_week_logs(habit_plan)
     end
   end
 
