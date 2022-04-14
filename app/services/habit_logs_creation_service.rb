@@ -32,16 +32,34 @@ module HabitLogsCreationService
     plan_end = habit_plan.end_datetime.to_datetime
     current_sunday = Date.today.beginning_of_week(:sunday)
     current_saturday = Date.today.end_of_week(:sunday)
-    range_start = current_sunday
-    range_end = current_saturday
+    next_sunday = Date.today.next_occurring(:sunday)
+    next_saturday = next_sunday.next_occurring(:saturday)
 
-    return if plan_start > current_saturday
+    return if plan_start > current_saturday && type == "current_week"
+    return if plan_start > next_saturday && type == "next_week"
+    return if plan_end < next_sunday && type == "next_week"
 
-    if plan_start >= current_sunday
+    if type == "current_week"
+      range_start = current_sunday
+      range_end = current_saturday
+    else
+      range_start = next_sunday
+      range_end = next_saturday
+    end
+
+    if plan_start >= current_sunday && type == "current_week"
       range_start = plan_start 
     end
 
-    if plan_end < current_saturday
+    if plan_end < current_saturday && type == "current_week"
+      range_end = plan_end
+    end
+
+    if plan_start > next_sunday && type == "next_week"
+      range_start = plan_start
+    end
+
+    if plan_end < next_saturday && type == "next_week"
       range_end = plan_end
     end
 
