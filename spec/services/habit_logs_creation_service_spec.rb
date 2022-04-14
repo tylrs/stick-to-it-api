@@ -27,14 +27,14 @@ RSpec.describe HabitLogsCreationService do
         allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
       end
 
-      it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(habit_plan)
+      it "calls create_logs with correct arguments" do
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "current_week")
 
         HabitLogsCreationService.create(habit_plan)
       end
 
-      it "does not call create_next_week_logs" do
-        expect(HabitLogsCreationService).not_to receive(:create_next_week_logs).with(habit_plan)
+      it "does not call create_logs again" do
+        expect(HabitLogsCreationService).not_to receive(:create_logs).with(habit_plan, "next_week")
 
         HabitLogsCreationService.create(habit_plan)
       end
@@ -45,14 +45,9 @@ RSpec.describe HabitLogsCreationService do
         allow(Date).to receive(:today).and_return Date.new(2022, 2, 5)
       end
 
-      it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(habit_plan)
-
-        HabitLogsCreationService.create(habit_plan)
-      end
-
-      it "calls create_next_week_logs" do
-        expect(HabitLogsCreationService).to receive(:create_next_week_logs).with(habit_plan)
+      it "calls create_logs twice with current_week option and next_week option" do
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "current_week")
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, "next_week")
 
         HabitLogsCreationService.create(habit_plan)
       end
@@ -239,23 +234,23 @@ RSpec.describe HabitLogsCreationService do
   end
 
   describe ".create_logs" do
-    let(:start_date) { Date.new(2022, 2, 2) }
 
     before do
-      date_limit = Date.new(2022, 2, 4)
-      HabitLogsCreationService.create_logs(start_date..date_limit, habit_plan)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+
+      HabitLogsCreationService.create_logs(habit_plan, "current_week")
     end
 
-    it "creates a fixed number of habit logs based on a date range" do
-      expect(user.habit_logs.count).to eq 3
+    it "creates habit_logs based on the habit plan and week type" do
+      expect(user.habit_logs.count).to eq 4
     end
 
     it "schedules the first habit log with the start date" do
-      expect(user.habit_logs.first.scheduled_at).to eq start_date
+      expect(user.habit_logs.first.scheduled_at).to eq habit_plan.start_datetime
     end
 
     it "schedules the last habit log with a chosen number of days past the start date" do
-      expect(user.habit_logs.last.scheduled_at).to eq(start_date + 2.days)
+      expect(user.habit_logs.last.scheduled_at).to eq(habit_plan.start_datetime + 3.days)
     end
   end
 end
