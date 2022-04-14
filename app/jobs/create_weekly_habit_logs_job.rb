@@ -4,7 +4,7 @@ class CreateWeeklyHabitLogsJob < ApplicationJob
   def perform
     habit_plans = HabitPlansFilterService.get_next_week_plans
     habit_plans.each do |habit_plan|
-      HabitLogsCreationService.create_next_week_logs(habit_plan)
+      HabitLogsCreationService.create_logs(habit_plan, "next_week")  
     end
   end
 end
