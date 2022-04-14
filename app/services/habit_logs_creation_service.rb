@@ -1,5 +1,5 @@
 module HabitLogsCreationService 
-  def self.create(habit_plan, user)
+  def self.create(habit_plan)
     plan_start = habit_plan.start_datetime.to_datetime
     plan_end = habit_plan.end_datetime.to_datetime
     today = Date.today  
