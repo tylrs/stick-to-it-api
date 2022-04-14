@@ -1,4 +1,12 @@
 module HabitLogsCreationService 
+  def self.create_logs(habit_plan, week_type)
+    date_range = determine_date_range(habit_plan, week_type)
+    date_range.each do |date|
+      log = habit_plan.habit_logs.build(scheduled_at: date.to_s)
+      habit_plan.habit_logs << log     
+    end
+  end
+  
   def self.create_initial_logs(habit_plan)
     plan_start = habit_plan.start_datetime.to_datetime
     today = Date.today  
@@ -46,14 +54,6 @@ module HabitLogsCreationService
       plan_end
     else
       week_end
-    end
-  end
-
-  def self.create_logs(habit_plan, week_type)
-    date_range = determine_date_range(habit_plan, week_type)
-    date_range.each do |date|
-      log = habit_plan.habit_logs.build(scheduled_at: date.to_s)
-      habit_plan.habit_logs << log     
     end
   end
 end
