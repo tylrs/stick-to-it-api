@@ -30,21 +30,13 @@ module HabitLogsCreationService
 
   def self.determine_range_start(plan_start, week_start, week_end)
     return nil if plan_start > week_end
-
-    if plan_start > week_start
-      plan_start
-    else
-      week_start
-    end
+    
+    plan_start > week_start ? plan_start : week_start
   end
 
   def self.determine_range_end(plan_end, week_start, week_end)
     return nil if plan_end < week_start
 
-    if plan_end < week_end
-      plan_end
-    else
-      week_end
-    end
+    plan_end < week_end ? plan_end : week_end
   end
 end
