@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe DatesInWeekService do
   describe ".get_week_start" do
     before do
@@ -14,7 +16,9 @@ RSpec.describe DatesInWeekService do
 
     context "when week_type is next_week" do
       it "should return the most recent Sunday of next week" do
-        
+        week_start = DatesInWeekService.get_week_start("next_week")
+
+        expect(week_start).to eq Date.new(2022, 2, 6)
       end
     end
   end
