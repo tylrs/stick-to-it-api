@@ -96,7 +96,7 @@ RSpec.describe HabitLogsCreationService do
       context "when start date is before current Saturday and on or after the current Sunday" do
         it "returns a date range starting on habit plan start date" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-          end_datetime: Date.new(2022, 2, 20))
+                                           end_datetime: Date.new(2022, 2, 20))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
           
           expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
@@ -106,7 +106,7 @@ RSpec.describe HabitLogsCreationService do
       context "when start date is after current Saturday" do
         it "returns nil" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
-          end_datetime: Date.new(2022, 2, 22))
+                                           end_datetime: Date.new(2022, 2, 22))
           date_limit = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
           
           expect(date_limit).to be_nil
@@ -116,7 +116,7 @@ RSpec.describe HabitLogsCreationService do
       context "when end date is before current Sunday" do
         it "returns nil" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
-          end_datetime: Date.new(2022, 2, 22))
+                                           end_datetime: Date.new(2022, 2, 22))
           date_limit = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
           
           expect(date_limit).to be_nil
@@ -126,7 +126,7 @@ RSpec.describe HabitLogsCreationService do
       context "when end date is before current Saturday" do
         it "returns a date range ending on habit plan end date" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-          end_datetime: Date.new(2022, 2, 4))
+                                           end_datetime: Date.new(2022, 2, 4))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
           
           expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 4)
@@ -136,7 +136,7 @@ RSpec.describe HabitLogsCreationService do
       context "when end date is on or after current Saturday" do
         it "returns a date range ending on current Saturday" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-          end_datetime: Date.new(2022, 2, 20))
+                                           end_datetime: Date.new(2022, 2, 20))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "current_week")
           
           expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
@@ -149,7 +149,7 @@ RSpec.describe HabitLogsCreationService do
       context "when a habit plan start and end date occur within next week" do
         it "returns a date range starting on habit plan start date and ending on habit plan end date" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 7), 
-          end_datetime: Date.new(2022, 2, 11))
+                                           end_datetime: Date.new(2022, 2, 11))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "next_week")
           
           expect(date_range).to eq Date.new(2022, 2, 7)..Date.new(2022, 2, 11)
@@ -159,7 +159,7 @@ RSpec.describe HabitLogsCreationService do
       context "when habit plan start date is before next Sunday" do  
         it "returns a date range starting on next sunday" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-          end_datetime: Date.new(2022, 2, 11))
+                                           end_datetime: Date.new(2022, 2, 11))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "next_week")
           
           expect(date_range).to eq Date.new(2022, 2, 6)..Date.new(2022, 2, 11)
@@ -169,7 +169,7 @@ RSpec.describe HabitLogsCreationService do
       context "when habit plan end date is after the following Saturday" do  
         it "returns a date range ending on the following saturday" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 6), 
-          end_datetime: Date.new(2022, 2, 20))
+                                           end_datetime: Date.new(2022, 2, 20))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "next_week")
           
           expect(date_range).to eq Date.new(2022, 2, 6)..Date.new(2022, 2, 12)
@@ -179,7 +179,7 @@ RSpec.describe HabitLogsCreationService do
       context "when habit plan end date is before next Sunday" do
         it "returns nil" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-          end_datetime: Date.new(2022, 2, 4))
+                                           end_datetime: Date.new(2022, 2, 4))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "next_week")
           
           expect(date_range).to be_nil
@@ -189,7 +189,7 @@ RSpec.describe HabitLogsCreationService do
       context "when habit plan start date is after the following Saturday" do
         it "returns nil" do
           habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
-          end_datetime: Date.new(2022, 2, 24))
+                                           end_datetime: Date.new(2022, 2, 24))
           date_range = HabitLogsCreationService.determine_date_range(habit_plan, "next_week")
           
           expect(date_range).to be_nil
