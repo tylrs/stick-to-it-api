@@ -19,15 +19,8 @@ module HabitLogsCreationService
   def self.determine_date_range(habit_plan, week_type)
     plan_start = habit_plan.start_datetime.to_datetime
     plan_end = habit_plan.end_datetime.to_datetime
- 
-    if week_type == "current_week"
-      week_start = Date.today.beginning_of_week(:sunday)
-      week_end = Date.today.end_of_week(:sunday)
-    else
-      week_start = Date.today.next_occurring(:sunday)
-      week_end = week_start.end_of_week(:sunday)
-    end
-
+    week_start = DatesInWeekService.get_week_start(week_type)
+    week_end = DatesInWeekService.get_week_end(week_type)
     range_start = determine_range_start(plan_start, week_start, week_end)
     range_end = determine_range_end(plan_end, week_start, week_end)
 
