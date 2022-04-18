@@ -1,4 +1,6 @@
 module HabitLogsCreationService 
+  WEEK_TYPES = {current: "current", next: "next"}
+
   def self.create_logs(habit_plan, week_type)
     date_range = determine_date_range(habit_plan, week_type)
 
@@ -11,8 +13,8 @@ module HabitLogsCreationService
   end
 
   def self.create_initial_logs(habit_plan)
-    create_logs(habit_plan, "current_week")
-    create_logs(habit_plan, "next_week") if Date.today.saturday?
+    create_logs(habit_plan, WEEK_TYPES[:current])
+    create_logs(habit_plan, WEEK_TYPES[:next]) if Date.today.saturday?
   end
 
   def self.determine_date_range(habit_plan, week_type)
