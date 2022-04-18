@@ -2,7 +2,7 @@ module HabitLogsCreationService
   def self.create_logs(habit_plan, week_type)
     date_range = determine_date_range(habit_plan, week_type)
 
-    return unless date_range
+    return nil unless date_range
 
     date_range.each do |date|
       log = habit_plan.habit_logs.build(scheduled_at: date.to_s)
@@ -23,7 +23,7 @@ module HabitLogsCreationService
     range_start = determine_range_start(plan_start, week_start, week_end)
     range_end = determine_range_end(plan_end, week_start, week_end)
 
-    return nil if !range_start || !range_end
+    return nil unless range_start && range_end
 
     range_start..range_end
   end
