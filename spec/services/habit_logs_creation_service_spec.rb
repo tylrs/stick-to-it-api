@@ -5,10 +5,44 @@ RSpec.describe HabitLogsCreationService do
   let(:habit_plan) { create(:habit_plan, { user: user }) }
   let(:next_saturday) { Date.new(2022, 2, 1).end_of_week(:sunday) }
 
-  describe ".create" do
+  describe ".create_logs" do
+    context "when a habit plan has a date within the week type" do
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+  
+        HabitLogsCreationService.create_logs(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+      end
+  
+      it "creates habit_logs based on the habit plan and week type" do
+        expect(user.habit_logs.count).to eq 4
+      end
+  
+      it "schedules the first habit log with the start date" do
+        expect(user.habit_logs.first.scheduled_at).to eq habit_plan.start_datetime
+      end
+  
+      it "schedules the last habit log with a chosen number of days past the start date" do
+        expect(user.habit_logs.last.scheduled_at).to eq(habit_plan.start_datetime + 3.days)
+      end
+    end
+
+    context "when a habit plan does not have a date within the week type" do
+      before do
+        allow(Date).to receive(:today).and_return Date.new(2022, 2, 25)
+  
+        HabitLogsCreationService.create_logs(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+      end
+
+      it "does not create any logs" do
+        expect(user.habit_logs.count).to eq 0
+      end
+    end
+  end
+
+  describe ".create_initial_logs" do
     let(:habit_plan) do
       create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-                          end_datetime: Date.new(2022, 2, 20))
+                          end_datetime: Date.new(2022, 2, 10))
     end
     let(:params) do 
       {
@@ -27,17 +61,16 @@ RSpec.describe HabitLogsCreationService do
         allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
       end
 
-      it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, 
-                                                                                    end_date, habit_plan, next_saturday)
+      it "calls create_logs with correct arguments" do
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
 
-        HabitLogsCreationService.create(params, user)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
 
-      it "does not call create_next_week_logs" do
-        expect(HabitLogsCreationService).not_to receive(:create_next_week_logs).with(habit_plan)
+      it "does not call create_logs again" do
+        expect(HabitLogsCreationService).not_to receive(:create_logs).with(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
 
-        HabitLogsCreationService.create(params, user)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
     end
 
@@ -46,117 +79,122 @@ RSpec.describe HabitLogsCreationService do
         allow(Date).to receive(:today).and_return Date.new(2022, 2, 5)
       end
 
-      it "calls create_current_week_logs with correct arguments" do
-        expect(HabitLogsCreationService).to receive(:create_current_week_logs).with(start_date, 
-                                                                                    end_date, habit_plan, next_saturday)
+      it "calls create_logs twice with current_week option and next_week option" do
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+        expect(HabitLogsCreationService).to receive(:create_logs).with(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
 
-        HabitLogsCreationService.create(params, user)
-      end
-
-      it "calls create_next_week_logs" do
-        expect(HabitLogsCreationService).to receive(:create_next_week_logs).with(habit_plan)
-
-        HabitLogsCreationService.create(params, user)
+        HabitLogsCreationService.create_initial_logs(habit_plan)
       end
     end
   end
 
-  describe ".create_current_week_logs" do
-    let(:habit_plan) do
-      create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-                          end_datetime: Date.new(2022, 2, 20))
-    end
-
-    it "calls create_logs with correct number of logs, range beginning, and habit plan" do
-      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
-      start_date = Date.new(2022, 2, 2)
-      end_date = Date.new(2022, 2, 20)
-
-      expect(HabitLogsCreationService).to receive(:create_logs).with(4, start_date, habit_plan)
-      
-      HabitLogsCreationService.create_current_week_logs(start_date, end_date, habit_plan, 
-                                                        next_saturday)
-    end
-  end
-
-  describe ".create_next_week_logs" do
-    let(:habit_plan) do
-      create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
-                          end_datetime: Date.new(2022, 2, 20))
-    end
-
-    it "calls create_logs with correct number of logs, range beginning, and habit plan" do
-      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
-      range_beginning = Date.new(2022, 2, 6)
-
-      expect(HabitLogsCreationService).to receive(:create_logs).with(7, range_beginning, habit_plan)
-      
-      HabitLogsCreationService.create_next_week_logs(habit_plan)
-    end
-  end
-
-  describe ".determine_date_limit_initial_creation" do
-    context "when start date is after next Saturday" do
-      it "sets date limit to nil" do
-        start_date = Date.new(2022, 2, 20)
-        end_date = Date.new(2022, 2, 22)
-        date_limit = HabitLogsCreationService.determine_date_limit_initial_creation(start_date, 
-                                                                                    end_date, next_saturday)
-  
-        expect(date_limit).to be_nil
-      end
-    end
-
-    context "when end date is before next Saturday" do
-      it "sets date limit to end date" do
-        start_date = Date.new(2022, 2, 0o1)
-        end_date = Date.new(2022, 2, 0o4)
-        date_limit = HabitLogsCreationService.determine_date_limit_initial_creation(start_date, 
-                                                                                    end_date, next_saturday)
-  
-        expect(date_limit).to eq end_date
-      end
-    end
-    
-    context "when end date is on or after next Saturday" do
-      it "sets date limit to next Saturday" do
-        start_date = Date.new(2022, 2, 2)
-        end_date = Date.new(2022, 2, 21)
-        date_limit = HabitLogsCreationService.determine_date_limit_initial_creation(start_date, 
-                                                                                    end_date, next_saturday)
-        
-        expect(date_limit).to eq next_saturday
-      end
-    end
-  end
-
-  describe ".get_num_logs" do
-    it "returns number of days between 2 dates- inclusive of both dates" do
-      start_date = Date.new(2022, 2, 2)
-      date_limit = Date.new(2022, 2, 12)
-      num_logs = HabitLogsCreationService.get_num_logs(start_date, date_limit)
-
-      expect(num_logs).to eq 11
-    end
-  end
-
-  describe ".create_logs" do
-    let(:start_date) { Date.new(2022, 2, 2) }
-
+  describe ".determine_date_range" do
     before do
-      HabitLogsCreationService.create_logs(3, start_date, habit_plan)
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+    end
+    context "current week" do
+      context "when start date is before current Saturday and on or after the current Sunday" do
+        it "returns a date range starting on habit plan start date" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+                                           end_datetime: Date.new(2022, 2, 20))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
+        end
+      end
+      
+      context "when start date is after current Saturday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
+                                           end_datetime: Date.new(2022, 2, 22))
+          date_limit = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+          
+          expect(date_limit).to be_nil
+        end
+      end
+
+      context "when end date is before current Sunday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
+                                           end_datetime: Date.new(2022, 2, 22))
+          date_limit = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+          
+          expect(date_limit).to be_nil
+        end
+      end
+      
+      context "when end date is before current Saturday" do
+        it "returns a date range ending on habit plan end date" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+                                           end_datetime: Date.new(2022, 2, 4))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 4)
+        end
+      end
+      
+      context "when end date is on or after current Saturday" do
+        it "returns a date range ending on current Saturday" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+                                           end_datetime: Date.new(2022, 2, 20))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:current])
+          
+          expect(date_range).to eq Date.new(2022, 2, 2)..Date.new(2022, 2, 5)
+        end
+      end
+      
     end
 
-    it "creates a fixed number of habit logs starting at a specified date" do
-      expect(user.habit_logs.count).to eq 3
-    end
+    context "next week" do
+      context "when a habit plan start and end date occur within next week" do
+        it "returns a date range starting on habit plan start date and ending on habit plan end date" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 7), 
+                                           end_datetime: Date.new(2022, 2, 11))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
+          
+          expect(date_range).to eq Date.new(2022, 2, 7)..Date.new(2022, 2, 11)
+        end 
+      end
+  
+      context "when habit plan start date is before next Sunday" do  
+        it "returns a date range starting on next sunday" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+                                           end_datetime: Date.new(2022, 2, 11))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
+          
+          expect(date_range).to eq Date.new(2022, 2, 6)..Date.new(2022, 2, 11)
+        end
+      end
+  
+      context "when habit plan end date is after the following Saturday" do  
+        it "returns a date range ending on the following saturday" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 6), 
+                                           end_datetime: Date.new(2022, 2, 20))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
+          
+          expect(date_range).to eq Date.new(2022, 2, 6)..Date.new(2022, 2, 12)
+        end
+      end
 
-    it "schedules the first habit log with the start date" do
-      expect(user.habit_logs.first.scheduled_at).to eq start_date
-    end
+      context "when habit plan end date is before next Sunday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 2), 
+                                           end_datetime: Date.new(2022, 2, 4))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
+          
+          expect(date_range).to be_nil
+        end
+      end
 
-    it "schedules the last habit log with a chosen number of days past the start date" do
-      expect(user.habit_logs.last.scheduled_at).to eq(start_date + 2.days)
+      context "when habit plan start date is after the following Saturday" do
+        it "returns nil" do
+          habit_plan = create(:habit_plan, user: user, start_datetime: Date.new(2022, 2, 20), 
+                                           end_datetime: Date.new(2022, 2, 24))
+          date_range = HabitLogsCreationService.determine_date_range(habit_plan, HabitLogsCreationService::WEEK_TYPES[:next])
+          
+          expect(date_range).to be_nil
+        end
+      end
     end
   end
 end
