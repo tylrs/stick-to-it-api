@@ -6,6 +6,11 @@ AllCops:
   Exclude:
     - "app/controllers/api/v1/**/*"
     - "spec/requests/api/v1/**/*"
+    - "db/**/*"
+    - "config/**/*"
+    - "script/**/*"
+    - "bin/{bundle,rails,rake}"
+    - !ruby/regexp /old_and_unused\.rb$/
 
 Layout/LineLength:
   Max: 100
