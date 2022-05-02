@@ -20,6 +20,5 @@ group :development, :test do
   gem "faker"
   gem "rspec-rails"
   gem "rubocop-rails"
-  gem "rubocop-rspec"
   gem "shoulda-matchers"
 end
