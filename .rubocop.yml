@@ -2,14 +2,22 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
+AllCops:
+  Exclude:
+    - "app/controllers/api/v1/**/*"
+    - "spec/requests/api/v1/**/*"
 
 Layout/LineLength:
   Max: 100
 
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
+Layout/TrailingWhitespace:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Rails/Date:
+  Enabled: false
 
 Rails/DynamicFindBy:
   Enabled: false
@@ -17,5 +25,11 @@ Rails/DynamicFindBy:
 Rails/TimeZone:
   Enabled: false
 
-Layout/TrailingWhitespace:
+Style/Documentation:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
