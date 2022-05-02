@@ -1,16 +1,20 @@
-class Api::V2::HabitLogsController < ApplicationController
-  before_action :find_habit_log
+module Api
+  module V2
+    class HabitLogsController < ApplicationController
+      before_action :find_habit_log
 
-  def update
-    log = HabitLogUpdateService.update(@habit_log)
-    render json: { habit_log: log }, status: :ok
-  end
+      def update
+        log = HabitLogUpdateService.update(@habit_log)
+        render json: { habit_log: log }, status: :ok
+      end
 
-  private
+      private
 
-  def find_habit_log
-    @habit_log = HabitLog.find params[:id]
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: "Habit Log Not Found" }, status: :not_found
+      def find_habit_log
+        @habit_log = HabitLog.find params[:id]
+      rescue ActiveRecord::RecordNotFound
+        render json: { errors: "Habit Log Not Found" }, status: :not_found
+      end
+    end
   end
 end

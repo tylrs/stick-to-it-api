@@ -22,7 +22,7 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".get_week_and_partner_plans" do
-    let(:habit_plans) { HabitPlansFilterService.get_week_and_partner_plans(user.id) }
+    let(:habit_plans) { described_class.get_week_and_partner_plans(user.id) }
 
     before do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
@@ -108,7 +108,7 @@ RSpec.describe HabitPlansFilterService do
       let(:user) { create(:user) }
 
       it "returns no habit plans" do
-        response = HabitPlansFilterService.get_week_and_partner_plans(user.id)
+        response = described_class.get_week_and_partner_plans(user.id)
         
         expect(response.length).to eq 0
       end
@@ -116,7 +116,7 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".get_today_and_partner_plans" do
-    let(:habit_plans) { HabitPlansFilterService.get_today_and_partner_plans(user.id) }
+    let(:habit_plans) { described_class.get_today_and_partner_plans(user.id) }
     let(:habit_plan_tomorrow) do
       create(:habit_plan, { start_datetime: Date.new(2022, 2, 3), user: user })
     end    
@@ -168,6 +168,7 @@ RSpec.describe HabitPlansFilterService do
         it "includes partner's habit plan only for today" do
           expect(habit_plans.length).to eq 2
         end
+
         it "includes matching partner" do
           expect(habit_plans[1].user).to eq partner
         end
@@ -192,7 +193,7 @@ RSpec.describe HabitPlansFilterService do
       end
 
       it "returns no habit plans" do
-        response = HabitPlansFilterService.get_today_and_partner_plans(user.id)
+        response = described_class.get_today_and_partner_plans(user.id)
         
         expect(response.length).to eq 0
       end
@@ -212,7 +213,7 @@ RSpec.describe HabitPlansFilterService do
       create(:habit_plan, 
              { start_datetime: Date.new(2022, 2, 2), end_datetime: Date.new(2022, 2, 5) })
     end    
-    let(:next_week_plans) { HabitPlansFilterService.get_next_week_plans }
+    let(:next_week_plans) { described_class.get_next_week_plans }
 
     before do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)

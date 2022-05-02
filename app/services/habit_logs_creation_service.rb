@@ -1,5 +1,5 @@
 module HabitLogsCreationService 
-  WEEK_TYPES = {current: "current", next: "next"}
+  WEEK_TYPES = { current: "current", next: "next" }.freeze
 
   def self.create_logs(habit_plan, week_type)
     date_range = determine_date_range(habit_plan, week_type)
