@@ -1,6 +1,7 @@
 require:
   - rubocop-rails
 AllCops:
+  TargetRubyVersion: 2.7.2
   Exclude:
     - "app/controllers/api/v1/**/*"
     - "app/services/habit_logs_filter_service.rb"
