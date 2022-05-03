@@ -1,6 +1,6 @@
 require:
   - rubocop-rails
-
+  - vendor/*/
 AllCops:
   Exclude:
     - "app/controllers/api/v1/**/*"
