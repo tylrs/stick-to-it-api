@@ -75,11 +75,11 @@ RSpec.describe "HabitPlans v2", type: :request do
     end
 
     context "when a user has multiple habit plans for this week" do
-      let(:habit_plan_2) do
+      let(:habit_plan2) do
         create(:habit_plan, { start_datetime: "2022-02-05 00:00:00", user: user })
       end      
-      let!(:habit_log_2) do
-        create(:habit_log, { scheduled_at: "2022/02/05", habit_plan: habit_plan_2 })
+      let!(:habit_log2) do
+        create(:habit_log, { scheduled_at: "2022/02/05", habit_plan: habit_plan2 })
       end      
       
       before do
@@ -95,18 +95,18 @@ RSpec.describe "HabitPlans v2", type: :request do
       it "returns the correct habit plans" do
         expect(parsed_response).to include(
           include("id" => habit_plan.id),
-          include("id" => habit_plan_2.id)
+          include("id" => habit_plan2.id)
         )
       end
     end
 
     context "when a user does not have any habit plans for the current week" do
-      let(:user_2) { create(:user) }
+      let(:user2) { create(:user) }
 
       it "does not return habit plans for this week" do
         allow(Date).to receive(:today).and_return Date.new(2022, 2, 11)
         
-        get "/api/v2/users/#{user_2.id}/habit_plans/week", headers: headers
+        get "/api/v2/users/#{user2.id}/habit_plans/week", headers: headers
 
         expect(parsed_response.length).to eq 0
       end
@@ -193,7 +193,7 @@ RSpec.describe "HabitPlans v2", type: :request do
       expect do
         delete "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}", 
                headers: headers
-      end.to_not change { user.created_habits.count }
+      end.not_to(change { user.created_habits.count })
     end
 
     it "destroys a habit plan" do

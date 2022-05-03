@@ -1,14 +1,44 @@
-Layout/LineLength:
-  Max: 100
+require:
+  - rubocop-rails
+AllCops:
+  TargetRubyVersion: 2.7.2
+  Exclude:
+    - "app/controllers/api/v1/**/*"
+    - "app/services/habit_logs_filter_service.rb"
+    - "spec/requests/api/v1/**/*"
+    - "db/**/*"
+    - "config/**/*"
+    - "script/**/*"
+    - "vendor/bundle/**/*"
+    - "bin/{bundle,rails,rake}"
+    - !ruby/regexp /old_and_unused\.rb$/
 
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
+Layout/LineLength:
+  Max: 200
+
+Layout/TrailingWhitespace:
+  Enabled: false
+
+Metrics:
+  Enabled: false
+
+Rails/Date:
+  Enabled: false
 
 Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/FilePath:
   Enabled: false
 
 Rails/TimeZone:
   Enabled: false
 
-Layout/TrailingWhitespace:
+Style/Documentation:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

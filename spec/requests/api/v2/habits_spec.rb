@@ -99,7 +99,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
                headers: headers, 
                params: JSON.generate(habit_info)
-        end.to_not change { user.habit_logs.count }
+        end.not_to(change { user.habit_logs.count })
       end
     end
 
@@ -128,7 +128,7 @@ RSpec.describe "Habits v2", type: :request do
           post "/api/v2/users/#{user.id}/habits", 
                headers: headers, 
                params: JSON.generate(habit_info)
-        end.to_not change { user.habits.count }
+        end.not_to(change { user.habits.count })
       end
     end
   end

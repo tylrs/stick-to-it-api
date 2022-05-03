@@ -241,6 +241,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 7.0.1)
   rspec-rails
+  rubocop (~> 1.27)
   rubocop-rails
   shoulda-matchers
   sidekiq
