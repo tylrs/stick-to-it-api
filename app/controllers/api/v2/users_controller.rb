@@ -24,10 +24,10 @@ module Api
       end
 
       def update
-        unless @user.update(user_params)
-          render json: { errors: @user.errors.full_messages },
-                 status: :unprocessable_entity
-        end
+        return if @user.update(user_params)
+
+        render json: { errors: @user.errors.full_messages },
+               status: :unprocessable_entity
       end
 
       def destroy
