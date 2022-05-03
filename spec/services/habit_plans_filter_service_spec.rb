@@ -115,8 +115,8 @@ RSpec.describe HabitPlansFilterService do
     end
   end
 
-  describe ".get_today_and_partner_plans" do
-    let(:habit_plans) { described_class.get_today_and_partner_plans(user.id) }
+  describe "today_and_partner_plans" do
+    let(:habit_plans) { described_class.today_and_partner_plans(user.id) }
     let(:habit_plan_tomorrow) do
       create(:habit_plan, { start_datetime: Date.new(2022, 2, 3), user: user })
     end    
@@ -193,14 +193,14 @@ RSpec.describe HabitPlansFilterService do
       end
 
       it "returns no habit plans" do
-        response = described_class.get_today_and_partner_plans(user.id)
+        response = described_class.today_and_partner_plans(user.id)
         
         expect(response.length).to eq 0
       end
     end
   end
 
-  describe ".get_next_week_plans" do
+  describe ".next_week_plans" do
     let!(:habit_plan_next_week2) do
       create(:habit_plan, 
              { start_datetime: Date.new(2022, 2, 12), end_datetime: Date.new(2022, 2, 19) })
@@ -213,7 +213,7 @@ RSpec.describe HabitPlansFilterService do
       create(:habit_plan, 
              { start_datetime: Date.new(2022, 2, 2), end_datetime: Date.new(2022, 2, 5) })
     end    
-    let(:next_week_plans) { described_class.get_next_week_plans }
+    let(:next_week_plans) { described_class.next_week_plans }
 
     before do
       allow(Date).to receive(:today).and_return Date.new(2022, 2, 1)
