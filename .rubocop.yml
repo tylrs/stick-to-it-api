@@ -9,6 +9,7 @@ AllCops:
     - "db/**/*"
     - "config/**/*"
     - "script/**/*"
+    - "vendor/bundle/**/*"
     - "bin/{bundle,rails,rake}"
     - !ruby/regexp /old_and_unused\.rb$/
 
