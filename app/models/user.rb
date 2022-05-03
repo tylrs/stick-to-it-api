@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   has_secure_password
-  has_many :created_habits, foreign_key: :creator_id, class_name: "Habit", dependent: nil
+  has_many :created_habits, foreign_key: :creator_id, class_name: "Habit", dependent: nil, inverse_of: :creator
   has_many :habit_plans, dependent: :destroy
   has_many :habits, through: :habit_plans
   has_many :habit_logs, through: :habit_plans
