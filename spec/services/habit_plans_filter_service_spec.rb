@@ -201,11 +201,11 @@ RSpec.describe HabitPlansFilterService do
   end
 
   describe ".get_next_week_plans" do
-    let!(:habit_plan_next_week_2) do
+    let!(:habit_plan_next_week2) do
       create(:habit_plan, 
              { start_datetime: Date.new(2022, 2, 12), end_datetime: Date.new(2022, 2, 19) })
     end    
-    let!(:habit_plan_next_week_3) do
+    let!(:habit_plan_next_week3) do
       create(:habit_plan, 
              { start_datetime: Date.new(2022, 2, 4), end_datetime: Date.new(2022, 2, 6) })
     end    
@@ -223,8 +223,8 @@ RSpec.describe HabitPlansFilterService do
       expect(next_week_plans).to contain_exactly(
         an_object_having_attributes(id: habit_plan.id),
         an_object_having_attributes(id: habit_plan_next_week.id),
-        an_object_having_attributes(id: habit_plan_next_week_2.id),
-        an_object_having_attributes(id: habit_plan_next_week_3.id)
+        an_object_having_attributes(id: habit_plan_next_week2.id),
+        an_object_having_attributes(id: habit_plan_next_week3.id)
       )
     end
   end
