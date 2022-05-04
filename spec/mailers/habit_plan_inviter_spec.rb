@@ -24,6 +24,10 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
       end
     end
 
+    describe "body" do
+      
+    end
+
     it "sends the email" do
       expect do
         described_class.invite_email(user, habit_plan.id, "friend@example.com")
