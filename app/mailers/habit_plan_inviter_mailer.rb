@@ -1,0 +1,2 @@
+class HabitPlanInviterMailer < ApplicationMailer
+end
