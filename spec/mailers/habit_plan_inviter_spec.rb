@@ -15,6 +15,10 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
         expect(email.to).to eq "friend@example.com"
       end
 
+      it "has the correct reply-to" do
+        expect(email.reply_to).to eq "#{user.email}"
+      end
+
       it "has the correct subject" do
         expect(email.subject).to eq "#{user.name} wants you to join their habit"
       end
