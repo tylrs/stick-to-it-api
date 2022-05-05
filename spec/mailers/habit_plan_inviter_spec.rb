@@ -41,6 +41,10 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
       end
     end
 
+    it "can enqueue an email as a job" do
+      expect { described_class.plan_invite_email(user, habit_plan, recipient_info).deliver_later }.to have_enqueued_job
+    end
+
     it "sends the email" do
       expect do
         described_class.plan_invite_email(user, habit_plan, recipient_info).deliver_now
