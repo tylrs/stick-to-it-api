@@ -30,7 +30,7 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
 
     it "sends the email" do
       expect do
-        described_class.plan_invite_email(user, habit_plan.id, "friend@example.com")
+        described_class.plan_invite_email(user, habit_plan, "friend@example.com").deliver_now
       end.to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end
