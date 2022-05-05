@@ -7,6 +7,13 @@ RSpec.describe "Invitations v2", type: :request do
   let(:headers) { { "Content-type": "application/json", "Authorization": "Bearer #{token}" } }
   let(:recipient_info) { { name: "Bob", email: "bob.friend@example.com" } }
 
+  it_behaves_like "a protected route" do
+    let(:request_type) { :post }
+    let(:path) do
+      "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
+    end     
+  end
+
   describe "#create" do
     context "when the email send is successful" do
       before do
