@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe HabitPlanInviterMailer, type: :mailer do
-  describe ".habit_plan_invite_email" do
+  describe ".plan_invite_email" do
     let(:recipient_info) { { name: "Bob", email: "bob.friend@example.com" } }
     let(:email) { described_class.plan_invite_email(user, habit_plan, recipient_info) }
     let(:habit_plan) { create(:habit_plan) }
