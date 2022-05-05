@@ -6,7 +6,7 @@ module Api
       def create
         HabitPlanInviterMailer.plan_invite_email(@user, @habit_plan, { name: recipient_params[:name], email: recipient_params[:email] }).deliver_later
 
-        render json: {message: "Email Sent"}, status: :ok
+        render json: { message: "Email Sent" }, status: :ok
       end
     
       private
@@ -18,7 +18,7 @@ module Api
       def find_habit_plan
         @habit_plan = HabitPlan.find params[:habit_plan_id]
       rescue ActiveRecord::RecordNotFound
-        render json: {errors: "Habit Plan not found"}, status: :not_found
+        render json: { errors: "Habit Plan not found" }, status: :not_found
       end
     
       def find_user

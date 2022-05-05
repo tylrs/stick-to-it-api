@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Invitations v2", type: :request do
   let(:habit_plan) { create(:habit_plan) }
@@ -52,5 +52,4 @@ RSpec.describe "Invitations v2", type: :request do
       end
     end
   end
-
 end
