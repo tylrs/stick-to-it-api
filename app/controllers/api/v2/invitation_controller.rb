@@ -4,7 +4,12 @@ module Api
       before_action :find_user, :find_habit_plan
 
       def create
-        HabitPlanInviterMailer.plan_invite_email(@user, @habit_plan, { name: recipient_params[:name], email: recipient_params[:email] }).deliver_later
+        HabitPlanInviterMailer.plan_invite_email(
+          @user, 
+          @habit_plan, 
+          { name: recipient_params[:name], 
+            email: recipient_params[:email] }
+        ).deliver_later
 
         render json: { message: "Email Sent" }, status: :ok
       end
