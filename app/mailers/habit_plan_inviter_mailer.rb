@@ -6,6 +6,7 @@ class HabitPlanInviterMailer < ApplicationMailer
     @start_date = habit_plan.start_datetime
     @end_date = habit_plan.end_datetime
     @accept_invite_url = "URLTOBEGENERATED"
+    
     mail(
       reply_to: user.email,
       to: recipient_info[:email],

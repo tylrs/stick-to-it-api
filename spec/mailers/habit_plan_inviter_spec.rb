@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe HabitPlanInviterMailer, type: :mailer do
   describe ".habit_plan_invite_email" do
-    let(:recipient_info) {{name: "Bob", email: "bob.friend@example.com"}}
-    let(:email) {described_class.plan_invite_email(user, habit_plan, recipient_info)}
+    let(:recipient_info) { { name: "Bob", email: "bob.friend@example.com" } }
+    let(:email) { described_class.plan_invite_email(user, habit_plan, recipient_info) }
     let(:habit_plan) { create(:habit_plan) }
     let(:user) { habit_plan.user }
     
@@ -13,11 +13,11 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
       end
       
       it "has the correct recipient" do
-        expect(email.to).to eq ["#{recipient_info[:email]}"]
+        expect(email.to).to eq [recipient_info[:email].to_s]
       end
 
       it "has the correct reply-to" do
-        expect(email.reply_to).to eq ["#{user.email}"]
+        expect(email.reply_to).to eq [user.email.to_s]
       end
 
       it "has the correct subject" do
