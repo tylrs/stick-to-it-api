@@ -16,9 +16,10 @@ Rails.application.routes.draw do
         resources :habit_plans, only: %i[week today destroy] do
           get :week, on: :collection, to: "habit_plans#show_week"
           get :today, on: :collection, to: "habit_plans#show_today"
+          post "invitation/create" 
           resources :habit_logs, only: [:update]
         end
-        resources :habits, only: %i[create destroy] 
+        resources :habits, only: %i[create destroy]
       end
       post "/auth/login", to: "authentication#login"
       get "/*a", to: "application#not_found"     
