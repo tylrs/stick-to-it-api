@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_many :habit_plans, dependent: :destroy
   has_many :habits, through: :habit_plans
   has_many :habit_logs, through: :habit_plans
+  has_many :sent_invites, class_name: "Invitation"
+  has_many :invitations, class_name: "Invitation"
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
