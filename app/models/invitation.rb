@@ -5,5 +5,5 @@ class Invitation < ApplicationRecord
 
   validates :recipient_email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
-  enum :status, [:pending, :accepted, :declined]
+  enum :status, %i[pending accepted declined]
 end
