@@ -8,6 +8,6 @@ RSpec.describe Invitation, type: :model do
   end
 
   describe "validations" do
-    
+    it { is_expected.to validate_presence_of(:recipient_email) }
   end
 end
