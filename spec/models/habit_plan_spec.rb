@@ -5,6 +5,7 @@ RSpec.describe HabitPlan, type: :model do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:habit) }
     it { is_expected.to have_many(:habit_logs) }
+    it { is_expected.to have_one(:invitation) }
   end
 
   describe "Validations" do
