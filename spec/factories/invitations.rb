@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :invitation do
-    user { nil }
-    recipient_id { "" }
-    recipient_email { "MyString" }
-    habit_plan { nil }
-    status { 1 }
+    sender
+    recipient
+    recipient_email { recipient.email }
+    habit_plan { association :habit_plan, invitation: instance, user: sender }
+    status { 0 }
   end
 end
