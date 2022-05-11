@@ -80,6 +80,11 @@ RSpec.describe "Users v2", type: :request do
     let(:token) { JsonWebTokenService.encode(user_id: sender.id) }
     let(:headers) { { "Content-type": "application/json", "Authorization": "Bearer #{token}" } }
 
+    it_behaves_like "a protected route" do
+      let(:request_type) { :get }
+      let(:path) { "/api/v2/users/email?email=#{recipient.email}" }
+    end
+
     context "when a user matches the requested email" do
       before do
         get "/api/v2/users/email?email=#{recipient.email}", headers: headers
