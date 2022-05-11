@@ -91,18 +91,20 @@ RSpec.describe "Users v2", type: :request do
 
       describe "return value" do
         it "returns the correct user's name" do
-          expect(parsed_response["name"].to eq recipient.name)
+          expect(parsed_response["name"]).to eq recipient.name
         end
 
         it "returns the correct user's email" do
-          expect(parsed_response["email"].to eq recipient.email)
+          expect(parsed_response["email"]).to eq recipient.email
         end
       end
     end
 
     context "when a user that matches the requested email cannot be found" do
       it "should return http not found" do
+        get "/api/v2/users/email?email=#{Faker::Internet.unique.safe_email}", headers: headers
         
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
