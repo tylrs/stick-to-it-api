@@ -73,4 +73,37 @@ RSpec.describe "Users v2", type: :request do
       end
     end
   end
+
+  describe "#show" do
+    let(:sender) { create(:user) }
+    let(:recipient) { create(:user) }
+    let(:token) { JsonWebTokenService.encode(user_id: sender.id) }
+    let(:headers) { { "Content-type": "application/json", "Authorization": "Bearer #{token}" } }
+
+    context "when a user matches the requested email" do
+      before do
+        get "/api/v2/users?email=#{recipient.email}", headers: headers
+      end
+
+      it "returns http success" do
+        expect(response).to be_ok
+      end
+
+      describe "return value" do
+        it "returns the correct user's name" do
+          expect(parsed_response["name"].to eq recipient.name)
+        end
+
+        it "returns the correct user's email" do
+          expect(parsed_response["email"].to eq recipient.email)
+        end
+      end
+    end
+
+    context "when a user that matches the requested email cannot be found" do
+      it "should return http not found" do
+        
+      end
+    end
+  end
 end
