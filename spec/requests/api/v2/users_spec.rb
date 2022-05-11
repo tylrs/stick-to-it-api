@@ -82,7 +82,7 @@ RSpec.describe "Users v2", type: :request do
 
     context "when a user matches the requested email" do
       before do
-        get "/api/v2/users?email=#{recipient.email}", headers: headers
+        get "/api/v2/users/email?email=#{recipient.email}", headers: headers
       end
 
       it "returns http success" do
