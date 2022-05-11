@@ -2,15 +2,10 @@ module Api
   module V2
     class UsersController < ApplicationController
       skip_before_action :authorize_request, only: [:create]
-      before_action :find_user, except: %i[create index]
-
-      def index
-        users = User.all
-        render json: users, status: :ok
-      end
+      before_action :find_user_by_email, only: [:show]
 
       def show
-        render json: @user, status: :ok
+        render json: @user.to_json(only: %i[name email]), status: :ok
       end
 
       def create
@@ -30,14 +25,10 @@ module Api
                status: :unprocessable_entity
       end
 
-      def destroy
-        @user.destroy
-      end
-
       private
 
-      def find_user
-        @user = User.find params[:id]
+      def find_user_by_email
+        @user = User.find_by! email: params[:email]
       rescue ActiveRecord::RecordNotFound
         render json: { errors: "User not found" }, status: :not_found
       end
