@@ -1,5 +1,5 @@
 class HabitPlanInviterMailer < ApplicationMailer
-  def plan_invite_email(user, habit_plan, recipient_info)
+  def plan_invite_user_email(user, habit_plan, recipient_info)
     @recipient_name = recipient_info[:name]
     @user_name = user.name
     @habit_name = habit_plan.habit.name
