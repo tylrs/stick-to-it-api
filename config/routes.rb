@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         end
         resources :habits, only: %i[create destroy]
       end
+      get "/users/email", to: "users#show"
       post "/auth/login", to: "authentication#login"
       get "/*a", to: "application#not_found"     
     end
