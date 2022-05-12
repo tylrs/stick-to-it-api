@@ -1,0 +1,9 @@
+<h1>Hello <%= @recipient_name%>,</h1>
+
+<p><%= @user_name%> would like you to join them on their new habit: <%= @habit_name%></p>
+
+<p>They are planning on working on the habit from <%= @start_date%> to <%= @end_date%></p>
+
+<p>If you would like to view the invitation, please <%= @action_type%> with the email address this message was sent to.</p>
+
+<a href=<%= @invitation_link%>>Go to <%= @action_type%> screen</a>
