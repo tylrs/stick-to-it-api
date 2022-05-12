@@ -10,10 +10,17 @@ module Api
           habit_plan: @habit_plan,
           user: @user
         }
-
-        HabitPlanInviterMailer.plan_invite_email(invite_info).deliver_later
-
-        render json: { message: "Email Sent" }, status: :ok
+        invitation = @user.sent_invites.new(
+          recipient_email: mailer_params[:recipient_email], 
+          habit_plan_id: @habit_plan.id
+        )
+        if invitation.save
+          HabitPlanInviterMailer.plan_invite_email(invite_info).deliver_later
+          render json: { message: "Email Sent" }, status: :ok
+        else
+          render json: { errors: invitation.errors.full_messages },
+                 status: :unprocessable_entity
+        end
       end
 
       private

@@ -15,7 +15,7 @@ RSpec.describe "Invitations v2", type: :request do
   end
 
   describe "#create" do
-    context "when the email send is successful" do
+    context "when the invitation record has been successfully created" do
       before do
         post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
              headers: headers,
@@ -24,6 +24,35 @@ RSpec.describe "Invitations v2", type: :request do
 
       it "returns http success" do
         expect(response).to be_ok
+      end
+
+      it "returns a success message" do
+        expect(parsed_response["message"]).to eq "Email Sent"
+      end
+
+      it "creates an Invitation record" do
+        expect do
+          post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
+               headers: headers,
+               params: JSON.generate(recipient_info)
+        end.to change { user.sent_invites.count }.by(1)
+      end
+    end
+
+    context "when the invitation record creation fails" do
+      let(:recipient_info) { { recipient_name: "Bob", recipient_email: "" } }
+      before do
+        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
+             headers: headers,
+             params: JSON.generate(recipient_info)
+      end
+
+      it "returns an unprocessable entity status" do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns error messages" do
+        expect(parsed_response["errors"]).to contain_exactly("Recipient email can't be blank", "Recipient email is invalid")
       end
     end
 
