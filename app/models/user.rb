@@ -5,7 +5,6 @@ class User < ApplicationRecord
   has_many :habits, through: :habit_plans
   has_many :habit_logs, through: :habit_plans
   has_many :sent_invites, foreign_key: :sender_id, class_name: "Invitation", dependent: :destroy, inverse_of: :sender
-  has_many :invitations, foreign_key: :recipient_id, class_name: "Invitation", dependent: :destroy, inverse_of: :recipient
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
