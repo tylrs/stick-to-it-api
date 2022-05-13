@@ -1,7 +1,7 @@
 module Api
   module V2
     class InvitationController < ApplicationController
-      before_action :find_invite_info
+      before_action :find_invite_info, only: [:create]
 
       def create
         invite_info = {
@@ -23,6 +23,14 @@ module Api
         end
       end
 
+      def show_received
+        
+      end
+
+      def show_sent
+
+      end
+      
       private
 
       def mailer_params
