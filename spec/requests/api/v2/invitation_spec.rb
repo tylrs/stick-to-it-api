@@ -12,13 +12,13 @@ RSpec.describe "Invitations v2", type: :request do
     it_behaves_like "a protected route" do
       let(:request_type) { :post }
       let(:path) do
-        "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
+        "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create"
       end     
     end
 
     context "when the invitation record has been successfully created" do
       before do
-        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
+        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
       end
@@ -33,7 +33,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       it "creates an Invitation record" do
         expect do
-          post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
+          post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
                headers: headers,
                params: JSON.generate(recipient_info)
         end.to change { user.sent_invites.count }.by(1)
@@ -43,7 +43,7 @@ RSpec.describe "Invitations v2", type: :request do
     context "when the invitation record creation fails" do
       let(:recipient_info) { { recipient_name: "Bob", recipient_email: "" } }
       before do
-        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
+        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
       end
@@ -59,7 +59,7 @@ RSpec.describe "Invitations v2", type: :request do
 
     context "when the user cannot be found" do
       before do
-        post "/api/v2/users/500/habit_plans/#{habit_plan.id}/invitation/create",
+        post "/api/v2/users/500/habit_plans/#{habit_plan.id}/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
       end
@@ -94,7 +94,7 @@ RSpec.describe "Invitations v2", type: :request do
     it_behaves_like "a protected route" do
       let(:request_type) { :post }
       let(:path) do
-        "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
+        "/api/v2/users/#{user.id}/invitations/received"
       end     
     end
 
@@ -114,18 +114,18 @@ RSpec.describe "Invitations v2", type: :request do
 
       let!(:accepted_invitation) { create(:invitation, { 
         sender: user, 
-        recipient_email: recipient.email
+        recipient_email: recipient.email,
         status: 1 }) 
       }
 
       let!(:declined_invitation) { create(:invitation, { 
         sender: user, 
-        recipient_email: recipient.email
+        recipient_email: recipient.email,
         status: 2 }) 
       }
 
       before do
-        get "/api/v2/users/#{recipient.id}/invitations", headers: headers
+        get "/api/v2/users/#{recipient.id}/invitations/received", headers: headers
       end
 
 
@@ -142,7 +142,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit habit_plan user]
+          invitation_keys = %w[id status habit habit_plan sender]
 
           expect(parsed_response[0]).keys.to match_array(invitation_keys)
         end
@@ -184,7 +184,7 @@ RSpec.describe "Invitations v2", type: :request do
       let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
 
       before do
-        get "/api/v2/users/#{recipient.id}"/invitations, headers: headers
+        get "/api/v2/users/#{recipient.id}/invitations/received", headers: headers
       end
 
       it "returns http not found" do

@@ -16,11 +16,11 @@ Rails.application.routes.draw do
         resources :habit_plans, only: %i[week today destroy] do
           get :week, on: :collection, to: "habit_plans#show_week"
           get :today, on: :collection, to: "habit_plans#show_today"
-          post "invitation/create" 
+          post "invitations/create" 
           resources :habit_logs, only: [:update]
         end
-        get "invitations/received", to "invitations#show_received"
-        get "invitations/sent", to "invitations#show_sent"
+        get "invitations/received", to: "invitations#show_received"
+        get "invitations/sent", to: "invitations#show_sent"
         resources :habits, only: %i[create destroy]
       end
       get "/users/email", to: "users#show"

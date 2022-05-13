@@ -1,6 +1,6 @@
 module Api
   module V2
-    class InvitationController < ApplicationController
+    class InvitationsController < ApplicationController
       before_action :find_invite_info, only: [:create]
 
       def create
@@ -24,7 +24,10 @@ module Api
       end
 
       def show_received
-        
+        user = User.find params[:id]
+
+        invitations = Invitation.includes(:sender, :habit_plan, :habit).where(recipient_email: user.email)
+        debugger
       end
 
       def show_sent
