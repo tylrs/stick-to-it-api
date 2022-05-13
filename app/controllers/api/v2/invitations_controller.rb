@@ -24,15 +24,18 @@ module Api
       end
 
       def show_received
-        user = User.find params[:id]
+        user = User.find params[:user_id]
+        invitations = Invitation.includes(:sender, habit_plan: [:habit]).where(recipient_email: user.email, status: "pending")
 
-        invitations = Invitation.includes(:sender, :habit_plan, :habit).where(recipient_email: user.email)
-        debugger
+        if invitations.length.positive?
+          render json: invitations, only: %i[id status habit_plan sender], 
+                 include: [sender: { only: %i[name username] }, habit_plan: { only: %i[start_datetime end_datetime], include: [habit: { only: %i[name description] }] }], status: :ok
+        else
+          render json: { errors: "No invitations found" }, status: :not_found
+        end
       end
 
-      def show_sent
-
-      end
+      def show_sent; end
       
       private
 

@@ -75,7 +75,7 @@ RSpec.describe "Invitations v2", type: :request do
 
     context "when the habit plan cannot be found" do
       before do
-        post "/api/v2/users/#{user.id}/habit_plans/500/invitation/create",
+        post "/api/v2/users/#{user.id}/habit_plans/500/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
       end
@@ -91,43 +91,51 @@ RSpec.describe "Invitations v2", type: :request do
   end
 
   describe "#show_received" do
+    let(:recipient) { create(:user) }
+
     it_behaves_like "a protected route" do
-      let(:request_type) { :post }
+      let(:request_type) { :get }
       let(:path) do
-        "/api/v2/users/#{user.id}/invitations/received"
+        "/api/v2/users/#{recipient.id}/invitations/received"
       end     
     end
 
     context "when a user has pending invitations" do
-      let(:recipient) { create(:user) }
       let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
-      let!(:pending_invitation) { create(:invitation, { 
-        sender: user, 
-        recipient_email: recipient.email,
-        habit_plan: habit_plan }) 
-      }
+      let!(:pending_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 habit_plan: habit_plan 
+               }) 
+      end
 
-      let!(:pending_invitation2) { create(:invitation, { 
-        sender: user, 
-        recipient_email: recipient.email}) 
-      }
+      let!(:pending_invitation2) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email 
+               }) 
+      end
 
-      let!(:accepted_invitation) { create(:invitation, { 
-        sender: user, 
-        recipient_email: recipient.email,
-        status: 1 }) 
-      }
+      let!(:accepted_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 status: "accepted" 
+               }) 
+      end
 
-      let!(:declined_invitation) { create(:invitation, { 
-        sender: user, 
-        recipient_email: recipient.email,
-        status: 2 }) 
-      }
+      let!(:declined_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 status: "declined" 
+               }) 
+      end
 
       before do
         get "/api/v2/users/#{recipient.id}/invitations/received", headers: headers
       end
-
 
       it "returns http success" do
         expect(response).to be_ok
@@ -142,13 +150,13 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit habit_plan sender]
-
-          expect(parsed_response[0]).keys.to match_array(invitation_keys)
+          invitation_keys = %w[id status habit_plan sender]
+          
+          expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
 
         it "returns habit plan info keys" do
-          habit_plan_info_keys = %w[start_datetime end_datetime]
+          habit_plan_info_keys = %w[start_datetime end_datetime habit]
             
           expect(parsed_response[0]["habit_plan"].keys).to match_array(habit_plan_info_keys)
         end
@@ -156,13 +164,13 @@ RSpec.describe "Invitations v2", type: :request do
         it "returns habit info keys" do
           habit_info_keys = %w[name description] 
   
-          expect(parsed_response[0]["habit"].keys).to match_array(habit_info_keys)
+          expect(parsed_response[0]["habit_plan"]["habit"].keys).to match_array(habit_info_keys)
         end
 
-        it "returns user info keys" do
-          user_info_keys = %w[name] 
+        it "returns sender info keys" do
+          sender_info_keys = %w[name username] 
   
-          expect(parsed_response[0]["user"].keys).to match_array(user_info_keys)
+          expect(parsed_response[0]["sender"].keys).to match_array(sender_info_keys)
         end
       end
 
@@ -191,8 +199,8 @@ RSpec.describe "Invitations v2", type: :request do
         expect(response).to have_http_status(:not_found)
       end
 
-      it "returns no invitations" do
-        expect(parsed_response.length).to eq 0
+      it "returns an error message" do
+        expect(parsed_response["errors"]).to eq "No invitations found"
       end
     end
   end
