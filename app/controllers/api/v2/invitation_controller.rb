@@ -1,37 +1,40 @@
 module Api
   module V2
     class InvitationController < ApplicationController
-      before_action :find_user, :find_habit_plan
+      before_action :find_invite_info
 
       def create
-        HabitPlanInviterMailer.plan_invite_email(
-          @user, 
-          @habit_plan, 
-          { name: recipient_params[:name], 
-            email: recipient_params[:email] }
-        ).deliver_later
+        invite_info = {
+          recipient_name: mailer_params[:recipient_name],
+          recipient_email: mailer_params[:recipient_email],
+          habit_plan: @habit_plan,
+          user: @user
+        }
+        invitation = @user.sent_invites.new(
+          recipient_email: mailer_params[:recipient_email], 
+          habit_plan_id: @habit_plan.id
+        )
+        if invitation.save
+          HabitPlanInviterMailer.plan_invite_email(invite_info).deliver_later
+          render json: { message: "Email Sent" }, status: :ok
+        else
+          render json: { errors: invitation.errors.full_messages },
+                 status: :unprocessable_entity
+        end
+      end
 
-        render json: { message: "Email Sent" }, status: :ok
-      end
-    
       private
-    
-      def recipient_params
-        params.permit(:name, :email)
+
+      def mailer_params
+        params.permit(:user_id, :habit_plan_id, :recipient_name, :recipient_email)
       end
-    
-      def find_habit_plan
+
+      def find_invite_info
         @habit_plan = HabitPlan.find params[:habit_plan_id]
-      rescue ActiveRecord::RecordNotFound
-        render json: { errors: "Habit Plan not found" }, status: :not_found
-      end
-    
-      def find_user
         @user = User.find params[:user_id]
       rescue ActiveRecord::RecordNotFound
-        render json: { errors: "User not found" }, status: :not_found
+        render json: { errors: "Record not found" }, status: :not_found
       end
-    
     end
   end
 end

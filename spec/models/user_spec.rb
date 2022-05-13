@@ -6,7 +6,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:habit_plans) }
     it { is_expected.to have_many(:habit_logs) }
     it { is_expected.to have_many(:created_habits) }
-    it { is_expected.to have_many(:invitations) }
     it { is_expected.to have_many(:sent_invites) }
   end
 

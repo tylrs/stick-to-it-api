@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_09_200506) do
+ActiveRecord::Schema.define(version: 2022_05_12_213127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,14 +46,12 @@ ActiveRecord::Schema.define(version: 2022_05_09_200506) do
 
   create_table "invitations", force: :cascade do |t|
     t.bigint "sender_id", null: false
-    t.bigint "recipient_id", null: false
     t.string "recipient_email", null: false
     t.bigint "habit_plan_id", null: false
     t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["habit_plan_id"], name: "index_invitations_on_habit_plan_id"
-    t.index ["recipient_id"], name: "index_invitations_on_recipient_id"
     t.index ["sender_id"], name: "index_invitations_on_sender_id"
   end
 
@@ -73,6 +71,5 @@ ActiveRecord::Schema.define(version: 2022_05_09_200506) do
   add_foreign_key "habit_plans", "users"
   add_foreign_key "habits", "users", column: "creator_id"
   add_foreign_key "invitations", "habit_plans"
-  add_foreign_key "invitations", "users", column: "recipient_id"
   add_foreign_key "invitations", "users", column: "sender_id"
 end
