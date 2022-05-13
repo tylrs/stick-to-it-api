@@ -7,14 +7,15 @@ RSpec.describe "Invitations v2", type: :request do
   let(:headers) { { "Content-type": "application/json", "Authorization": "Bearer #{token}" } }
   let(:recipient_info) { { recipient_name: "Bob", recipient_email: "bob.friend@example.com" } }
 
-  it_behaves_like "a protected route" do
-    let(:request_type) { :post }
-    let(:path) do
-      "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
-    end     
-  end
-
+  
   describe "#create" do
+    it_behaves_like "a protected route" do
+      let(:request_type) { :post }
+      let(:path) do
+        "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
+      end     
+    end
+
     context "when the invitation record has been successfully created" do
       before do
         post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create",
@@ -85,6 +86,113 @@ RSpec.describe "Invitations v2", type: :request do
 
       it "returns an error message" do
         expect(parsed_response["errors"]).to eq "Record not found"
+      end
+    end
+  end
+
+  describe "#show_received" do
+    it_behaves_like "a protected route" do
+      let(:request_type) { :post }
+      let(:path) do
+        "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitation/create"
+      end     
+    end
+
+    context "when a user has pending invitations" do
+      let(:recipient) { create(:user) }
+      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
+      let!(:pending_invitation) { create(:invitation, { 
+        sender: user, 
+        recipient_email: recipient.email,
+        habit_plan: habit_plan }) 
+      }
+
+      let!(:pending_invitation2) { create(:invitation, { 
+        sender: user, 
+        recipient_email: recipient.email}) 
+      }
+
+      let!(:accepted_invitation) { create(:invitation, { 
+        sender: user, 
+        recipient_email: recipient.email
+        status: 1 }) 
+      }
+
+      let!(:declined_invitation) { create(:invitation, { 
+        sender: user, 
+        recipient_email: recipient.email
+        status: 2 }) 
+      }
+
+      before do
+        get "/api/v2/users/#{recipient.id}/invitations", headers: headers
+      end
+
+
+      it "returns http success" do
+        expect(response).to be_ok
+      end
+
+      it "returns pending invitations" do
+        expect(parsed_response).to include(
+          include("id" => pending_invitation.id),
+          include("id" => pending_invitation2.id)
+        )
+      end
+
+      describe "return value" do
+        it "returns the correct keys" do
+          invitation_keys = %w[id status habit habit_plan user]
+
+          expect(parsed_response[0]).keys.to match_array(invitation_keys)
+        end
+
+        it "returns habit plan info keys" do
+          habit_plan_info_keys = %w[start_datetime end_datetime]
+            
+          expect(parsed_response[0]["habit_plan"].keys).to match_array(habit_plan_info_keys)
+        end
+  
+        it "returns habit info keys" do
+          habit_info_keys = %w[name description] 
+  
+          expect(parsed_response[0]["habit"].keys).to match_array(habit_info_keys)
+        end
+
+        it "returns user info keys" do
+          user_info_keys = %w[name] 
+  
+          expect(parsed_response[0]["user"].keys).to match_array(user_info_keys)
+        end
+      end
+
+      it "does not return already accepted invitations" do
+        expect(parsed_response).not_to include(
+          include("id" => accepted_invitation.id)
+        )
+      end
+
+      it "does not return declined invitations" do
+        expect(parsed_response).not_to include(
+          include("id" => declined_invitation.id)
+        )
+      end
+    end
+
+    context "when a user has no pending invitations" do
+      let(:recipient) { create(:user) }
+      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
+
+      before do
+        get "/api/v2/users/#{recipient.id}"/invitations, headers: headers
+      end
+
+      it "returns http not found" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns no invitations" do
+        expect(parsed_response.length).to eq 0
       end
     end
   end
