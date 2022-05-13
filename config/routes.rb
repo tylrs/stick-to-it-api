@@ -19,6 +19,8 @@ Rails.application.routes.draw do
           post "invitation/create" 
           resources :habit_logs, only: [:update]
         end
+        get "invitations/received", to "invitations#show_received"
+        get "invitations/sent", to "invitations#show_sent"
         resources :habits, only: %i[create destroy]
       end
       get "/users/email", to: "users#show"
