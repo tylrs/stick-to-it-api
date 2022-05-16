@@ -45,9 +45,24 @@ module Api
       end
 
       def accept
-        # look up invitation id 
-        # if it's status is pending, then
-          #
+        invitation = Invitation.find params[:invitation_id]
+
+        if invitation.status === "pending"
+          sender_habit_plan = HabitPlan.find invitation.habit_plan_id
+          recipient = User.find params[:user_id]
+          recipient_habit_plan = recipient.habit_plans.create(
+            start_datetime: sender_habit_plan[:start_datetime], 
+            end_datetime: sender_habit_plan[:end_datetime], 
+            habit_id: sender_habit_plan[:habit_id]
+          )
+          HabitLogsCreationService.create_initial_logs(recipient_habit_plan)
+          invitation.update(status: "accepted")
+
+          render json: invitation, status: :ok
+        else
+          #create custom errors
+          render json: {errors: "Record not found"}, status: :not_found
+        end
       end
       
       private
