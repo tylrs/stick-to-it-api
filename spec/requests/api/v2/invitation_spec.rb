@@ -204,4 +204,109 @@ RSpec.describe "Invitations v2", type: :request do
       end
     end
   end
+
+  describe "#show_sent" do
+    let(:recipient) { create(:user) }
+
+    it_behaves_like "a protected route" do
+      let(:request_type) { :get }
+      let(:path) do
+        "/api/v2/users/#{recipient.id}/invitations/sent"
+      end     
+    end
+
+    context "when a user has sent invitations" do
+      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
+      let!(:pending_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 habit_plan: habit_plan 
+               }) 
+      end
+
+      let!(:pending_invitation2) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email 
+               }) 
+      end
+
+      let!(:accepted_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 status: "accepted" 
+               }) 
+      end
+
+      let!(:declined_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 status: "declined" 
+               }) 
+      end
+
+      before do
+        get "/api/v2/users/#{recipient.id}/invitations/sent", headers: headers
+      end
+
+      it "returns http success" do
+        expect(response).to be_ok
+      end
+
+      it "returns all invitations" do
+        expect(parsed_response).to include(
+          include("id" => pending_invitation.id),
+          include("id" => pending_invitation2.id),
+          include("id" => accepted_invitation.id),
+          include("id" => declined_invitation.id)
+        )
+      end
+
+      describe "return value" do
+        it "returns the correct keys" do
+          invitation_keys = %w[id status habit_plan sender]
+          
+          expect(parsed_response[0].keys).to match_array(invitation_keys)
+        end
+
+        it "returns habit plan info keys" do
+          habit_plan_info_keys = %w[start_datetime end_datetime habit]
+            
+          expect(parsed_response[0]["habit_plan"].keys).to match_array(habit_plan_info_keys)
+        end
+  
+        it "returns habit info keys" do
+          habit_info_keys = %w[name description] 
+  
+          expect(parsed_response[0]["habit_plan"]["habit"].keys).to match_array(habit_info_keys)
+        end
+
+        it "returns sender info keys" do
+          sender_info_keys = %w[name username] 
+  
+          expect(parsed_response[0]["sender"].keys).to match_array(sender_info_keys)
+        end
+      end
+    end
+
+    context "when a user has no sent invitations" do
+      let(:recipient) { create(:user) }
+      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
+
+      before do
+        get "/api/v2/users/#{recipient.id}/invitations/sent", headers: headers
+      end
+
+      it "returns http not found" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns an error message" do
+        expect(parsed_response["errors"]).to eq "No sent invitations found"
+      end
+    end
+  end
 end
