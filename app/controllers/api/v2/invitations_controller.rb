@@ -60,8 +60,8 @@ module Api
 
           render json: invitation, status: :ok
         else
-          #create custom errors
-          render json: {errors: "Record not found"}, status: :not_found
+          # create custom errors
+          render json: { errors: "Record not found" }, status: :not_found
         end
       end
       

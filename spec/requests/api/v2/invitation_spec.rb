@@ -337,15 +337,15 @@ RSpec.describe "Invitations v2", type: :request do
       it "creates a habit plan" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
-          headers: headers  
-        end.to change {recipient.habit_plans.count}.by(1)
+                headers: headers  
+        end.to change { recipient.habit_plans.count }.by(1)
       end
 
       it "creates habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
-          headers: headers  
-        end.to change {recipient.habit_logs.count}.by(4)
+                headers: headers  
+        end.to change { recipient.habit_logs.count }.by(4)
       end
     end
     
@@ -376,28 +376,28 @@ RSpec.describe "Invitations v2", type: :request do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
                 headers: headers  
-        end.not_to change {recipient.habit_plans.count}
+        end.not_to change { recipient.habit_plans.count }
       end
 
       it "does not create habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
                 headers: headers  
-        end.not_to change {recipient.habit_logs.count}
+        end.not_to change { recipient.habit_logs.count }
       end
     end
 
     context "when the invitation cannot be found" do
       it "returns http not found" do
         patch "/api/v2/users/#{recipient.id}/invitations/500", 
-        headers: headers  
+              headers: headers  
 
         expect(response).to have_http_status(:not_found)
       end
 
       it "returns an error message" do
         patch "/api/v2/users/#{recipient.id}/invitations/500", 
-        headers: headers  
+              headers: headers  
 
         expect(parsed_response["errors"][0]).to eq "Record not found"
       end
@@ -406,14 +406,14 @@ RSpec.describe "Invitations v2", type: :request do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/500", 
                 headers: headers  
-        end.not_to change {recipient.habit_plans.count}
+        end.not_to change { recipient.habit_plans.count }
       end
 
       it "does not create habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/500", 
                 headers: headers  
-        end.not_to change {recipient.habit_logs.count}
+        end.not_to change { recipient.habit_logs.count }
       end
     end
 
@@ -441,19 +441,18 @@ RSpec.describe "Invitations v2", type: :request do
         expect(parsed_response["errors"][0]).to eq "Record not found"
       end
 
-
       it "does not create a habit plan" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
                 headers: headers  
-        end.not_to change {recipient.habit_plans.count}
+        end.not_to change { recipient.habit_plans.count }
       end
 
       it "does not create habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
                 headers: headers  
-        end.not_to change {recipient.habit_logs.count}
+        end.not_to change { recipient.habit_logs.count }
       end
     end
   end
