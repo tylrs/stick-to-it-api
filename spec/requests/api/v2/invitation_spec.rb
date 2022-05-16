@@ -216,9 +216,9 @@ RSpec.describe "Invitations v2", type: :request do
     context "when a user has sent invitations" do
       let!(:pending_invitation) do 
         create(:invitation, {
-          sender: user,
-          habit_plan: habit_plan 
-        }) 
+                 sender: user,
+                 habit_plan: habit_plan 
+               }) 
       end
 
       let!(:pending_invitation2) { create(:invitation, { sender: user }) }

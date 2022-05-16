@@ -35,7 +35,7 @@ module Api
       end
 
       def show_sent
-        sent_invites = Invitation.includes(:sender, habit_plan: [:habit]).where(sender_id: params[:user_id ])
+        sent_invites = Invitation.includes(:sender, habit_plan: [:habit]).where(sender_id: params[:user_id])
         if sent_invites.length.positive?
           render json: sent_invites, only: %i[id status habit_plan sender recipient_email], 
                  include: [sender: { only: %i[name username] }, habit_plan: { only: %i[start_datetime end_datetime], include: [habit: { only: %i[name description] }] }], status: :ok
