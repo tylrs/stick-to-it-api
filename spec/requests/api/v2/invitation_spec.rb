@@ -300,6 +300,10 @@ RSpec.describe "Invitations v2", type: :request do
     let(:recipient) { create(:user) }
     let(:token) { JsonWebTokenService.encode(user_id: recipient.id) }
 
+    before do
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+    end
+
     it_behaves_like "a protected route" do
       let(:request_type) { :patch }
       let(:path) do
@@ -316,16 +320,18 @@ RSpec.describe "Invitations v2", type: :request do
                }) 
       end
 
-      before do
-        patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", headers: headers
-      end
-
       it "returns http success" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+              headers: headers
+
         expect(response).to be_ok
       end
-
+      
       it "marks the invitation as accepted" do
-        expect(parsed_response["invitation"]["status"]).to eq "accepted"
+        patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+              headers: headers
+
+        expect(parsed_response["status"]).to eq "accepted"
       end
 
       it "creates a habit plan" do
@@ -352,16 +358,17 @@ RSpec.describe "Invitations v2", type: :request do
                }) 
       end
 
-      before do
-        patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
-              headers: headers  
-      end
-
       it "returns http unprocessable entity" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+              headers: headers
+
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "returns an error message" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+              headers: headers  
+
         expect(parsed_response["errors"][0]).to eq "Invitation has already been accepted or declined"
       end
 
@@ -381,16 +388,17 @@ RSpec.describe "Invitations v2", type: :request do
     end
 
     context "when the invitation cannot be found" do
-      before do
-        patch "/api/v2/users/#{recipient.id}/invitations/500", 
-              headers: headers  
-      end
-
       it "returns http not found" do
+        patch "/api/v2/users/#{recipient.id}/invitations/500", 
+        headers: headers  
+
         expect(response).to have_http_status(:not_found)
       end
 
       it "returns an error message" do
+        patch "/api/v2/users/#{recipient.id}/invitations/500", 
+        headers: headers  
+
         expect(parsed_response["errors"][0]).to eq "Record not found"
       end
 
