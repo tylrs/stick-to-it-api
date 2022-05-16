@@ -409,7 +409,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
     end
 
-    context "when habit plan cannot be found" do
+    context "when the habit plan cannot be found" do
       let!(:pending_invitation) do 
         create(:invitation, {
                  sender: user,
