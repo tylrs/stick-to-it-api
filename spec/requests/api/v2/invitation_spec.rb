@@ -150,7 +150,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender]
+          invitation_keys = %w[id status habit_plan sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -209,7 +209,7 @@ RSpec.describe "Invitations v2", type: :request do
     it_behaves_like "a protected route" do
       let(:request_type) { :get }
       let(:path) do
-        "/api/v2/users/#{sender.id}/invitations/sent"
+        "/api/v2/users/#{user.id}/invitations/sent"
       end     
     end
 
@@ -221,7 +221,7 @@ RSpec.describe "Invitations v2", type: :request do
         }) 
       end
 
-      let!(:pending_invitation2) { create(:invitation) }
+      let!(:pending_invitation2) { create(:invitation, { sender: user }) }
 
       let!(:accepted_invitation) do 
         create(:invitation, { 
@@ -256,7 +256,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender]
+          invitation_keys = %w[id status habit_plan sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -291,7 +291,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns an error message" do
-        expect(parsed_response["errors"]).to eq "No sent invitations found"
+        expect(parsed_response["errors"]).to eq "No sent invites found"
       end
     end
   end
