@@ -150,7 +150,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender recipient_email]
+          invitation_keys = %w[id status habit_plan habit_plan_id sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -256,7 +256,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender recipient_email]
+          invitation_keys = %w[id status habit_plan habit_plan_id sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -294,5 +294,9 @@ RSpec.describe "Invitations v2", type: :request do
         expect(parsed_response["errors"]).to eq "No sent invites found"
       end
     end
+  end
+
+  describe "#accept" do
+    
   end
 end

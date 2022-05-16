@@ -27,7 +27,7 @@ module Api
         user = User.find params[:user_id]
         invitations = Invitation.includes(:sender, habit_plan: [:habit]).where(recipient_email: user.email, status: "pending")
         if invitations.length.positive?
-          render json: invitations, only: %i[id status habit_plan sender recipient_email], 
+          render json: invitations, only: %i[id status habit_plan habit_plan_id sender recipient_email], 
                  include: [sender: { only: %i[name username] }, habit_plan: { only: %i[start_datetime end_datetime], include: [habit: { only: %i[name description] }] }], status: :ok
         else
           render json: { errors: "No invitations found" }, status: :not_found
@@ -37,11 +37,17 @@ module Api
       def show_sent
         sent_invites = Invitation.includes(:sender, habit_plan: [:habit]).where(sender_id: params[:user_id])
         if sent_invites.length.positive?
-          render json: sent_invites, only: %i[id status habit_plan sender recipient_email], 
+          render json: sent_invites, only: %i[id status habit_plan habit_plan_id sender recipient_email], 
                  include: [sender: { only: %i[name username] }, habit_plan: { only: %i[start_datetime end_datetime], include: [habit: { only: %i[name description] }] }], status: :ok
         else
           render json: { errors: "No sent invites found" }, status: :not_found
         end
+      end
+
+      def accept
+        # look up invitation id 
+        # if it's status is pending, then
+          #
       end
       
       private
