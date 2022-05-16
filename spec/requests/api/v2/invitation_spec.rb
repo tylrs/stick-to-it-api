@@ -206,36 +206,26 @@ RSpec.describe "Invitations v2", type: :request do
   end
 
   describe "#show_sent" do
-    let(:recipient) { create(:user) }
-
     it_behaves_like "a protected route" do
       let(:request_type) { :get }
       let(:path) do
-        "/api/v2/users/#{recipient.id}/invitations/sent"
+        "/api/v2/users/#{sender.id}/invitations/sent"
       end     
     end
 
     context "when a user has sent invitations" do
-      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
       let!(:pending_invitation) do 
-        create(:invitation, { 
-                 sender: user, 
-                 recipient_email: recipient.email,
-                 habit_plan: habit_plan 
-               }) 
+        create(:invitation, {
+          sender: user,
+          habit_plan: habit_plan 
+        }) 
       end
 
-      let!(:pending_invitation2) do 
-        create(:invitation, { 
-                 sender: user, 
-                 recipient_email: recipient.email 
-               }) 
-      end
+      let!(:pending_invitation2) { create(:invitation) }
 
       let!(:accepted_invitation) do 
         create(:invitation, { 
                  sender: user, 
-                 recipient_email: recipient.email,
                  status: "accepted" 
                }) 
       end
@@ -243,13 +233,12 @@ RSpec.describe "Invitations v2", type: :request do
       let!(:declined_invitation) do 
         create(:invitation, { 
                  sender: user, 
-                 recipient_email: recipient.email,
                  status: "declined" 
                }) 
       end
 
       before do
-        get "/api/v2/users/#{recipient.id}/invitations/sent", headers: headers
+        get "/api/v2/users/#{user.id}/invitations/sent", headers: headers
       end
 
       it "returns http success" do
@@ -293,11 +282,8 @@ RSpec.describe "Invitations v2", type: :request do
     end
 
     context "when a user has no sent invitations" do
-      let(:recipient) { create(:user) }
-      let(:token) { JsonWebTokenService.encode(user_id: recipient.id) } 
-
       before do
-        get "/api/v2/users/#{recipient.id}/invitations/sent", headers: headers
+        get "/api/v2/users/#{user.id}/invitations/sent", headers: headers
       end
 
       it "returns http not found" do
