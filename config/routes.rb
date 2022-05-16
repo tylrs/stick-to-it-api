@@ -21,6 +21,7 @@ Rails.application.routes.draw do
         end
         get "invitations/received", to: "invitations#show_received"
         get "invitations/sent", to: "invitations#show_sent"
+        patch "invitations/:invitation_id", to: "invitations#accept"
         resources :habits, only: %i[create destroy]
       end
       get "/users/email", to: "users#show"
