@@ -69,7 +69,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns an error message" do
-        expect(parsed_response["errors"]).to eq "Record not found"
+        expect(parsed_response["errors"]).to eq "Couldn't find User with 'id'=500"
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns an error message" do
-        expect(parsed_response["errors"]).to eq "Record not found"
+        expect(parsed_response["errors"]).to eq "Couldn't find HabitPlan with 'id'=500"
       end
     end
   end
