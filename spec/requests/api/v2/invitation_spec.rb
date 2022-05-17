@@ -69,7 +69,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns an error message" do
-        expect(parsed_response["errors"]).to eq "Record not found"
+        expect(parsed_response["errors"]).to eq "Couldn't find User with 'id'=500"
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns an error message" do
-        expect(parsed_response["errors"]).to eq "Record not found"
+        expect(parsed_response["errors"]).to eq "Couldn't find HabitPlan with 'id'=500"
       end
     end
   end
@@ -150,7 +150,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender recipient_email]
+          invitation_keys = %w[id status habit_plan habit_plan_id sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -256,7 +256,7 @@ RSpec.describe "Invitations v2", type: :request do
 
       describe "return value" do
         it "returns the correct keys" do
-          invitation_keys = %w[id status habit_plan sender recipient_email]
+          invitation_keys = %w[id status habit_plan habit_plan_id sender recipient_email]
           
           expect(parsed_response[0].keys).to match_array(invitation_keys)
         end
@@ -292,6 +292,128 @@ RSpec.describe "Invitations v2", type: :request do
 
       it "returns an error message" do
         expect(parsed_response["errors"]).to eq "No sent invites found"
+      end
+    end
+  end
+
+  describe "#accept" do
+    let(:recipient) { create(:user) }
+    let(:token) { JsonWebTokenService.encode(user_id: recipient.id) }
+
+    before do
+      allow(Date).to receive(:today).and_return Date.new(2022, 2, 2)
+    end
+
+    it_behaves_like "a protected route" do
+      let(:request_type) { :patch }
+      let(:path) do
+        "/api/v2/users/#{recipient.id}/invitations/1"
+      end     
+    end
+
+    context "when a user has a pending invitation" do
+      let!(:pending_invitation) do 
+        create(:invitation, {
+                 sender: user,
+                 recipient_email: recipient.email,
+                 habit_plan: habit_plan 
+               }) 
+      end
+
+      it "returns http success" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+              headers: headers
+
+        expect(response).to be_ok
+      end
+      
+      it "marks the invitation as accepted" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+              headers: headers
+
+        expect(parsed_response["status"]).to eq "accepted"
+      end
+
+      it "creates a habit plan" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+                headers: headers  
+        end.to change { recipient.habit_plans.count }.by(1)
+      end
+
+      it "creates habit logs" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/#{pending_invitation.id}", 
+                headers: headers  
+        end.to change { recipient.habit_logs.count }.by(4)
+      end
+    end
+    
+    context "when the invitation is not pending" do
+      let!(:accepted_invitation) do 
+        create(:invitation, { 
+                 sender: user, 
+                 recipient_email: recipient.email,
+                 status: "accepted" 
+               }) 
+      end
+
+      it "returns http unprocessable entity" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+              headers: headers
+
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "returns an error message" do
+        patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+              headers: headers  
+
+        expect(parsed_response["errors"]).to eq "Invitation has already been #{accepted_invitation.status}"
+      end
+
+      it "does not create a habit plan" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+                headers: headers  
+        end.not_to(change { recipient.habit_plans.count })
+      end
+
+      it "does not create habit logs" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
+                headers: headers  
+        end.not_to(change { recipient.habit_logs.count })
+      end
+    end
+
+    context "when the invitation cannot be found" do
+      it "returns http not found" do
+        patch "/api/v2/users/#{recipient.id}/invitations/500", 
+              headers: headers  
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns an error message" do
+        patch "/api/v2/users/#{recipient.id}/invitations/500", 
+              headers: headers  
+
+        expect(parsed_response["errors"]).to eq "Couldn't find Invitation with 'id'=500"
+      end
+
+      it "does not create a habit plan" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/500", 
+                headers: headers  
+        end.not_to(change { recipient.habit_plans.count })
+      end
+
+      it "does not create habit logs" do
+        expect do
+          patch "/api/v2/users/#{recipient.id}/invitations/500", 
+                headers: headers  
+        end.not_to(change { recipient.habit_logs.count })
       end
     end
   end
