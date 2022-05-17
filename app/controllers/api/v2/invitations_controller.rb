@@ -59,8 +59,8 @@ module Api
 
       def find_invitation
         @invitation = Invitation.find params[:invitation_id]
-      rescue ActiveRecord::RecordNotFound => error
-        render json: { errors: error.message }, status: :not_found
+      rescue ActiveRecord::RecordNotFound => e
+        render json: { errors: e.message }, status: :not_found
       end
 
       def mailer_params
@@ -70,8 +70,8 @@ module Api
       def find_invite_info
         @habit_plan = HabitPlan.find params[:habit_plan_id]
         @user = User.find params[:user_id]
-      rescue ActiveRecord::RecordNotFound => error
-        render json: { errors: error.message }, status: :not_found
+      rescue ActiveRecord::RecordNotFound => e
+        render json: { errors: e.message }, status: :not_found
       end
     end
   end
