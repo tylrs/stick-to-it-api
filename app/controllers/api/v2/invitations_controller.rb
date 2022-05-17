@@ -2,6 +2,7 @@ module Api
   module V2
     class InvitationsController < ApplicationController
       before_action :find_invite_info, only: [:create]
+      before_action :find_invitation, only: [:accept]
 
       def create
         invite_info = {
@@ -45,20 +46,22 @@ module Api
       end
 
       def accept
-        invitation = Invitation.find params[:invitation_id]
-
-        if invitation.status === "pending"
-          HabitPlansCreationService.create_partner_plans(invitation.habit_plan_id, params[:user_id])
-          invitation.update(status: "accepted")
-
-          render json: invitation, status: :ok
+        if @invitation.status === "pending"
+          HabitPlansCreationService.create_partner_plans(@invitation.habit_plan_id, params[:user_id])
+          @invitation.update(status: "accepted")
+          render json: @invitation, status: :ok
         else
-          # create custom errors
-          render json: { errors: "Record not found" }, status: :not_found
+          render json: { errors: "Invitation has already been #{@invitation.status}" }, status: :unprocessable_entity
         end
       end
       
       private
+
+      def find_invitation
+        @invitation = Invitation.find params[:invitation_id]
+      rescue ActiveRecord::RecordNotFound => error
+        render json: { errors: error.message }, status: :not_found
+      end
 
       def mailer_params
         params.permit(:user_id, :habit_plan_id, :recipient_name, :recipient_email)
@@ -67,8 +70,8 @@ module Api
       def find_invite_info
         @habit_plan = HabitPlan.find params[:habit_plan_id]
         @user = User.find params[:user_id]
-      rescue ActiveRecord::RecordNotFound
-        render json: { errors: "Record not found" }, status: :not_found
+      rescue ActiveRecord::RecordNotFound => error
+        render json: { errors: error.message }, status: :not_found
       end
     end
   end
