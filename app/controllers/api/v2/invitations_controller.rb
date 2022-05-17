@@ -46,7 +46,7 @@ module Api
       end
 
       def accept
-        if @invitation.status === "pending"
+        if @invitation.status == "pending"
           HabitPlansCreationService.create_partner_plans(@invitation.habit_plan_id, params[:user_id])
           @invitation.update(status: "accepted")
           render json: @invitation, status: :ok

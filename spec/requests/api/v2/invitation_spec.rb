@@ -376,14 +376,14 @@ RSpec.describe "Invitations v2", type: :request do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
                 headers: headers  
-        end.not_to change { recipient.habit_plans.count }
+        end.not_to(change { recipient.habit_plans.count })
       end
 
       it "does not create habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/#{accepted_invitation.id}", 
                 headers: headers  
-        end.not_to change { recipient.habit_logs.count }
+        end.not_to(change { recipient.habit_logs.count })
       end
     end
 
@@ -406,14 +406,14 @@ RSpec.describe "Invitations v2", type: :request do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/500", 
                 headers: headers  
-        end.not_to change { recipient.habit_plans.count }
+        end.not_to(change { recipient.habit_plans.count })
       end
 
       it "does not create habit logs" do
         expect do
           patch "/api/v2/users/#{recipient.id}/invitations/500", 
                 headers: headers  
-        end.not_to change { recipient.habit_logs.count }
+        end.not_to(change { recipient.habit_logs.count })
       end
     end
   end
