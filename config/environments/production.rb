@@ -73,6 +73,16 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :sidekiq
 
+  config.action_mailer.delivery_method = :smtp 
+  config.action_mailer.perform_deliveries = true 
+  config.action_mailer.smtp_settings = { 
+    domain: "https://stick-to-it-api.herokuapp.com/", 
+    address: "smtp.sendgrid.net", 
+    port: 587, 
+    authentication: :plain, 
+    user_name: "apikey", 
+    password: ENV["SENDGRID_API_KEY"] 
+  }
   # Use a different logger for distributed setups.
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
