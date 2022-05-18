@@ -17,7 +17,7 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
     
     describe "headers" do
       it "has the correct sender" do
-        expect(email.from).to eq ["#{ENV["FROM_EMAIL"]}"]
+        expect(email.from).to eq [ENV["FROM_EMAIL"].to_s]
       end
       
       it "has the correct recipient" do
