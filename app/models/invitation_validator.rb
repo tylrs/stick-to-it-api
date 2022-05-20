@@ -4,4 +4,4 @@ class InvitationValidator < ActiveModel::Validator
       record.errors.add :habit_plan_limit, "Can only have one pending or accepted invitation per habit plan"
     end
   end
-end 
+end
