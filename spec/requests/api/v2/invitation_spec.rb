@@ -53,7 +53,8 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns error messages" do
-        expect(parsed_response["errors"]).to contain_exactly("Recipient email can't be blank", "Recipient email is invalid")
+        expect(parsed_response["errors"]).to contain_exactly("Recipient email can't be blank", 
+                                                             "Recipient email is invalid")
       end
     end
 

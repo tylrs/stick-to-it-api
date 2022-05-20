@@ -5,8 +5,9 @@ module Api
         week_habit_plans = HabitPlansFilterService.week_and_partner_plans(params[:user_id])
         render json: week_habit_plans,
                include: [habit: { only: %i[creator_id name
-                                           description] }, user: { only: [:name] }, habit_logs: { only: %i[id habit_id scheduled_at
-                                                                                                           completed_at] }], 
+                                           description] },
+                         user: { only: [:name] }, 
+                         habit_logs: { only: %i[id habit_id scheduled_at completed_at] }], 
                status: :ok
       end
 
@@ -14,8 +15,9 @@ module Api
         today_habit_plans = HabitPlansFilterService.today_and_partner_plans(params[:user_id])
         render json: today_habit_plans,
                include: [habit: { only: %i[creator_id name
-                                           description] }, user: { only: [:name] }, habit_logs: { only: %i[id habit_id scheduled_at
-                                                                                                           completed_at] }], 
+                                           description] }, 
+                         user: { only: [:name] }, 
+                         habit_logs: { only: %i[id habit_id scheduled_at completed_at] }], 
                status: :ok
       end
 
