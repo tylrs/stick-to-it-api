@@ -21,13 +21,13 @@ RSpec.describe "Invitations v2", type: :request do
         post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
-             expect(response).to be_ok
+        expect(response).to be_ok
       end
             
       it "returns a success message" do
         post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
-              headers: headers,
-              params: JSON.generate(recipient_info)
+             headers: headers,
+             params: JSON.generate(recipient_info)
         expect(parsed_response["message"]).to eq "Email Sent"
       end
 
