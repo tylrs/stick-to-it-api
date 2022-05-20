@@ -14,7 +14,7 @@ AllCops:
     - !ruby/regexp /old_and_unused\.rb$/
 
 Layout/LineLength:
-  Max: 200
+  Max: 150
 
 Layout/TrailingWhitespace:
   Enabled: false
