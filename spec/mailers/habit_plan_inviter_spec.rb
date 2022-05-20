@@ -36,19 +36,39 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
     context "when the recipient is already registered" do
       describe "body" do
         it "returns the correct plain text" do
-          expect(email.text_part.body.to_s).to include("Hello #{invite_info[:recipient_name]}")
-          expect(email.text_part.body.to_s).to include("#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}")
-          expect(email.text_part.body.to_s).to include("They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}")
-          expect(email.text_part.body.to_s).to include("If you would like to view the invitation, please log in with the email address this message was sent to.")
-          expect(email.text_part.body.to_s).to include("Go to log in screen: http://stick-to-it-ui.herokuapp.com/login")
+          expect(email.text_part.body.to_s).to include(
+            "Hello #{invite_info[:recipient_name]}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "If you would like to view the invitation, please log in with the email address this message was sent to."
+          )
+          expect(email.text_part.body.to_s).to include(
+            "Go to log in screen: http://stick-to-it-ui.herokuapp.com/login"
+          )
         end
         
         it "returns the correct html" do
-          expect(email.html_part.body.to_s).to include("Hello #{invite_info[:recipient_name]}")
-          expect(email.html_part.body.to_s).to include("#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}")
-          expect(email.html_part.body.to_s).to include("They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}")
-          expect(email.html_part.body.to_s).to include("If you would like to view the invitation, please log in with the email address this message was sent to.")
-          expect(email.html_part.body.to_s).to include("Go to log in screen")
+          expect(email.html_part.body.to_s).to include(
+            "Hello #{invite_info[:recipient_name]}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "If you would like to view the invitation, please log in with the email address this message was sent to."
+          )
+          expect(email.html_part.body.to_s).to include(
+            "Go to log in screen"
+          )
         end
       end
     end
@@ -65,19 +85,45 @@ RSpec.describe HabitPlanInviterMailer, type: :mailer do
 
       describe "body" do
         it "returns the correct plain text" do
-          expect(email.text_part.body.to_s).to include("Hello #{invite_info[:recipient_name]}")
-          expect(email.text_part.body.to_s).to include("#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}")
-          expect(email.text_part.body.to_s).to include("They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}")
-          expect(email.text_part.body.to_s).to include("If you would like to view the invitation, please create an account with the email address this message was sent to.")
-          expect(email.text_part.body.to_s).to include("Go to create an account screen: http://stick-to-it-ui.herokuapp.com/create-account")
+          expect(email.text_part.body.to_s).to include(
+            "Hello #{invite_info[:recipient_name]}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "If you would like to view the invitation,"
+          )
+          expect(email.text_part.body.to_s).to include(
+            "please create an account with the email address this message was sent to."
+          )
+          expect(email.text_part.body.to_s).to include(
+            "Go to create an account screen: http://stick-to-it-ui.herokuapp.com/create-account"
+          )
         end
         
         it "returns the correct html" do
-          expect(email.html_part.body.to_s).to include("Hello #{invite_info[:recipient_name]}")
-          expect(email.html_part.body.to_s).to include("#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}")
-          expect(email.html_part.body.to_s).to include("They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}")
-          expect(email.html_part.body.to_s).to include("If you would like to view the invitation, please create an account with the email address this message was sent to.")
-          expect(email.html_part.body.to_s).to include("Go to create an account screen")
+          expect(email.html_part.body.to_s).to include(
+            "Hello #{invite_info[:recipient_name]}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "#{user.name} would like you to join them on their new habit: #{habit_plan.habit.name}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "They are planning on working on the habit from #{habit_plan.start_datetime} to #{habit_plan.end_datetime}"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "If you would like to view the invitation,"
+          )
+          expect(email.html_part.body.to_s).to include(
+            "please create an account with the email address this message was sent to."
+          )
+          expect(email.html_part.body.to_s).to include(
+            "Go to create an account screen"
+          )
         end
       end
     end

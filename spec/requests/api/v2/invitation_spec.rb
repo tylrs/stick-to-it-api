@@ -17,21 +17,21 @@ RSpec.describe "Invitations v2", type: :request do
     end
 
     context "when the invitation record has been successfully created" do
-      before do
+      it "returns http success" do
         post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
              headers: headers,
              params: JSON.generate(recipient_info)
-      end
-
-      it "returns http success" do
         expect(response).to be_ok
       end
-
+            
       it "returns a success message" do
+        post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
+             headers: headers,
+             params: JSON.generate(recipient_info)
         expect(parsed_response["message"]).to eq "Email Sent"
       end
 
-      it "creates an Invitation record" do
+      it "creates an invitation record" do
         expect do
           post "/api/v2/users/#{user.id}/habit_plans/#{habit_plan.id}/invitations/create",
                headers: headers,
@@ -53,7 +53,8 @@ RSpec.describe "Invitations v2", type: :request do
       end
 
       it "returns error messages" do
-        expect(parsed_response["errors"]).to contain_exactly("Recipient email can't be blank", "Recipient email is invalid")
+        expect(parsed_response["errors"]).to contain_exactly("Recipient email can't be blank", 
+                                                             "Recipient email is invalid")
       end
     end
 
@@ -109,7 +110,6 @@ RSpec.describe "Invitations v2", type: :request do
                  habit_plan: habit_plan 
                }) 
       end
-
       let!(:pending_invitation2) do 
         create(:invitation, { 
                  sender: user, 
@@ -124,7 +124,6 @@ RSpec.describe "Invitations v2", type: :request do
                  status: "accepted" 
                }) 
       end
-
       let!(:declined_invitation) do 
         create(:invitation, { 
                  sender: user, 
@@ -220,16 +219,13 @@ RSpec.describe "Invitations v2", type: :request do
                  habit_plan: habit_plan 
                }) 
       end
-
       let!(:pending_invitation2) { create(:invitation, { sender: user }) }
-
       let!(:accepted_invitation) do 
         create(:invitation, { 
                  sender: user, 
                  status: "accepted" 
                }) 
       end
-
       let!(:declined_invitation) do 
         create(:invitation, { 
                  sender: user, 
