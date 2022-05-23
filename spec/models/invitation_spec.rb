@@ -9,6 +9,17 @@ RSpec.describe Invitation, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:recipient_email) }
 
+    context "when a valid invitation is accepted" do
+      let!(:habit_plan) { create(:habit_plan) }
+      let!(:pending_invitation) { create(:invitation, { habit_plan: habit_plan }) }
+
+      it "passes validations" do
+        pending_invitation.accepted!
+
+        expect(pending_invitation.status).to eq "accepted"
+      end
+    end
+
     context "when an invitation associated with the same habit plan already exists and is pending" do
       let!(:habit_plan) { create(:habit_plan) }
       let!(:pending_invitation) { create(:invitation, { habit_plan: habit_plan }) }
