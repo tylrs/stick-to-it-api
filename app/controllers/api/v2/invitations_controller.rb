@@ -55,7 +55,7 @@ module Api
       def accept
         if @invitation.status == "pending"
           HabitPlansCreationService.create_partner_plans(@invitation.habit_plan_id, params[:user_id])
-          @invitation.update(status: "accepted")
+          @invitation.accepted!
           render json: @invitation, status: :ok
         else
           render json: { errors: "Invitation has already been #{@invitation.status}" }, status: :unprocessable_entity
